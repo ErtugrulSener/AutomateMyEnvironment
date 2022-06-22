@@ -5,6 +5,7 @@ REQUIRED_DEPENDENCIES = [
     "choco",
 ]
 
+
 @Singleton
 class Checker:
     checkers = []
