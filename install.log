@@ -1,0 +1,19 @@
+check_for_admin_rights            | INFO    | Checking if script was called as admin (Required)
+check_for_admin_rights            | ERROR   | You need administrator previleges to run this script!
+check_for_admin_rights            | INFO    | Checking if script was called as admin (Required)
+check_if_os_is_suitable           | INFO    | Checking if it is a suitable OS (Only windows is supported by now)
+check_for_required_dependencies   | INFO    | Checking for dependencies...
+check_for_required_dependencies   | DEBUG   | choco (Required) -> Found     
+parse                             | DEBUG   | Parsing default configuration in: configs/config.ini
+start_installing                  | INFO    | Starting installation process...
+install                           | INFO    | Skipping brave since it is installed already.
+install                           | INFO    | Skipping chocolateygui since it is installed already.
+install                           | INFO    | Skipping vscode since it is installed already.
+install                           | INFO    | Skipping git since it is installed already.
+install                           | INFO    | Installing cmder...
+install                           | INFO    | Successfully installed cmder!
+refresh_installed_software_cache  | INFO    | Refreshing installed software cache!
+install                           | ERROR   | Failed to install cmder with last output:
+install                           | ERROR   | CompletedProcess(args='choco install -r -y cmder', returncode=0)
+check_for_admin_rights            | INFO    | Checking if script was called as admin (Required)
+check_for_admin_rights            | ERROR   | You need administrator previleges to run this script!

@@ -1,0 +1,5 @@
+# Ignore isos folder, since the content is pretty big
+isos
+
+# Ignore python related files
+*.pyc
