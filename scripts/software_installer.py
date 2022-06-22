@@ -51,10 +51,10 @@ class SoftwareInstaller:
         else:
             output = subprocess.check_output(command)
 
-        logger.info(f"Successfully installed {software}!")
-        self.refresh_installed_software_cache()
-
         if not self.is_installed(software):
             logger.error(f"Failed to install {software} with last output:")
             logger.error(output)
             exit(4)
+
+        logger.info(f"Successfully installed {software}!")
+        self.refresh_installed_software_cache()
