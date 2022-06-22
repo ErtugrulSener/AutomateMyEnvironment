@@ -3,3 +3,6 @@ isos
 
 # Ignore python related files
 *.pyc
+
+# Ignore log files
+install.log

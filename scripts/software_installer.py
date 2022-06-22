@@ -27,7 +27,7 @@ class SoftwareInstaller:
 
     def start_installing(self):
         logger.info("Starting installation process...")
-        
+
         for entry in ConfigParser.instance().items("SOFTWARE_LIST"):
             software, params = entry
             self.install(software, params)

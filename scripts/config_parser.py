@@ -10,6 +10,7 @@ DEFAULT_CONFIG = "config.ini"
 class ConfigParser(configparser.ConfigParser):
     def __init__(self):
         configparser.ConfigParser.__init__(self)
+        self.optionxform = str
 
     def parse(self):
         logger.debug(f"Parsing default configuration in: {DEFAULT_CONFIG}")

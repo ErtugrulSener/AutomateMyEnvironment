@@ -20,5 +20,3 @@ if __name__ == "__main__":
     ConfigParser.instance().parse();
     ArgumentParser.instance().parse();
     SoftwareInstaller.instance().start_installing()
-
-    k = input("Drücken sie eine beliebige Taste, um die Software zu terminieren.")
