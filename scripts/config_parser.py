@@ -2,9 +2,11 @@ import configparser
 
 from scripts.singleton import Singleton
 from scripts.logger import Logger
+
 logger = Logger.instance()
 
 DEFAULT_CONFIG = "config.ini"
+
 
 @Singleton
 class ConfigParser(configparser.ConfigParser):

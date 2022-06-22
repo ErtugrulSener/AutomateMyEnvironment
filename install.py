@@ -17,6 +17,6 @@ Exit codes:
 if __name__ == "__main__":
     Checker.instance().register(SystemChecker)
 
-    ConfigParser.instance().parse();
-    ArgumentParser.instance().parse();
+    ConfigParser.instance().parse()
+    ArgumentParser.instance().parse()
     SoftwareInstaller.instance().start_installing()

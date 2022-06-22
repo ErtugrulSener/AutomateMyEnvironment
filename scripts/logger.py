@@ -19,6 +19,7 @@ FORMAT_FIELD_STYLES.update({
     'levelname': {'color': 'green'},
 })
 
+
 @Singleton
 class Logger(logging.Logger):
     def __init__(self):
@@ -37,7 +38,8 @@ class Logger(logging.Logger):
         self.addHandler(streamHandler)
 
         # Use coloredlogs to get some pretty log messages
-        coloredlogs.install(logger=self, level=logging.getLevelName(DEFAULT_LOG_LEVEL), fmt=FORMAT_STYLE, field_styles=FORMAT_FIELD_STYLES)
+        coloredlogs.install(logger=self, level=logging.getLevelName(DEFAULT_LOG_LEVEL), fmt=FORMAT_STYLE,
+                            field_styles=FORMAT_FIELD_STYLES)
 
     def set_log_level(self, level):
         coloredlogs.set_level(level)

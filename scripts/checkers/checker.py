@@ -1,4 +1,4 @@
-from singleton import Singleton
+from scripts.singleton import Singleton
 
 # Required dependencies
 REQUIRED_DEPENDENCIES = [

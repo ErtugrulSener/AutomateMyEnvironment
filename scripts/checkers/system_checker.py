@@ -2,10 +2,11 @@ import platform
 
 from shutil import which
 from scripts import admin
-from elevate import elevate
 from scripts.singleton import Singleton
 from scripts.logger import Logger
+
 logger = Logger.instance()
+
 
 @Singleton
 class SystemChecker:
@@ -14,14 +15,16 @@ class SystemChecker:
         "choco",
     ]
 
-    def check_for_admin_rights(self):
+    @staticmethod
+    def check_for_admin_rights():
         logger.info('Checking if script was called as admin (Required)')
 
-        if not admin.isUserAdmin():
-            logger.error('You need administrator previleges to run this script!')
+        if not admin.is_user_admin():
+            logger.error('You need administrator privileges to run this script!')
             exit(1)
 
-    def check_if_os_is_suitable(self):
+    @staticmethod
+    def check_if_os_is_suitable():
         logger.info('Checking if it is a suitable OS (Only windows is supported by now)')
         is_windows = any(platform.win32_ver())
 

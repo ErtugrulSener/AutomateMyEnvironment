@@ -1,5 +1,6 @@
 from scripts.singleton import Singleton
 
+
 @Singleton
 class Checker:
     checkers = []

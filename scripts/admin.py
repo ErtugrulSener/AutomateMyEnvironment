@@ -12,11 +12,14 @@ import traceback
 import types
 import ctypes
 
-import win32api, win32con, win32event, win32process
+import win32con
+import win32event
+import win32process
 from win32com.shell.shell import ShellExecuteEx
 from win32com.shell import shellcon
 
-def isUserAdmin():
+
+def is_user_admin():
     if os.name == 'nt':
         # WARNING: requires Windows XP SP2 or higher!
         try:
@@ -31,6 +34,7 @@ def isUserAdmin():
     else:
         raise RuntimeError("Unsupported operating system for this module: %s" % (os.name,))
 
+
 def runAsAdmin(cmdLine=None, wait=True):
     if os.name != 'nt':
         raise RuntimeError("This function is only implemented on Windows.")
@@ -39,7 +43,7 @@ def runAsAdmin(cmdLine=None, wait=True):
 
     if cmdLine is None:
         cmdLine = [python_exe] + sys.argv
-    elif type(cmdLine) not in (types.TupleType,types.ListType):
+    elif type(cmdLine) not in (types.TupleType, types.ListType):
         raise ValueError("cmdLine is not a sequence.")
 
     cmd = '"%s"' % (cmdLine[0],)
@@ -47,7 +51,7 @@ def runAsAdmin(cmdLine=None, wait=True):
     params = " ".join(['"%s"' % (x,) for x in cmdLine[1:]])
 
     showCmd = win32con.SW_SHOWNORMAL
-    #showCmd = win32con.SW_HIDE
+    # showCmd = win32con.SW_HIDE
     lpVerb = 'runas'  # causes UAC elevation prompt.
 
     # print "Running", cmd, params
@@ -56,8 +60,6 @@ def runAsAdmin(cmdLine=None, wait=True):
     # of the process, so we can't get anything useful from it. Therefore
     # the more complex ShellExecuteEx() must be used.
 
-    # procHandle = win32api.ShellExecute(0, lpVerb, cmd, params, cmdDir, showCmd)
-
     procInfo = ShellExecuteEx(nShow=showCmd,
                               fMask=shellcon.SEE_MASK_NOCLOSEPROCESS,
                               lpVerb=lpVerb,
@@ -65,7 +67,7 @@ def runAsAdmin(cmdLine=None, wait=True):
                               lpParameters=params)
 
     if wait:
-        procHandle = procInfo['hProcess']    
+        procHandle = procInfo['hProcess']
         obj = win32event.WaitForSingleObject(procHandle, win32event.INFINITE)
         rc = win32process.GetExitCodeProcess(procHandle)
     else:

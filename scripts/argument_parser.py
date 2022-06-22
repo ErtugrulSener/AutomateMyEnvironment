@@ -2,7 +2,9 @@ import argparse
 
 from scripts.singleton import Singleton
 from scripts.logger import Logger
+
 logger = Logger.instance()
+
 
 @Singleton
 class ArgumentParser(argparse.ArgumentParser):
@@ -10,7 +12,9 @@ class ArgumentParser(argparse.ArgumentParser):
         argparse.ArgumentParser.__init__(self)
 
     def parse(self):
-        self.add_argument("-l", "--log-level", required=False, help='Specify the log level, possible values are: {}'.format(', '.join(logger.get_level_name_list())))
+        self.add_argument("-l", "--log-level", required=False,
+                          help='Specify the log level, possible values are: {}'.format(
+                              ', '.join(logger.get_level_name_list())))
 
         args = self.parse_args()
         if args.log_level:
