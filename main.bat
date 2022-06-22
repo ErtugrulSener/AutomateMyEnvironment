@@ -1,5 +1,8 @@
 @echo off
 
+:: cd to the directory the script is in
+@cd %~dp0
+
 :: Check for python 3 installation on system
 python --version 3 > nul
 
