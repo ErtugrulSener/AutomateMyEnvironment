@@ -1,3 +1,4 @@
+import re
 import subprocess
 
 from scripts.logger import Logger
@@ -43,21 +44,35 @@ class SoftwareInstaller:
 
         logger.info(f"Installing {software}...")
 
-        command = f"choco install -r -y {software}"
+        command = f"choco install -r -y {software}.install"
 
         if params:
             command += f" --params '{' '.join(params)}'"
 
         if logger.is_debug():
-            output = subprocess.run(command)
+            output = subprocess.run(command, capture_output=True).stdout
         else:
             output = subprocess.check_output(command)
 
-        self.refresh_installed_software_cache()
+        output_list = output.decode().splitlines()
+        is_installed = False
 
-        if not self.is_installed(software):
-            logger.error(f"Failed to install {software} with last output:")
-            logger.error(output)
+        for line in output_list:
+            matcher = re.match("^.*Software installed to '(.*)'.*$", line)
+
+            if matcher:
+                software_path = matcher.group(1)
+                is_installed = True
+                break
+
+        if not is_installed:
+            logger.error(f"Failed to install {software} with output:")
+
+            for line in output_list:
+                print(line)
+
             exit(4)
+            return
 
-        logger.info(f"Successfully installed {software}!")
+        logger.info(f"Successfully installed {software} to {software_path}!")
+        self.refresh_installed_software_cache()

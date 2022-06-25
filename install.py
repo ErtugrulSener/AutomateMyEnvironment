@@ -3,8 +3,6 @@ from scripts.checkers.system_checker import SystemChecker
 from scripts.logger import Logger
 from scripts.parsers.argument_parser import ArgumentParser
 from scripts.parsers.config_parser import ConfigParser
-from scripts.software.configurators.cmder_configurator import CmderConfigurator
-from scripts.software_configurator import SoftwareConfigurator
 from scripts.software_installer import SoftwareInstaller
 
 logger = Logger.instance()
@@ -33,4 +31,4 @@ if __name__ == "__main__":
     ArgumentParser.instance().parse()
     SoftwareInstaller.instance().start_installing()
 
-    SoftwareConfigurator.instance().configure(CmderConfigurator)
+    # SoftwareConfigurator.instance().configure(CmderConfigurator)
