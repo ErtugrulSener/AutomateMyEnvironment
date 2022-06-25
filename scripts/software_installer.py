@@ -97,7 +97,7 @@ class SoftwareInstaller:
         command = CommandGenerator() \
             .choco() \
             .uninstall() \
-            .parameters("-y", software) \
+            .parameters("-x", "-y", software) \
             .get()
 
         if logger.is_debug():
