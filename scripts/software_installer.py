@@ -1,10 +1,14 @@
+import os.path
 import re
 import subprocess
+
+from winregistry import WinRegistry
 
 from scripts.command_generator import CommandGenerator
 from scripts.logger import Logger
 from scripts.parsers.argument_parser import ArgumentParser
 from scripts.parsers.config_parser import ConfigParser
+from scripts.regedit_manager import RegeditManager, RegeditPath
 from scripts.singleton import Singleton
 
 logger = Logger.instance()
@@ -72,11 +76,23 @@ class SoftwareInstaller:
         is_installed = False
 
         for line in output_list:
-            matcher = re.match("^.*Software installed to '(.*)'.*$", line)
+            matcherForExe = re.match("^.*Software installed to '(.*)'.*$", line)
+            matcherForMsi = "Software installed as 'msi', install location is likely default." in line
 
-            if matcher:
-                software_path = matcher.group(1)
+            if matcherForExe:
+                software_path = matcherForExe.group(1)
                 is_installed = True
+                break
+            elif matcherForMsi:
+                for key in [RegeditPath.DEFAULT_INSTALLATION_PATH, RegeditPath.DEFAULT_INSTALLATION_PATH_x86]:
+                    with WinRegistry() as client:
+                        entry = client.read_entry(*RegeditManager.instance().get(key))
+
+                        if entry and os.path.exists(os.path.join(entry.value, software)):
+                            software_path = os.path.join(entry.value, software)
+                            is_installed = True
+                            break
+
                 break
 
         if not is_installed:
