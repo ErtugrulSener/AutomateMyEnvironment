@@ -1,4 +1,5 @@
 import logging
+
 import coloredlogs
 
 from scripts.singleton import Singleton
@@ -27,24 +28,26 @@ class Logger(logging.Logger):
 
         formatter = logging.Formatter(FORMAT_STYLE)
 
-        fileHandler = logging.FileHandler(DEFAULT_INSTALL_SCRIPT_PATH)
-        fileHandler.setFormatter(formatter)
-        fileHandler.setLevel(DEFAULT_LOG_LEVEL)
-        self.addHandler(fileHandler)
+        file_handler = logging.FileHandler(DEFAULT_INSTALL_SCRIPT_PATH)
+        file_handler.setFormatter(formatter)
+        file_handler.setLevel(DEFAULT_LOG_LEVEL)
+        self.addHandler(file_handler)
 
-        streamHandler = logging.StreamHandler()
-        streamHandler.setFormatter(formatter)
-        streamHandler.setLevel(DEFAULT_LOG_LEVEL)
-        self.addHandler(streamHandler)
+        stream_handler = logging.StreamHandler()
+        stream_handler.setFormatter(formatter)
+        stream_handler.setLevel(DEFAULT_LOG_LEVEL)
+        self.addHandler(stream_handler)
 
         # Use coloredlogs to get some pretty log messages
         coloredlogs.install(logger=self, level=logging.getLevelName(DEFAULT_LOG_LEVEL), fmt=FORMAT_STYLE,
                             field_styles=FORMAT_FIELD_STYLES)
 
-    def set_log_level(self, level):
+    @staticmethod
+    def set_log_level(level):
         coloredlogs.set_level(level)
 
-    def get_level_name_list(self):
+    @staticmethod
+    def get_level_name_list():
         return [name for name in logging._levelToName.values()]
 
     def is_debug(self):

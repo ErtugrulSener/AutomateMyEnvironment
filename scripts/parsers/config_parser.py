@@ -15,5 +15,6 @@ class ConfigParser(configparser.ConfigParser):
         self.optionxform = str
 
     def parse(self):
-        logger.debug(f"Parsing default configuration in: {DEFAULT_CONFIG}")
+        logger.debug(f"Parsing default configuration: {DEFAULT_CONFIG}")
         self.read(DEFAULT_CONFIG)
+        logger.debug(f"Parsing default configuration was successful.")

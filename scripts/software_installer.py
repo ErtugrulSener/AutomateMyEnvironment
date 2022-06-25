@@ -1,8 +1,8 @@
 import subprocess
 
-from scripts.singleton import Singleton
-from scripts.config_parser import ConfigParser
 from scripts.logger import Logger
+from scripts.parsers.config_parser import ConfigParser
+from scripts.singleton import Singleton
 
 logger = Logger.instance()
 
@@ -27,12 +27,14 @@ class SoftwareInstaller:
     def start_installing(self):
         logger.info("Starting installation process...")
 
-        for entry in ConfigParser.instance().items("SOFTWARE_LIST"):
-            software, params = entry
-            self.install(software, params)
+        for name, parameters in ConfigParser.instance().items("SOFTWARE_LIST"):
+            self.install(name, parameters)
 
     def is_installed(self, software):
         return software in self.installed_software
+
+    def get_path(self, software):
+        pass
 
     def install(self, software, params):
         if self.is_installed(software):

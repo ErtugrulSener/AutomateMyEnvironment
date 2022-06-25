@@ -1,7 +1,7 @@
 import argparse
 
-from scripts.singleton import Singleton
 from scripts.logger import Logger
+from scripts.singleton import Singleton
 
 logger = Logger.instance()
 

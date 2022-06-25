@@ -1,14 +1,12 @@
 import platform
-
 from shutil import which
+
 from scripts import admin
-from scripts.singleton import Singleton
 from scripts.logger import Logger
 
 logger = Logger.instance()
 
 
-@Singleton
 class SystemChecker:
     # Required dependencies
     REQUIRED_DEPENDENCIES = [
