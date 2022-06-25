@@ -10,7 +10,7 @@ logger = Logger.instance()
 
 
 class CmderConfigurator(Configurator):
-    REG_PATHS = {
+    REGEDIT_PATHS = {
         "left_panel_directory": r"HKEY_CLASSES_ROOT\Directory\Background\shell\cmder",
         "right_panel_directory": r"HKEY_CLASSES_ROOT\Directory\shell\cmder",
     }
