@@ -1,7 +1,9 @@
 import re
 import subprocess
 
+from scripts.command_generator import CommandGenerator
 from scripts.logger import Logger
+from scripts.parsers.argument_parser import ArgumentParser
 from scripts.parsers.config_parser import ConfigParser
 from scripts.singleton import Singleton
 
@@ -19,7 +21,13 @@ class SoftwareInstaller:
             logger.info("Refreshing installed software cache!")
 
         # Remove first and last line of choco list output, to only get software names
-        software_list = subprocess.check_output('choco list --local', stderr=subprocess.STDOUT).splitlines()
+        command = CommandGenerator() \
+            .choco() \
+            .list() \
+            .parameters("--local") \
+            .get(len(self.installed_software) > 0)
+
+        software_list = subprocess.check_output(command, stderr=subprocess.STDOUT).splitlines()
         software_list = software_list[1:-1]
 
         # Fetch name out of the acquired string, looking like for example: 'python 3.9.0'
@@ -39,20 +47,26 @@ class SoftwareInstaller:
 
     def install(self, software, params):
         if self.is_installed(software):
-            logger.info(f"Skipping {software} since it is installed already.")
-            return
+            if ArgumentParser.instance().get_argument_value("reinstall"):
+                self.uninstall(software)
+            else:
+                logger.info(f"Skipping {software} since it is installed already.")
+                return
 
         logger.info(f"Installing {software}...")
 
-        command = f"choco install -r -y {software}.install"
+        command = CommandGenerator() \
+            .choco() \
+            .install() \
+            .parameters("--no-progress", "-r", "-y", software)
 
         if params:
-            command += f" --params '{' '.join(params)}'"
+            command = command.parameters("--params", ' '.join(params))
 
         if logger.is_debug():
-            output = subprocess.run(command, capture_output=True).stdout
+            output = subprocess.run(command.get(), capture_output=True).stdout
         else:
-            output = subprocess.check_output(command)
+            output = subprocess.check_output(command.get())
 
         output_list = output.decode().splitlines()
         is_installed = False
@@ -76,3 +90,19 @@ class SoftwareInstaller:
 
         logger.info(f"Successfully installed {software} to {software_path}!")
         self.refresh_installed_software_cache()
+
+    def uninstall(self, software):
+        logger.info(f"Uninstalling {software} for reinstallation...")
+
+        command = CommandGenerator() \
+            .choco() \
+            .uninstall() \
+            .parameters("-y", software) \
+            .get()
+
+        if logger.is_debug():
+            subprocess.run(command)
+        else:
+            subprocess.check_output(command)
+
+        logger.info(f"Uninstalled {software} successfully.")

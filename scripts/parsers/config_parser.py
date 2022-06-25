@@ -1,7 +1,7 @@
 import configparser
 
-from scripts.singleton import Singleton
 from scripts.logger import Logger
+from scripts.singleton import Singleton
 
 logger = Logger.instance()
 
@@ -15,6 +15,6 @@ class ConfigParser(configparser.ConfigParser):
         self.optionxform = str
 
     def parse(self):
-        logger.debug(f"Parsing default configuration: {DEFAULT_CONFIG}")
+        logger.info(f"Parsing default configuration: {DEFAULT_CONFIG}")
         self.read(DEFAULT_CONFIG)
-        logger.debug(f"Parsing default configuration was successful.")
+        logger.info(f"Parsing default configuration was successful.")

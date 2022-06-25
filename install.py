@@ -23,7 +23,6 @@ TODO:
         - Load default configuration with settings for ultimate version (Like key bindings and so)
 """
 
-
 if __name__ == "__main__":
     Checker.instance().register(SystemChecker)
 
