@@ -49,8 +49,8 @@ if %ERRORLEVEL% NEQ 0 (
 
 :: Check if git repo is checked out here already
 if not exist Automation\ (
-	@SET remote_url_in_folder=hi
-	FOR /F %%I IN ('git config --get remote.origin.url') DO @SET "remote_url_in_folder=%%I"
+	@SET remote_url_in_folder=
+	FOR /F "tokens=*" %%a in ('git config --get remote.origin.url') do SET remote_url_in_folder=%%a
 	
 	if "%remote_url_in_folder%"=="%GIT_REMOTE_URL%" (
 		goto skipFetchingGitRepository
