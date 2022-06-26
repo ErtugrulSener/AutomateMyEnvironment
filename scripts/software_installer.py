@@ -62,40 +62,54 @@ class SoftwareInstaller:
         command = CommandGenerator() \
             .choco() \
             .install() \
-            .parameters("--no-progress", "-r", "-y", software)
+            .parameters("--no-progress", "--limit-output", "--confirm", software)
 
         if params:
             command = command.parameters("--params", ' '.join(params))
 
+        output = ""
         if logger.is_debug():
-            output = subprocess.run(command.get(), capture_output=True).stdout
+            with subprocess.Popen(command.get(), stdout=subprocess.PIPE, bufsize=1, universal_newlines=True) as p:
+                for line in p.stdout:
+                    output += line
+                    print(line, end='')
+
+            if p.returncode != 0:
+                raise subprocess.CalledProcessError(p.returncode, p.args)
         else:
-            output = subprocess.check_output(command.get())
+            output = subprocess.check_output(command.get(), text=True)
 
-        output_list = output.decode().splitlines()
-        is_installed = False
+        output_list = output.splitlines()
+        software_path = None
 
-        for line in output_list:
-            matcherForExe = re.match("^.*Software installed to '(.*)'.*$", line)
-            matcherForMsi = "Software installed as 'msi', install location is likely default." in line
+        for line_index, line in enumerate(output_list):
+            matcher_exact = re.match("^.*Software installed to '(.*)'.*$", line)
+            matcher_default_directory = "install location is likely default." in line
 
-            if matcherForExe:
-                software_path = matcherForExe.group(1)
-                is_installed = True
+            if matcher_exact:
+                software_path = matcher_exact.group(1)
                 break
-            elif matcherForMsi:
+            elif matcher_default_directory:
+                # Search in default installation paths first
                 for key in [RegeditPath.DEFAULT_INSTALLATION_PATH, RegeditPath.DEFAULT_INSTALLATION_PATH_x86]:
                     with WinRegistry() as client:
                         entry = client.read_entry(*RegeditManager.instance().get(key))
 
                         if entry and os.path.exists(os.path.join(entry.value, software)):
                             software_path = os.path.join(entry.value, software)
-                            is_installed = True
                             break
 
-                break
+                # Reverse search via uninstall directory in registry
+                """with WinRegistry() as client:
+                    entry = client.read_entry(
+                        *RegeditManager.instance().get(RegeditPath.DEFAULT_UNINSTALLATION_PATH, software))
 
-        if not is_installed:
+                    if entry and os.path.exists(os.path.join(entry.value, software)):
+                        software_path = os.path.join(entry.value, software)
+                        is_installed = True
+                        break"""
+
+        if not software_path:
             logger.error(f"Failed to install {software} with output:")
 
             for line in output_list:
@@ -107,13 +121,14 @@ class SoftwareInstaller:
         logger.info(f"Successfully installed {software} to {software_path}!")
         self.refresh_installed_software_cache()
 
-    def uninstall(self, software):
-        logger.info(f"Uninstalling {software} for reinstallation...")
+    @staticmethod
+    def uninstall(software):
+        logger.info(f"Uninstalling {software} for re-installation...")
 
         command = CommandGenerator() \
             .choco() \
             .uninstall() \
-            .parameters("-x", "-y", software) \
+            .parameters("--remove-dependencies", "--limit-output", "--confirm", software) \
             .get()
 
         if logger.is_debug():

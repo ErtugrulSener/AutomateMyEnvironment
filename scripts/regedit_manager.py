@@ -9,17 +9,28 @@ logger = Logger.instance()
 class RegeditPath(Enum):
     DEFAULT_INSTALLATION_PATH = [
         r"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion",
-        "ProgramFilesDir",
+        "ProgramFilesDir"
     ]
 
-    DEFAULT_INSTALLATION_PATH_x86 = {
+    DEFAULT_INSTALLATION_PATH_x86 = [
         r"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion",
-        "ProgramFilesDir (x86)",
-    }
+        "ProgramFilesDir (x86)"
+    ]
+
+    DEFAULT_UNINSTALLATION_PATH = [
+        r"HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{}",
+        "InstallLocation"
+    ]
 
 
 @Singleton
 class RegeditManager:
-    def get(self, key):
-        logger.debug(f"Fetching regedit key {key}")
-        return RegeditPath(key).value
+    @staticmethod
+    def get(key, *args):
+        path, value = RegeditPath(key).value
+
+        if args:
+            path = path.format(*args)
+
+        logger.debug(f"Reading value {value} in path {path} by key {key}")
+        return path, value

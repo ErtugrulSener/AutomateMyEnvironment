@@ -17,7 +17,7 @@ class ArgumentParser(argparse.ArgumentParser):
                           help='Specify the log level, possible values are: {}'.format(
                               ', '.join(logger.get_level_name_list())))
         self.add_argument("--reinstall", required=False,
-                          help='If specified, will uninstall installed software for reinstallation.',
+                          help='If specified, will uninstall installed software for re-installation.',
                           action='store_true')
 
         args = self.parse_args()
