@@ -1,13 +1,8 @@
 @echo off
-
 @clear
 
 :: Variables
 set GIT_REMOTE_URL=https://github.com/ErtugrulSener/Automation.git
-
-:: cd to the directory the script is in
-@cd %~dp0
-
 
 
 :: Check for python 3 installation on system
@@ -48,18 +43,13 @@ if %ERRORLEVEL% NEQ 0 (
 
 
 :: Check if git repo is checked out here already
-if not exist Automation\ (
-	@SET remote_url_in_folder=
-	FOR /F "tokens=*" %%a in ('git config --get remote.origin.url') do SET remote_url_in_folder=%%a
-	
-	if "%remote_url_in_folder%"=="%GIT_REMOTE_URL%" (
-		goto skipFetchingGitRepository
-	) else (
-		goto fetchGitRepository
-	)
-) else (
-	@cd Automation
+@SET remote_url_in_folder=
+FOR /F "tokens=*" %%a in ('git config --get remote.origin.url') do SET remote_url_in_folder=%%a
+
+if "%remote_url_in_folder%"=="%GIT_REMOTE_URL%" (
 	goto skipFetchingGitRepository
+) else (
+	goto fetchGitRepository
 )
 
 :fetchGitRepository:
