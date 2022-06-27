@@ -59,13 +59,17 @@ class SoftwareInstaller:
 
         logger.info(f"Installing {software}...")
 
+        default_software_path = os.path.join(ConfigParser.instance().get("INSTALL", "path"), software)
         command = CommandGenerator() \
             .choco() \
             .install() \
-            .parameters("--no-progress", "--limit-output", "--confirm", software)
+            .parameters("--no-progress", "--limit-output", "--confirm",
+                        f"--install-directory '{default_software_path}'", software)
+
+        # .parameters("--no-progress", "--limit-output", "--confirm", software)
 
         if params:
-            command = command.parameters("--params", ' '.join(params))
+            command = command.parameters(' '.join(params))
 
         output = ""
         if logger.is_debug():
