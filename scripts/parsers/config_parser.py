@@ -11,7 +11,7 @@ DEFAULT_CONFIG = "config.ini"
 @Singleton
 class ConfigParser(configparser.ConfigParser):
     def __init__(self):
-        configparser.ConfigParser.__init__(self)
+        configparser.ConfigParser.__init__(self, interpolation=configparser.ExtendedInterpolation())
         self.optionxform = str
 
     def parse(self):
