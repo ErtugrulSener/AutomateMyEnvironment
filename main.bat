@@ -60,4 +60,22 @@ if "%remote_url_in_folder%"=="%GIT_REMOTE_URL%" (
 :skipFetchingGitRepository
 
 
+
+:: Check if requirements for python script are installed
+@python -c "import pkg_resources; pkg_resources.require(open('requirements.txt',mode='r'))" 2> nul
+
+if %ERRORLEVEL% NEQ 0 (
+	goto installPythonDependencies
+) else (
+	goto skipInstallingPythonDependencies
+)
+
+:installPythonDependencies:
+	echo Installing python dependencies since they're missing
+	@pip install --ignore-installed -r requirements.txt
+	@cls
+
+:skipInstallingPythonDependencies
+
+
 python install.py %*
