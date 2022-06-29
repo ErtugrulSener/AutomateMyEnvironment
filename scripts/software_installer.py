@@ -63,25 +63,49 @@ class SoftwareInstaller:
         command = CommandGenerator() \
             .choco() \
             .install() \
-            .parameters("--no-progress", "--limit-output", "--confirm",
-                        f"--install-directory '{default_software_path}'", software)
+            .parameters("--no-progress", "--limit-output", "--confirm", software)
 
-        # .parameters("--no-progress", "--limit-output", "--confirm", software)
+        use_auto_installer = True
+        override_program_files_directories = False
+
+        old_program_files_directory = os.environ['PROGRAMFILES']
 
         if params:
-            command = command.parameters(' '.join(params))
+            if "--install-arguments" in params:
+                use_auto_installer = False
+
+            if "--override-program-files-directories" in params:
+                override_program_files_directories = True
+                params = params.replace("--override-program-files-directories", "")
+
+            if len(params) > 0:
+                command = command.parameters(params)
+
+        if override_program_files_directories:
+            with WinRegistry() as client:
+                path, key_name = RegeditManager.instance().get(RegeditPath.PROGRAM_FILES_PATH)
+                client.write_entry(path, key_name, r"C:\Software")
+
+        if use_auto_installer:
+            command = command.parameters(f"--install-directory '{default_software_path}'")
 
         output = ""
         if logger.is_debug():
-            with subprocess.Popen(command.get(), stdout=subprocess.PIPE, bufsize=1, universal_newlines=True) as p:
+            with subprocess.Popen(command.get(), stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+                                  bufsize=1, universal_newlines=True, shell=True) as p:
                 for line in p.stdout:
-                    output += line
                     print(line, end='')
+                    output += line
 
             if p.returncode != 0:
                 raise subprocess.CalledProcessError(p.returncode, p.args)
         else:
-            output = subprocess.check_output(command.get(), text=True)
+            output = subprocess.check_output(command.get(), text=True, stderr=subprocess.STDOUT)
+
+        if override_program_files_directories:
+            with WinRegistry() as client:
+                path, key_name = RegeditManager.instance().get(RegeditPath.PROGRAM_FILES_PATH)
+                client.write_entry(path, key_name, old_program_files_directory)
 
         output_list = output.splitlines()
         software_path = None

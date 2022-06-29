@@ -7,6 +7,11 @@ logger = Logger.instance()
 
 
 class RegeditPath(Enum):
+    PROGRAM_FILES_PATH = [
+        r"HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Environment",
+        "ProgramFiles"
+    ]
+
     DEFAULT_INSTALLATION_PATH = [
         r"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion",
         "ProgramFilesDir"
