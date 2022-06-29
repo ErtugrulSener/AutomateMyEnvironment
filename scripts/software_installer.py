@@ -68,7 +68,7 @@ class SoftwareInstaller:
         use_auto_installer = True
         override_program_files_directories = False
 
-        old_program_files_directory = os.environ['PROGRAMFILES']
+        default_program_files_directory = r"C:\Program Files"
 
         if params:
             if "--install-arguments" in params:
@@ -86,7 +86,7 @@ class SoftwareInstaller:
                 path, key_name = RegeditManager.instance().get(RegeditPath.PROGRAM_FILES_PATH)
                 client.write_entry(path, key_name, r"C:\Software")
 
-        if use_auto_installer:
+        elif use_auto_installer:
             command = command.parameters(f"--install-directory '{default_software_path}'")
 
         output = ""
@@ -105,7 +105,7 @@ class SoftwareInstaller:
         if override_program_files_directories:
             with WinRegistry() as client:
                 path, key_name = RegeditManager.instance().get(RegeditPath.PROGRAM_FILES_PATH)
-                client.write_entry(path, key_name, old_program_files_directory)
+                client.write_entry(path, key_name, default_program_files_directory)
 
         output_list = output.splitlines()
         software_path = None
