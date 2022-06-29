@@ -1,5 +1,5 @@
 @echo off
-@clear
+@cls
 
 :: Variables
 set GIT_REMOTE_URL=https://github.com/ErtugrulSener/Automation.git
