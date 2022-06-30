@@ -44,7 +44,7 @@ class GitConfigurator(Configurator):
     def all_set_already(self):
         for key, value in ConfigParser.instance().items("GIT"):
             if not self.is_config_set(key):
-                return False;
+                return False
 
         return True
 
