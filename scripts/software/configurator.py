@@ -7,6 +7,8 @@ logger = Logger.instance()
 
 class Configurator:
     def __init__(self, name):
+        self.name = None
+
         self.set_name(name)
 
     """ The self set naming convention for new configurator files to append is: <software>_configurator.py
@@ -22,4 +24,7 @@ class Configurator:
         return self.name
 
     def info(self, text):
-        logger.info(f"<{self.get_name()}>: {text}")
+        logger.info(f"<{self.name}>: {text}")
+
+    def skip(self):
+        logger.info(f"{self.name.capitalize()} is configured properly, skipping...")

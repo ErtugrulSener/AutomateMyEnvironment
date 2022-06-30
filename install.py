@@ -3,6 +3,8 @@ from scripts.checkers.system_checker import SystemChecker
 from scripts.logger import Logger
 from scripts.parsers.argument_parser import ArgumentParser
 from scripts.parsers.config_parser import ConfigParser
+from scripts.software.configurators.git_configurator import GitConfigurator
+from scripts.software_configurator import SoftwareConfigurator
 from scripts.software_installer import SoftwareInstaller
 
 logger = Logger.instance()
@@ -23,11 +25,12 @@ TODO:
         - Load default configuration with settings for ultimate version (Like key bindings and so)
 """
 
+
 if __name__ == "__main__":
     Checker.instance().register(SystemChecker)
 
     ConfigParser.instance().parse()
     ArgumentParser.instance().parse()
-    SoftwareInstaller.instance().start_installing()
+    SoftwareInstaller.instance().start()
 
-    # SoftwareConfigurator.instance().configure(CmderConfigurator)
+    SoftwareConfigurator.instance().configure(GitConfigurator)

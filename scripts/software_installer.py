@@ -4,6 +4,7 @@ import subprocess
 
 from winregistry import WinRegistry
 
+from scripts.command_executor import CommandExecutor
 from scripts.command_generator import CommandGenerator
 from scripts.logger import Logger
 from scripts.parsers.argument_parser import ArgumentParser
@@ -37,7 +38,7 @@ class SoftwareInstaller:
         # Fetch name out of the acquired string, looking like for example: 'python 3.9.0'
         self.installed_software = [software.decode().split(" ")[0] for software in software_list]
 
-    def start_installing(self):
+    def start(self):
         logger.info("Starting installation process...")
 
         for name, parameters in ConfigParser.instance().items("SOFTWARE_LIST"):
@@ -89,18 +90,7 @@ class SoftwareInstaller:
         elif use_auto_installer:
             command = command.parameters(f"--install-directory '{default_software_path}'")
 
-        output = ""
-        if logger.is_debug():
-            with subprocess.Popen(command.get(), stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
-                                  bufsize=1, universal_newlines=True, shell=True) as p:
-                for line in p.stdout:
-                    print(line, end='')
-                    output += line
-
-            if p.returncode != 0:
-                raise subprocess.CalledProcessError(p.returncode, p.args)
-        else:
-            output = subprocess.check_output(command.get(), text=True, stderr=subprocess.STDOUT)
+        output = CommandExecutor.instance().get_output(command)
 
         if override_program_files_directories:
             with WinRegistry() as client:

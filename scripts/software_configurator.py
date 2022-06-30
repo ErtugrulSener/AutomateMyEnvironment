@@ -14,5 +14,5 @@ class SoftwareConfigurator:
         if instance not in self.configurators:
             self.configurators.append(instance)
 
-        logger.info(f"Configuring {instance.get_name()} now.")
+        logger.info(f"Configuring {instance.get_name()} now")
         instance.configure()

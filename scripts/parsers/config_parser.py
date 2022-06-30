@@ -17,4 +17,4 @@ class ConfigParser(configparser.ConfigParser):
     def parse(self):
         logger.info(f"Parsing default configuration: {DEFAULT_CONFIG}")
         self.read(DEFAULT_CONFIG)
-        logger.info(f"Parsing default configuration was successful.")
+        logger.info(f"Parsing default configuration was successful")
