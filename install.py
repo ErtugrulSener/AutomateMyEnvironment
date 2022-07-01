@@ -4,6 +4,7 @@ from scripts.logger import Logger
 from scripts.parsers.argument_parser import ArgumentParser
 from scripts.parsers.config_parser import ConfigParser
 from scripts.software.configurators.git_configurator import GitConfigurator
+from scripts.software.configurators.windows_services_configurator import WindowsServicesConfigurator
 from scripts.software_configurator import SoftwareConfigurator
 from scripts.software_installer import SoftwareInstaller
 
@@ -33,4 +34,5 @@ if __name__ == "__main__":
     ArgumentParser.instance().parse()
     SoftwareInstaller.instance().start()
 
+    SoftwareConfigurator.instance().configure(WindowsServicesConfigurator)
     SoftwareConfigurator.instance().configure(GitConfigurator)

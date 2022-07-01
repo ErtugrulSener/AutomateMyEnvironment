@@ -16,11 +16,9 @@ logger = Logger.instance()
 class GitConfigurator(Configurator):
     def __init__(self):
         super().__init__(__file__)
+
         self.global_config = []
         self.global_config_path = os.path.join(str(Path.home()), ".gitconfig")
-
-        self.parse_global_config()
-        self.is_config_set("core.sshcommand")
 
     def parse_global_config(self):
         command = CommandGenerator() \
@@ -28,7 +26,7 @@ class GitConfigurator(Configurator):
             .config() \
             .parameters("--global", "--list")
 
-        output = CommandExecutor.instance().get_output(command)
+        output = CommandExecutor().get_output(command)
 
         for line in output.splitlines():
             key, value = line.split("=")
@@ -49,6 +47,8 @@ class GitConfigurator(Configurator):
         return True
 
     def configure(self):
+        self.parse_global_config()
+
         if self.all_set_already():
             self.skip()
             return

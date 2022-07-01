@@ -90,7 +90,7 @@ class SoftwareInstaller:
         elif use_auto_installer:
             command = command.parameters(f"--install-directory '{default_software_path}'")
 
-        output = CommandExecutor.instance().get_output(command)
+        output = CommandExecutor().get_output(command)
 
         if override_program_files_directories:
             with WinRegistry() as client:
