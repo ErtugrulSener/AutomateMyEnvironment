@@ -10,7 +10,7 @@ logger = Logger.instance()
 class SystemChecker:
     # Required dependencies
     REQUIRED_DEPENDENCIES = [
-        "choco",
+        "scoop",
     ]
 
     @staticmethod

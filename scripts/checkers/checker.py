@@ -1,11 +1,5 @@
 from scripts.singleton import Singleton
 
-# Required dependencies
-REQUIRED_DEPENDENCIES = [
-    "choco",
-]
-
-
 @Singleton
 class Checker:
     checkers = []

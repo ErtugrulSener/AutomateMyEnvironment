@@ -1,15 +1,11 @@
-import os.path
 import re
 import subprocess
-
-from winregistry import WinRegistry
 
 from scripts.command_executor import CommandExecutor
 from scripts.command_generator import CommandGenerator
 from scripts.logger import Logger
 from scripts.parsers.argument_parser import ArgumentParser
 from scripts.parsers.config_parser import ConfigParser
-from scripts.regedit_manager import RegeditManager, RegeditPath
 from scripts.singleton import Singleton
 
 logger = Logger.instance()
@@ -25,18 +21,22 @@ class SoftwareInstaller:
         if self.installed_software:
             logger.info("Refreshing installed software cache!")
 
-        # Remove first and last line of choco list output, to only get software names
+        # Remove first and last line of output, to only get software names
         command = CommandGenerator() \
-            .choco() \
+            .scoop() \
             .list() \
-            .parameters("--local") \
             .get(len(self.installed_software) > 0)
 
-        software_list = subprocess.check_output(command, stderr=subprocess.STDOUT).splitlines()
-        software_list = software_list[1:-1]
+        output = subprocess.check_output(command, stderr=subprocess.STDOUT, text=True, shell=True).splitlines()
+        output = output[4:-2]
 
         # Fetch name out of the acquired string, looking like for example: 'python 3.9.0'
-        self.installed_software = [software.decode().split(" ")[0] for software in software_list]
+        for line in output:
+            match = re.match(r"(\S+)\s+(\S+)\s+.*", line)
+
+            if match:
+                software_name = match.group(1)
+                self.installed_software.append(software_name)
 
     def start(self):
         logger.info("Starting installation process...")
@@ -60,83 +60,14 @@ class SoftwareInstaller:
 
         logger.info(f"Installing {software}...")
 
-        default_software_path = os.path.join(ConfigParser.instance().get("INSTALL", "path"), software)
         command = CommandGenerator() \
-            .choco() \
+            .scoop() \
             .install() \
-            .parameters("--no-progress", "--limit-output", "--confirm", software)
+            .parameters("--global", software)
 
-        use_auto_installer = True
-        override_program_files_directories = False
+        CommandExecutor().get_output(command)
 
-        default_program_files_directory = r"C:\Program Files"
-
-        if params:
-            if "--install-arguments" in params:
-                use_auto_installer = False
-
-            if "--override-program-files-directories" in params:
-                override_program_files_directories = True
-                params = params.replace("--override-program-files-directories", "")
-
-            if len(params) > 0:
-                command = command.parameters(params)
-
-        if override_program_files_directories:
-            with WinRegistry() as client:
-                path, key_name = RegeditManager.instance().get(RegeditPath.PROGRAM_FILES_PATH)
-                client.write_entry(path, key_name, r"C:\Software")
-
-        elif use_auto_installer:
-            command = command.parameters(f"--install-directory '{default_software_path}'")
-
-        output = CommandExecutor().get_output(command)
-
-        if override_program_files_directories:
-            with WinRegistry() as client:
-                path, key_name = RegeditManager.instance().get(RegeditPath.PROGRAM_FILES_PATH)
-                client.write_entry(path, key_name, default_program_files_directory)
-
-        output_list = output.splitlines()
-        software_path = None
-
-        for line_index, line in enumerate(output_list):
-            matcher_exact = re.match("^.*Software installed to '(.*)'.*$", line)
-            matcher_default_directory = "install location is likely default." in line
-
-            if matcher_exact:
-                software_path = matcher_exact.group(1)
-                break
-            elif matcher_default_directory:
-                # Search in default installation paths first
-                for key in [RegeditPath.DEFAULT_INSTALLATION_PATH, RegeditPath.DEFAULT_INSTALLATION_PATH_x86]:
-                    with WinRegistry() as client:
-                        entry = client.read_entry(*RegeditManager.instance().get(key))
-
-                        if entry and os.path.exists(os.path.join(entry.value, software)):
-                            software_path = os.path.join(entry.value, software)
-                            break
-
-                # Reverse search via uninstall directory in registry
-                """with WinRegistry() as client:
-                    entry = client.read_entry(
-                        *RegeditManager.instance().get(RegeditPath.DEFAULT_UNINSTALLATION_PATH, software))
-
-                    if entry and os.path.exists(os.path.join(entry.value, software)):
-                        software_path = os.path.join(entry.value, software)
-                        is_installed = True
-                        break"""
-
-        if not software_path:
-            logger.error(f"Failed to install {software} with output:")
-
-            for line in output_list:
-                print(line)
-
-            exit(4)
-            return
-
-        logger.info(f"Successfully installed {software} to {software_path}!")
+        logger.info(f"Successfully installed {software}!")
         self.refresh_installed_software_cache()
 
     @staticmethod
@@ -144,14 +75,14 @@ class SoftwareInstaller:
         logger.info(f"Uninstalling {software} for re-installation...")
 
         command = CommandGenerator() \
-            .choco() \
+            .scoop() \
             .uninstall() \
-            .parameters("--remove-dependencies", "--limit-output", "--confirm", software) \
+            .parameters("--global", software) \
             .get()
 
         if logger.is_debug():
-            subprocess.run(command)
+            subprocess.run(command, shell=True)
         else:
-            subprocess.check_output(command)
+            subprocess.check_output(command, shell=True)
 
         logger.info(f"Uninstalled {software} successfully.")

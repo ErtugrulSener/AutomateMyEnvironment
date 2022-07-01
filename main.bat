@@ -5,40 +5,66 @@
 set GIT_REMOTE_URL=https://github.com/ErtugrulSener/Automation.git
 
 
-:: Check for python 3 installation on system
-python --version 3 > nul
+:: Check for scoop installation on system
+@call scoop >NUL 2>&1
 
 if %ERRORLEVEL% NEQ 0 (
-	goto installPythonViaChocolatey
+	goto installScoop
 ) else (
-	goto skipPythonInstallation
+	goto skipScoopInstallation
 )
 
-:installPythonViaChocolatey:
-	echo Installing chocolatey windows package manager
-	@"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command "iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))" && SET "PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin"
-	
-	echo Installing Python3 since it's missing
-	@choco install -y python3
+:installScoop
+	echo Setting global environments parameters
+	@setx SCOOP_GLOBAL "C:\Software" /M
 
-:skipPythonInstallation
+	echo Installing scoop windows package manager
+	@powershell -File .\install_scoop.ps1
 
+	echo Refreshing environment to make scoop available instantly
+	@call refreshenv
+
+:skipScoopInstallation
 
 
 :: Check for git installation on system
-git --version > nul
+@call git --version >NUL 2>&1
 
 if %ERRORLEVEL% NEQ 0 (
-	goto installGit
+	goto installGitViaScoop
 ) else (
 	goto skipGitInstallation
 )
 
-:installGit:
-	echo Installing Git since it's missing
-	@choco install -y git
+:installGitViaScoop
+	echo Installing Git since it's needed to install buckets
+	@call scoop install -g git >NUL 2>&1
 
 :skipGitInstallation
+
+
+@call scoop bucket add extras >NUL 2>&1
+@call scoop bucket add java >NUL 2>&1
+
+
+
+:: Check for python 3 installation on system
+@call python --version 3 >NUL 2>&1
+
+if %ERRORLEVEL% NEQ 0 (
+	goto installPythonViaScoop
+) else (
+	goto skipPythonInstallation
+)
+
+:installPythonViaScoop:
+	echo Installing Python3 since it's missing
+	@call scoop install -g python >NUL 2>&1
+
+	echo Refreshing environment to make python available instantly
+	@call refreshenv
+
+:skipPythonInstallation
 
 
 
@@ -62,7 +88,7 @@ if "%remote_url_in_folder%"=="%GIT_REMOTE_URL%" (
 
 
 :: Check if requirements for python script are installed
-@python -c "import pkg_resources; pkg_resources.require(open('requirements.txt',mode='r'))" 2> nul
+@call python -c "import pkg_resources; pkg_resources.require(open('requirements.txt',mode='r'))" >NUL 2>&1
 
 if %ERRORLEVEL% NEQ 0 (
 	goto installPythonDependencies
@@ -73,9 +99,9 @@ if %ERRORLEVEL% NEQ 0 (
 :installPythonDependencies:
 	echo Installing python dependencies since they're missing
 	@pip install --ignore-installed -r requirements.txt
-	@cls
 
 :skipInstallingPythonDependencies
 
 
+@cls
 python install.py %*

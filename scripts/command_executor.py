@@ -8,11 +8,15 @@ logger = Logger.instance()
 
 
 class CommandExecutor:
-    def __init__(self, is_powershell_command=False, print_to_console=True):
+    def __init__(self,
+                 execute_in_shell=True,
+                 is_powershell_command=False,
+                 print_to_console=True):
+        self.execute_in_shell = execute_in_shell
         self.is_powershell_command = is_powershell_command
         self.print_to_console = print_to_console
 
-    def get_output(self, command, print_to_console=True, timeout=5):
+    def get_output(self, command, timeout=5):
         if self.is_powershell_command:
             command = CommandGenerator().powershell() + command
 
@@ -21,7 +25,7 @@ class CommandExecutor:
 
             with subprocess.Popen(command.get(), stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
                                   bufsize=1, universal_newlines=True,
-                                  text=True, encoding="ansi") as p:
+                                  text=True, shell=self.execute_in_shell, encoding="ansi") as p:
                 for line in p.stdout:
                     output += line
 
@@ -36,5 +40,5 @@ class CommandExecutor:
             return output
         else:
             return subprocess.check_output(command.get(),
-                                           text=True, stderr=subprocess.STDOUT,
+                                           text=True, shell=self.execute_in_shell, stderr=subprocess.STDOUT,
                                            encoding="ansi", timeout=timeout)

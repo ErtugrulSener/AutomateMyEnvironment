@@ -28,7 +28,9 @@ class WindowsServicesConfigurator(Configurator):
             .pipe() \
             .ft("-auto")
 
-        output = CommandExecutor(is_powershell_command=True, print_to_console=False).get_output(command)
+        output = CommandExecutor(execute_in_shell=False,
+                                 is_powershell_command=True,
+                                 print_to_console=False).get_output(command)
 
         # Skip the first two lines header
         for line in output.splitlines()[3:]:
