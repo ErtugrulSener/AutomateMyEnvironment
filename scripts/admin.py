@@ -17,6 +17,9 @@ import win32event
 import win32process
 from win32com.shell.shell import ShellExecuteEx
 from win32com.shell import shellcon
+from scripts.logger import Logger
+
+logger = Logger.instance()
 
 
 def is_user_admin():
@@ -26,7 +29,7 @@ def is_user_admin():
             return ctypes.windll.shell32.IsUserAnAdmin()
         except:
             traceback.print_exc()
-            print("Admin check failed, assuming not an admin.")
+            logger.error("Admin check failed, assuming not an admin.")
             return False
     elif os.name == 'posix':
         # Check for root on Posix
