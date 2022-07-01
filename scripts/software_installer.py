@@ -64,7 +64,7 @@ class SoftwareInstaller:
         command = CommandGenerator() \
             .choco() \
             .install() \
-            .parameters("--no-progress", "--limit-output", "--confirm", "--ignore-checksums", software)
+            .parameters("--no-progress", "--limit-output", "--confirm", software)
 
         use_auto_installer = True
         override_program_files_directories = False
