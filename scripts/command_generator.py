@@ -12,6 +12,11 @@ class CommandGenerator:
         self.last_argument = item
         return self
 
+    def __add__(self, other):
+        self.command += other.command
+        self.last_argument = other.last_argument
+        return self
+
     def add_to_command(self, partial_command):
         self.command.append(partial_command)
 
@@ -19,7 +24,9 @@ class CommandGenerator:
         if not self.last_argument:
             return
 
-        if self.last_argument != "parameters":
+        if self.last_argument == "pipe":
+            self.add_to_command("|")
+        elif self.last_argument != "parameters":
             self.add_to_command(self.last_argument)
 
         if args and len(args) > 0:
