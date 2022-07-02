@@ -34,19 +34,12 @@ class Logger(logging.Logger):
         file_handler.setLevel(DEFAULT_LOG_LEVEL)
         self.addHandler(file_handler)
 
-        stream_handler = logging.StreamHandler()
-        stream_handler.setFormatter(formatter)
-        stream_handler.setLevel(DEFAULT_LOG_LEVEL)
-        stream_handler.setStream(sys.stdout)
-        self.addHandler(stream_handler)
-
         # Use coloredlogs to get some pretty log messages
         coloredlogs.install(logger=self, level=logging.getLevelName(DEFAULT_LOG_LEVEL), fmt=FORMAT_STYLE,
                             field_styles=FORMAT_FIELD_STYLES, stream=sys.stdout)
 
-    @staticmethod
-    def set_log_level(level):
-        coloredlogs.set_level(level)
+    def set_log_level(self, level):
+        self.setLevel(level.upper())
 
     @staticmethod
     def get_level_name_list():

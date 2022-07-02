@@ -28,10 +28,10 @@ TODO:
 
 
 if __name__ == "__main__":
-    Checker.instance().register(SystemChecker)
-
-    ConfigParser.instance().parse()
     ArgumentParser.instance().parse()
+
+    Checker.instance().register(SystemChecker)
+    ConfigParser.instance().parse()
     SoftwareInstaller.instance().start()
 
     SoftwareConfigurator.instance().configure(WindowsServicesConfigurator)
