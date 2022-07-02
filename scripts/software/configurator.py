@@ -1,4 +1,5 @@
-from os.path import splitext, basename
+from os.path import basename
+from os.path import splitext
 
 from scripts.logger import Logger
 
@@ -25,6 +26,9 @@ class Configurator:
 
     def info(self, text):
         logger.info(f"<{self.name}>: {text}")
+
+    def debug(self, text):
+        logger.debug(f"<{self.name}>: {text}")
 
     def skip(self):
         logger.info(f"{self.name.capitalize()} is configured properly, skipping...")
