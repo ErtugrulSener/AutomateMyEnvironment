@@ -1,5 +1,6 @@
 import subprocess
-import concurrent.futures
+
+from py_console import console
 
 from scripts.command_generator import CommandGenerator
 from scripts.logger import Logger
@@ -30,7 +31,7 @@ class CommandExecutor:
                     output += line
 
                     if self.print_to_console:
-                        print(line, end='')
+                        console.info(line.rstrip())
 
                 p.wait(timeout)
 

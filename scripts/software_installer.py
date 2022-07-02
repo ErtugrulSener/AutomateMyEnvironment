@@ -1,5 +1,4 @@
 import re
-import subprocess
 
 from scripts.command_executor import CommandExecutor
 from scripts.command_generator import CommandGenerator
