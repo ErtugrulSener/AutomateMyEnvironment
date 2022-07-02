@@ -16,7 +16,7 @@ class CommandExecutor:
         self.is_powershell_command = is_powershell_command
         self.print_to_console = print_to_console
 
-    def get_output(self, command, timeout=5):
+    def execute(self, command, timeout=5):
         if self.is_powershell_command:
             command = CommandGenerator().powershell() + command
 

@@ -26,7 +26,7 @@ class GitConfigurator(Configurator):
             .config() \
             .parameters("--global", "--list")
 
-        output = CommandExecutor().get_output(command)
+        output = CommandExecutor().execute(command)
 
         for line in output.splitlines():
             key, value = line.split("=")
@@ -64,5 +64,4 @@ class GitConfigurator(Configurator):
                     .git() \
                     .config("--global") \
                     .parameters(key, value)
-
-                subprocess.run(command.get())
+                CommandExecutor().execute(command)

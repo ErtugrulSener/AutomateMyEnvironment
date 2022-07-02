@@ -24,10 +24,10 @@ class SoftwareInstaller:
         # Remove first and last line of output, to only get software names
         command = CommandGenerator() \
             .scoop() \
-            .list() \
-            .get(len(self.installed_software) > 0)
+            .list()
 
-        output = subprocess.check_output(command, stderr=subprocess.STDOUT, text=True, shell=True).splitlines()
+        first_time_loading = len(self.installed_software) == 0
+        output = CommandExecutor(print_to_console=not first_time_loading).execute(command).splitlines()
         output = output[4:-2]
 
         # Fetch name out of the acquired string, looking like for example: 'python 3.9.0'
@@ -65,7 +65,7 @@ class SoftwareInstaller:
             .install() \
             .parameters("--global", software)
 
-        CommandExecutor().get_output(command)
+        CommandExecutor().execute(command)
 
         logger.info(f"Successfully installed {software}!")
         self.refresh_installed_software_cache()
@@ -77,12 +77,7 @@ class SoftwareInstaller:
         command = CommandGenerator() \
             .scoop() \
             .uninstall() \
-            .parameters("--global", software) \
-            .get()
-
-        if logger.is_debug():
-            subprocess.run(command, shell=True)
-        else:
-            subprocess.check_output(command, shell=True)
+            .parameters("--global", software)
+        CommandExecutor().execute(command)
 
         logger.info(f"Uninstalled {software} successfully.")
