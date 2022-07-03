@@ -50,14 +50,14 @@ class WindowsServicesConfigurator(Configurator):
             return ServiceStatus(service.State)
 
     def configure_status(self, service, action):
-        for service in self.wmi.Win32_Service(Name=service):
+        for service_operator in self.wmi.Win32_Service(Name=service):
             match action:
                 case ServiceAction.START:
                     if self.is_running(service):
                         self.info(f"{service} is already running, no need to start it")
                         return
 
-                    if service.StartService() == ERROR_SUCCESS:
+                    if service_operator.StartService() == ERROR_SUCCESS:
                         self.info(f"{service} was not running and is started successfully")
 
                 case ServiceAction.STOP:
@@ -65,11 +65,11 @@ class WindowsServicesConfigurator(Configurator):
                         self.info(f"{service} is not running, no need to stop it")
                         return
 
-                    if service.StopService() == ERROR_SUCCESS:
+                    if service_operator.StopService() == ERROR_SUCCESS:
                         self.info(f"{service} was running and is stopped successfully")
 
                 case ServiceAction.RESTART:
-                    if service.RestartService() == ERROR_SUCCESS:
+                    if service_operator.RestartService() == ERROR_SUCCESS:
                         self.info(f"{service} restarted successfully")
 
     def is_running(self, service):
@@ -107,19 +107,21 @@ class WindowsServicesConfigurator(Configurator):
             actual_start_mode = self.get_start_mode(service)
             expected_start_mode = ServiceStartType(start_mode)
 
-            self.debug(
-                f"Service '{service}' -> Start type was '{actual_start_mode.name}', "
-                f"but should be '{expected_start_mode.name}'")
-            self.debug(
-                f"Setting start type to '{expected_start_mode.name}' for service '{service}' now...")
-            self.configure_start_mode(service, start_mode)
+            if actual_start_mode != expected_start_mode:
+                self.debug(
+                    f"Service '{service}' -> Start type was '{actual_start_mode.name}', "
+                    f"but should be '{expected_start_mode.name}'")
+                self.debug(
+                    f"Setting start type to '{expected_start_mode.name}' for service '{service}' now...")
+                self.configure_start_mode(service, start_mode)
 
             # Set status to the expected one for ex. start or stop service
             actual_status = self.get_status(service)
             expected_status = self.get_expected_status_for_action(action)
 
-            self.debug(
-                f"Service '{service}' -> Status was '{actual_status.name}', but should be '{expected_status.name}'")
-            self.debug(
-                f"Performing action '{action.name.lower()}' for service '{service}' now...")
-            self.configure_status(service, action)
+            if actual_status != expected_status:
+                self.debug(
+                    f"Service '{service}' -> Status was '{actual_status.name}', but should be '{expected_status.name}'")
+                self.debug(
+                    f"Performing action '{action.name.lower()}' for service '{service}' now...")
+                self.configure_status(service, action)
