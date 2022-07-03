@@ -16,8 +16,8 @@ class UACConfigurator(Configurator):
         super().__init__(__file__)
 
     def is_configured_already(self):
-        for regedit_key, expected_value in self.EXPECTED_REGEDIT_ENTRIES.items():
-            if RegeditManager.instance().get(regedit_key) != expected_value:
+        for registry_key, expected_value in self.EXPECTED_REGEDIT_ENTRIES.items():
+            if RegeditManager.instance().get(registry_key) != expected_value:
                 return False
 
         return True
@@ -26,5 +26,5 @@ class UACConfigurator(Configurator):
         self.info("Setting UAC level to lowest to suppress the prompts")
 
         # Set UAC level to the lowest by setting the regedit keys
-        for regedit_key, expected_value in self.EXPECTED_REGEDIT_ENTRIES.items():
-            RegeditManager.instance().set(regedit_key, expected_value, winreg.REG_DWORD)
+        for registry_key, expected_value in self.EXPECTED_REGEDIT_ENTRIES.items():
+            RegeditManager.instance().set(registry_key, expected_value, winreg.REG_DWORD)

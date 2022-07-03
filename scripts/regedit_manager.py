@@ -54,24 +54,28 @@ class RegeditPath(Enum):
 @Singleton
 class RegeditManager:
     def get_table(self, key, *args):
-        path, regedit_key = key.value if isinstance(key, RegeditPath) else RegeditPath(key).value
+        path, registry_key = key.value if isinstance(key, RegeditPath) else RegeditPath(key).value
 
         if args:
             path = path.format(*args)
 
-        return path, regedit_key
+        return path, registry_key
 
     def get(self, key):
         with WinRegistry() as client:
-            path, regedit_key = self.get_table(key)
-            return client.read_entry(path, regedit_key).value
+            path, registry_key = self.get_table(key)
+
+            try:
+                return client.read_entry(path, registry_key).value
+            except FileNotFoundError as ex:
+                return None
 
     def set(self, key, value, value_type=winreg.REG_SZ):
         with WinRegistry() as client:
-            path, regedit_key = self.get_table(key)
+            path, registry_key = self.get_table(key)
 
             if self.get(key) == value:
                 return
 
-            logger.info(f"Setting value for regedit key {regedit_key} to {value}")
-            client.write_entry(path, regedit_key, value, value_type)
+            logger.info(f"Setting value for regedit key {registry_key} to {value}")
+            client.write_entry(path, registry_key, value, value_type)
