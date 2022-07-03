@@ -1,19 +1,15 @@
 import argparse
 from enum import Enum
 
-import wmi
 from winerror import ERROR_SUCCESS
+from wmi import WMI
 
-from scripts.logger import Logger
 from scripts.parsers.config_parser import ConfigParser
 from scripts.software.configurator import Configurator
 
-logger = Logger.instance()
-c = wmi.WMI()
-
 
 class ServiceStartType(Enum):
-    AUTOMATIC = "Automatic"
+    AUTO = "Auto"
     MANUAL = "Manual"
     DISABLED = "Disabled"
 
@@ -36,23 +32,25 @@ parser.add_argument('--action')
 
 
 class WindowsServicesConfigurator(Configurator):
+    wmi = WMI()
+
     def __init__(self):
         super().__init__(__file__)
 
     def get_start_mode(self, service):
-        for service in c.Win32_Service(Name=service):
+        for service in self.wmi.Win32_Service(Name=service):
             return ServiceStartType(service.StartMode)
 
     def configure_start_mode(self, service, start_mode):
-        for service in c.Win32_Service(Name=service):
+        for service in self.wmi.Win32_Service(Name=service):
             service.ChangeStartMode(StartMode=start_mode.value)
 
     def get_status(self, service):
-        for service in c.Win32_Service(Name=service):
+        for service in self.wmi.Win32_Service(Name=service):
             return ServiceStatus(service.State)
 
     def configure_status(self, service, action):
-        for service in c.Win32_Service(Name=service):
+        for service in self.wmi.Win32_Service(Name=service):
             match action:
                 case ServiceAction.START:
                     if self.is_running(service):
@@ -83,7 +81,7 @@ class WindowsServicesConfigurator(Configurator):
         elif action == ServiceAction.STOP:
             return ServiceStatus.STOPPED
 
-    def all_set_already(self):
+    def is_configured_already(self):
         for service, arguments in ConfigParser.instance().items("WINDOWS-SERVICES"):
             args = parser.parse_args(arguments.split(" "))
             expected_status = self.get_expected_status_for_action(ServiceAction(args.action))
@@ -98,10 +96,6 @@ class WindowsServicesConfigurator(Configurator):
         return True
 
     def configure(self):
-        if self.all_set_already():
-            self.skip()
-            return
-
         self.info(f"Checking if there are windows services that need to be updated...")
 
         for service, arguments in ConfigParser.instance().items("WINDOWS-SERVICES"):

@@ -15,4 +15,9 @@ class SoftwareConfigurator:
             self.configurators.append(instance)
 
         logger.info(f"Configuring {instance.get_name()} now")
+
+        if instance.is_configured_already():
+            instance.skip()
+            return
+
         instance.configure()

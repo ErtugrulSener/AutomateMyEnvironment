@@ -1,14 +1,12 @@
 import os
-import subprocess
 from itertools import chain
+from pathlib import Path
 
 from scripts.command_executor import CommandExecutor
 from scripts.command_generator import CommandGenerator
+from scripts.logger import Logger
 from scripts.parsers.config_parser import ConfigParser
 from scripts.software.configurator import Configurator
-
-from pathlib import Path
-from scripts.logger import Logger
 
 logger = Logger.instance()
 
@@ -20,13 +18,15 @@ class GitConfigurator(Configurator):
         self.global_config = []
         self.global_config_path = os.path.join(str(Path.home()), ".gitconfig")
 
+        self.parse_global_config()
+
     def parse_global_config(self):
         command = CommandGenerator() \
             .git() \
             .config() \
             .parameters("--global", "--list")
 
-        output = CommandExecutor().execute(command)
+        output = CommandExecutor(print_to_console=len(self.global_config) > 0).execute(command)
 
         for line in output.splitlines():
             key, value = line.split("=")
@@ -39,7 +39,7 @@ class GitConfigurator(Configurator):
 
         return False
 
-    def all_set_already(self):
+    def is_configured_already(self):
         for key, value in ConfigParser.instance().items("GIT"):
             if not self.is_config_set(key):
                 return False
@@ -47,12 +47,6 @@ class GitConfigurator(Configurator):
         return True
 
     def configure(self):
-        self.parse_global_config()
-
-        if self.all_set_already():
-            self.skip()
-            return
-
         logger.info(f"Found global config file in path: {self.global_config_path}")
         logger.info(f"Checking if there are config parameters that need to be updated...")
 
