@@ -50,6 +50,11 @@ class RegeditPath(Enum):
         "DisableAntiSpyware"
     ]
 
+    WINDOWS_DEFENDER_TAMPER_PROTECTION = [
+        r"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Defender\Features",
+        "TamperProtection"
+    ]
+
 
 @Singleton
 class RegeditManager:

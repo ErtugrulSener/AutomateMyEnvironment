@@ -31,12 +31,20 @@ class WindowsDefenderConfigurator(Configurator):
         return True
 
     def configure(self):
+        logger.info("Adding myself as exception, to prevent defender from removing the defender-control tools")
+
+        command = CommandGenerator() \
+            .parameters("Add-MpPreference", "-ExclusionPath", f'"{os.getcwd()}"')
+        CommandExecutor(is_powershell_command=True).execute(command)
+
+        logger.info("Checking if the needed tools need to be downloaded...")
+
         if not os.path.exists(self.DEFENDER_CONTROL_LOCAL_PATH):
             self.debug(f"Created {self.DEFENDER_CONTROL_LOCAL_PATH} folder")
             os.makedirs(self.DEFENDER_CONTROL_LOCAL_PATH)
 
-        if not os.path.exists(self.DEFENDER_CONTROL_LOCAL_PATH) or not os.listdir(self.DEFENDER_CONTROL_LOCAL_PATH):
-            self.info(f"Downloading newest tools to: {self.DEFENDER_CONTROL_LOCAL_PATH}")
+        if not os.path.exists(os.path.join(self.DEFENDER_CONTROL_LOCAL_PATH, "enable-defender.exe")) or \
+                not os.path.exists(os.path.join(self.DEFENDER_CONTROL_LOCAL_PATH, "disable-defender.exe")):
             response = requests.get(url=self.DEFENDER_CONTROL_API_URL).json()
 
             for asset in response["assets"]:
@@ -44,17 +52,12 @@ class WindowsDefenderConfigurator(Configurator):
 
                 command = CommandGenerator() \
                     .wget() \
-                    .parameters("-P", self.DEFENDER_CONTROL_LOCAL_PATH, url)
+                    .parameters("--no-clobber", "-P", self.DEFENDER_CONTROL_LOCAL_PATH, url)
 
                 CommandExecutor().execute(command)
 
-        self.info("Disabling real time monitoring service")
-
-        command = CommandGenerator() \
-            .parameters("Set-MpPreference", "-DisableRealtimeMonitoring", "1")
-        CommandExecutor(is_powershell_command=True).execute(command)
-
         self.info(f"Disabling windows defender completely")
+
         command = CommandGenerator() \
             .parameters(os.path.join(self.DEFENDER_CONTROL_LOCAL_PATH, "disable-defender.exe"), "-s")
         CommandExecutor().execute(command)

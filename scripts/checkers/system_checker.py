@@ -3,6 +3,8 @@ from shutil import which
 
 from scripts import admin
 from scripts.logger import Logger
+from scripts.regedit_manager import RegeditManager
+from scripts.regedit_manager import RegeditPath
 
 logger = Logger.instance()
 
@@ -48,7 +50,15 @@ class SystemChecker:
             logger.error('One or more dependencies are missing, install them to proceed!')
             exit(3)
 
+    def check_for_tamper_protection(self):
+        logger.info('Checking if tamper protection feature of Windows Defender is disabled...')
+
+        if RegeditManager.instance().get(RegeditPath.WINDOWS_DEFENDER_TAMPER_PROTECTION) == 5:
+            logger.error("The tamper protection feature of Windows Defender needs to be disabled!")
+            exit(5)
+
     def check(self):
         self.check_for_admin_rights()
         self.check_if_os_is_suitable()
         self.check_for_required_dependencies()
+        self.check_for_tamper_protection()

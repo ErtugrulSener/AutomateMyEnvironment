@@ -14,10 +14,11 @@ logger = Logger.instance()
 
 """
 Exit codes:
-    1 -> Missing admin rights, you need to run this script as an admin!
+    1 -> Missing admin rights, you need to run this script as an admin.
     2 -> The OS is not suitable, this script is only running under windows for now.
     3 -> You are missing important dependencies to run this script!
-    4 -> Failed to install software
+    4 -> Failed to install software.
+    5 -> Tamper Protection needs to be disabled manually.
 
 TODO:
     Cmder:
