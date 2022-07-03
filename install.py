@@ -5,6 +5,7 @@ from scripts.parsers.argument_parser import ArgumentParser
 from scripts.parsers.config_parser import ConfigParser
 from scripts.software.configurators.git_configurator import GitConfigurator
 from scripts.software.configurators.uac_configurator import UACConfigurator
+from scripts.software.configurators.windows_defender_configurator import WindowsDefenderConfigurator
 from scripts.software.configurators.windows_services_configurator import WindowsServicesConfigurator
 from scripts.software_configurator import SoftwareConfigurator
 from scripts.software_installer import SoftwareInstaller
@@ -37,4 +38,5 @@ if __name__ == "__main__":
 
     SoftwareConfigurator.instance().configure(WindowsServicesConfigurator)
     SoftwareConfigurator.instance().configure(UACConfigurator)
+    SoftwareConfigurator.instance().configure(WindowsDefenderConfigurator)
     SoftwareConfigurator.instance().configure(GitConfigurator)

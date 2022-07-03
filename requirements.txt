@@ -6,3 +6,4 @@ pywin32
 winregistry
 py-console
 WMI
+requests

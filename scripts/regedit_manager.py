@@ -45,6 +45,11 @@ class RegeditPath(Enum):
         "PromptOnSecureDesktop"
     ]
 
+    WINDOWS_DEFENDER_DISABLE_ANTI_SPYWARE = [
+        r"HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender",
+        "DisableAntiSpyware"
+    ]
+
 
 @Singleton
 class RegeditManager:

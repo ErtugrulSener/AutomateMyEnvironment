@@ -17,7 +17,7 @@ class UACConfigurator(Configurator):
 
     def is_configured_already(self):
         for regedit_key, expected_value in self.EXPECTED_REGEDIT_ENTRIES.items():
-            if RegeditManager.instance().get(RegeditPath.UAC_CONSENT_PROMPT_BEHAVIOR_ADMIN) != expected_value:
+            if RegeditManager.instance().get(regedit_key) != expected_value:
                 return False
 
         return True
