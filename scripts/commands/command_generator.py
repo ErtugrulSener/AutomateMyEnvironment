@@ -5,6 +5,9 @@ logger = Logger.instance()
 
 class CommandGenerator:
     def __init__(self):
+        self.command = []
+        self.last_argument = None
+
         self.reset()
 
     def __getattr__(self, item):

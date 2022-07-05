@@ -35,7 +35,7 @@ class WindowsEnergySavingPlanConfigurator(ConfiguratorBase):
             .powercfg() \
             .parameters("/l")
 
-        output = CommandExecutor().execute(command)
+        output = CommandExecutor(print_to_console=logger.is_trace()).execute(command)
 
         for line in output.splitlines()[3:]:
             is_active = line.endswith("*")

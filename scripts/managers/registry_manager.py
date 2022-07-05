@@ -4,8 +4,6 @@ from enum import Enum
 from winregistry import WinRegistry
 
 from scripts.logging.logger import Logger
-
-logger = Logger.instance()
 from scripts.singleton import Singleton
 
 logger = Logger.instance()
@@ -94,7 +92,7 @@ class RegistryManager:
 
             try:
                 return client.read_entry(path, registry_key).value
-            except FileNotFoundError as ex:
+            except FileNotFoundError:
                 return None
 
     def set(self, key, value, value_type=winreg.REG_SZ):

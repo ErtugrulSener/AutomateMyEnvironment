@@ -15,6 +15,7 @@ class Singleton:
     """
 
     def __init__(self, decorated):
+        self._instance = None
         self._decorated = decorated
 
     def instance(self):
@@ -24,15 +25,14 @@ class Singleton:
         On all subsequent calls, the already created instance is returned.
 
         """
-        try:
-            return self._instance
-        except AttributeError:
+
+        if self._instance is None:
             self._instance = self._decorated()
-            return self._instance
+
+        return self._instance
 
     def __call__(self):
         raise TypeError('Singletons must be accessed through `instance()`.')
 
     def __instancecheck__(self, inst):
         return isinstance(inst, self._decorated)
-

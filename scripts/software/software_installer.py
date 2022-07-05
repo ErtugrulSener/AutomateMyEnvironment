@@ -49,7 +49,7 @@ class SoftwareInstaller:
     def get_path(self, software):
         pass
 
-    def install(self, software, params):
+    def install(self, software, parameters):
         if self.is_installed(software):
             if ArgumentParser.instance().get_argument_value("reinstall"):
                 self.uninstall(software)
@@ -63,6 +63,9 @@ class SoftwareInstaller:
             .scoop() \
             .install() \
             .parameters("--global", software)
+
+        if parameters:
+            command = command.paremters(*parameters.split())
 
         CommandExecutor().execute(command)
 
