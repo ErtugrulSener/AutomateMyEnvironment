@@ -8,7 +8,7 @@ from scripts.software.configurators.uac_configurator import UACConfigurator
 from scripts.software.configurators.windows_defender_configurator import WindowsDefenderConfigurator
 from scripts.software.configurators.windows_desktop_configurator import WindowsDesktopConfigurator
 from scripts.software.configurators.windows_services_configurator import WindowsServicesConfigurator
-from scripts.software_configurator import SoftwareConfigurator
+from scripts.software_configurator import Configurator
 from scripts.software_installer import SoftwareInstaller
 
 logger = Logger.instance()
@@ -38,8 +38,8 @@ if __name__ == "__main__":
     ConfigParser.instance().parse()
     SoftwareInstaller.instance().start()
 
-    SoftwareConfigurator.instance().configure(WindowsDesktopConfigurator)
-    SoftwareConfigurator.instance().configure(WindowsServicesConfigurator)
-    SoftwareConfigurator.instance().configure(UACConfigurator)
-    SoftwareConfigurator.instance().configure(WindowsDefenderConfigurator)
-    SoftwareConfigurator.instance().configure(GitConfigurator)
+    Configurator.instance().configure(WindowsDesktopConfigurator)
+    Configurator.instance().configure(WindowsServicesConfigurator)
+    Configurator.instance().configure(UACConfigurator)
+    Configurator.instance().configure(WindowsDefenderConfigurator)
+    Configurator.instance().configure(GitConfigurator)

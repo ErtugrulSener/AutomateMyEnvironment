@@ -5,7 +5,7 @@ from winerror import ERROR_SUCCESS
 from wmi import WMI
 
 from scripts.parsers.config_parser import ConfigParser
-from scripts.software.configurator import Configurator
+from scripts.software.configuratorbase import ConfiguratorBase
 
 
 class ServiceStartType(Enum):
@@ -31,7 +31,7 @@ parser.add_argument('--start-mode')
 parser.add_argument('--action')
 
 
-class WindowsServicesConfigurator(Configurator):
+class WindowsServicesConfigurator(ConfiguratorBase):
     wmi = WMI()
 
     def __init__(self):

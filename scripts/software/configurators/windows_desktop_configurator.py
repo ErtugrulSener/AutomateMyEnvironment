@@ -5,10 +5,10 @@ from ctypes.wintypes import RGB
 
 from scripts.registry_manager import RegistryManager
 from scripts.registry_manager import RegistryPath
-from scripts.software.configurator import Configurator
+from scripts.software.configuratorbase import ConfiguratorBase
 
 
-class WindowsDesktopConfigurator(Configurator):
+class WindowsDesktopConfigurator(ConfiguratorBase):
     COLOR_BACKGROUND = 1
 
     SPI_SETDESKWALLPAPER = 0x14

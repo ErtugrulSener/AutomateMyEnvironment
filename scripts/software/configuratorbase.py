@@ -6,7 +6,7 @@ from scripts.logger import Logger
 logger = Logger.instance()
 
 
-class Configurator:
+class ConfiguratorBase:
     def __init__(self, name):
         self.name = None
 

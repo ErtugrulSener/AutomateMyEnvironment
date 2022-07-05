@@ -2,10 +2,10 @@ import winreg
 
 from scripts.registry_manager import RegistryManager
 from scripts.registry_manager import RegistryPath
-from scripts.software.configurator import Configurator
+from scripts.software.configuratorbase import ConfiguratorBase
 
 
-class UACConfigurator(Configurator):
+class UACConfigurator(ConfiguratorBase):
     EXPECTED_REGISTRY_ENTRIES = {
         RegistryPath.UAC_CONSENT_PROMPT_BEHAVIOR_ADMIN: 0,
         RegistryPath.UAC_ENABLE_LUA: 0,

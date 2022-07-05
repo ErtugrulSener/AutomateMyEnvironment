@@ -7,12 +7,12 @@ from scripts.command_generator import CommandGenerator
 from scripts.logger import Logger
 from scripts.registry_manager import RegistryManager
 from scripts.registry_manager import RegistryPath
-from scripts.software.configurator import Configurator
+from scripts.software.configuratorbase import ConfiguratorBase
 
 logger = Logger.instance()
 
 
-class WindowsDefenderConfigurator(Configurator):
+class WindowsDefenderConfigurator(ConfiguratorBase):
     DEFENDER_CONTROL_LOCAL_PATH = r"external\defender-control"
     DEFENDER_CONTROL_API_URL = "https://api.github.com/repos/qtkite/defender-control/releases/latest"
 

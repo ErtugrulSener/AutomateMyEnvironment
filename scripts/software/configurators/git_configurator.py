@@ -6,12 +6,12 @@ from scripts.command_executor import CommandExecutor
 from scripts.command_generator import CommandGenerator
 from scripts.logger import Logger
 from scripts.parsers.config_parser import ConfigParser
-from scripts.software.configurator import Configurator
+from scripts.software.configuratorbase import ConfiguratorBase
 
 logger = Logger.instance()
 
 
-class GitConfigurator(Configurator):
+class GitConfigurator(ConfiguratorBase):
     def __init__(self):
         super().__init__(__file__)
 

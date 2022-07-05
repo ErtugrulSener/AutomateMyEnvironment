@@ -5,7 +5,7 @@ logger = Logger.instance()
 
 
 @Singleton
-class SoftwareConfigurator:
+class Configurator:
     configurators = []
 
     def configure(self, configurator):

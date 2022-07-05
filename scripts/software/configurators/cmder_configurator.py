@@ -3,13 +3,13 @@ import os
 from winregistry import WinRegistry
 
 from scripts.logger import Logger
-from scripts.software.configurator import Configurator
+from scripts.software.configuratorbase import ConfiguratorBase
 from scripts.software_installer import SoftwareInstaller
 
 logger = Logger.instance()
 
 
-class CmderConfigurator(Configurator):
+class CmderConfigurator(ConfiguratorBase):
     REGISTRY_PATHS = {
         "left_panel_directory": r"HKEY_CLASSES_ROOT\Directory\Background\shell\cmder",
         "right_panel_directory": r"HKEY_CLASSES_ROOT\Directory\shell\cmder",
