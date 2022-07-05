@@ -1,4 +1,4 @@
-from scripts.logger import Logger
+from scripts.logging.logger import Logger
 from scripts.singleton import Singleton
 
 logger = Logger.instance()
@@ -9,7 +9,7 @@ class Configurator:
     configurators = []
 
     def configure(self, configurator):
-        instance = configurator()
+        instance = configurator.instance()
 
         if instance not in self.configurators:
             self.configurators.append(instance)

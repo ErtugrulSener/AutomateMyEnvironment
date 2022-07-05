@@ -3,11 +3,13 @@ from ctypes import byref
 from ctypes import c_int
 from ctypes.wintypes import RGB
 
-from scripts.registry_manager import RegistryManager
-from scripts.registry_manager import RegistryPath
-from scripts.software.configuratorbase import ConfiguratorBase
+from scripts.managers.registry_manager import RegistryManager
+from scripts.managers.registry_manager import RegistryPath
+from scripts.singleton import Singleton
+from scripts.software.configurator_base import ConfiguratorBase
 
 
+@Singleton
 class WindowsDesktopConfigurator(ConfiguratorBase):
     COLOR_BACKGROUND = 1
 

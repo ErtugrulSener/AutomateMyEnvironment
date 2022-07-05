@@ -2,8 +2,8 @@ import subprocess
 
 from py_console import console
 
-from scripts.command_generator import CommandGenerator
-from scripts.logger import Logger
+from scripts.commands.command_generator import CommandGenerator
+from scripts.logging.logger import Logger
 
 logger = Logger.instance()
 

@@ -1,10 +1,12 @@
 import winreg
 
-from scripts.registry_manager import RegistryManager
-from scripts.registry_manager import RegistryPath
-from scripts.software.configuratorbase import ConfiguratorBase
+from scripts.managers.registry_manager import RegistryManager
+from scripts.managers.registry_manager import RegistryPath
+from scripts.singleton import Singleton
+from scripts.software.configurator_base import ConfiguratorBase
 
 
+@Singleton
 class UACConfigurator(ConfiguratorBase):
     EXPECTED_REGISTRY_ENTRIES = {
         RegistryPath.UAC_CONSENT_PROMPT_BEHAVIOR_ADMIN: 0,
@@ -25,6 +27,6 @@ class UACConfigurator(ConfiguratorBase):
     def configure(self):
         self.info("Setting UAC level to lowest to suppress the prompts")
 
-        # Set UAC level to the lowest by setting the registry keys
+        # Set UAC level to the lowest by setting the managers keys
         for registry_key, expected_value in self.EXPECTED_REGISTRY_ENTRIES.items():
             RegistryManager.instance().set(registry_key, expected_value, winreg.REG_DWORD)

@@ -1,8 +1,8 @@
 import re
 
-from scripts.command_executor import CommandExecutor
-from scripts.command_generator import CommandGenerator
-from scripts.logger import Logger
+from scripts.commands.command_executor import CommandExecutor
+from scripts.commands.command_generator import CommandGenerator
+from scripts.logging.logger import Logger
 from scripts.parsers.argument_parser import ArgumentParser
 from scripts.parsers.config_parser import ConfigParser
 from scripts.singleton import Singleton

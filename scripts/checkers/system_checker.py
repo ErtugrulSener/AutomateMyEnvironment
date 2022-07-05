@@ -1,10 +1,10 @@
 import platform
 from shutil import which
 
-from scripts import admin
-from scripts.logger import Logger
-from scripts.registry_manager import RegistryManager
-from scripts.registry_manager import RegistryPath
+from scripts.logging.logger import Logger
+from scripts.managers import admin_manager
+from scripts.managers.registry_manager import RegistryManager
+from scripts.managers.registry_manager import RegistryPath
 
 logger = Logger.instance()
 
@@ -19,7 +19,7 @@ class SystemChecker:
     def check_for_admin_rights():
         logger.info('Checking if script was called as admin (Required)')
 
-        if not admin.is_user_admin():
+        if not admin_manager.is_user_admin():
             logger.error('You need administrator privileges to run this script!')
             exit(1)
 

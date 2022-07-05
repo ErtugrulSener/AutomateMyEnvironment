@@ -2,15 +2,17 @@ import os
 from itertools import chain
 from pathlib import Path
 
-from scripts.command_executor import CommandExecutor
-from scripts.command_generator import CommandGenerator
-from scripts.logger import Logger
+from scripts.commands.command_executor import CommandExecutor
+from scripts.commands.command_generator import CommandGenerator
+from scripts.logging.logger import Logger
 from scripts.parsers.config_parser import ConfigParser
-from scripts.software.configuratorbase import ConfiguratorBase
+from scripts.singleton import Singleton
+from scripts.software.configurator_base import ConfiguratorBase
 
 logger = Logger.instance()
 
 
+@Singleton
 class GitConfigurator(ConfiguratorBase):
     def __init__(self):
         super().__init__(__file__)

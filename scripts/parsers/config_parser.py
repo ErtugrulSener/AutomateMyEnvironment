@@ -1,6 +1,6 @@
 import configparser
 
-from scripts.logger import Logger
+from scripts.logging.logger import Logger
 from scripts.singleton import Singleton
 
 logger = Logger.instance()

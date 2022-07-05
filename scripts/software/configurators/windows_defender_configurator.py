@@ -2,16 +2,18 @@ import os
 
 import requests
 
-from scripts.command_executor import CommandExecutor
-from scripts.command_generator import CommandGenerator
-from scripts.logger import Logger
-from scripts.registry_manager import RegistryManager
-from scripts.registry_manager import RegistryPath
-from scripts.software.configuratorbase import ConfiguratorBase
+from scripts.commands.command_executor import CommandExecutor
+from scripts.commands.command_generator import CommandGenerator
+from scripts.logging.logger import Logger
+from scripts.managers.registry_manager import RegistryManager
+from scripts.managers.registry_manager import RegistryPath
+from scripts.singleton import Singleton
+from scripts.software.configurator_base import ConfiguratorBase
 
 logger = Logger.instance()
 
 
+@Singleton
 class WindowsDefenderConfigurator(ConfiguratorBase):
     DEFENDER_CONTROL_LOCAL_PATH = r"external\defender-control"
     DEFENDER_CONTROL_API_URL = "https://api.github.com/repos/qtkite/defender-control/releases/latest"

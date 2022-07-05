@@ -1,7 +1,7 @@
 from os.path import basename
 from os.path import splitext
 
-from scripts.logger import Logger
+from scripts.logging.logger import Logger
 
 logger = Logger.instance()
 

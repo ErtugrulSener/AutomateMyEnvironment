@@ -6,18 +6,19 @@
 # Released under the same license as Python 2.6.5
 
 
-import sys
+import ctypes
 import os
+import sys
 import traceback
 import types
-import ctypes
 
 import win32con
 import win32event
 import win32process
-from win32com.shell.shell import ShellExecuteEx
 from win32com.shell import shellcon
-from scripts.logger import Logger
+from win32com.shell.shell import ShellExecuteEx
+
+from scripts.logging.logger import Logger
 
 logger = Logger.instance()
 
@@ -38,20 +39,20 @@ def is_user_admin():
         raise RuntimeError("Unsupported operating system for this module: %s" % (os.name,))
 
 
-def runAsAdmin(cmdLine=None, wait=True):
+def run_as_admin(cmd_line=None, wait=True):
     if os.name != 'nt':
         raise RuntimeError("This function is only implemented on Windows.")
 
     python_exe = sys.executable
 
-    if cmdLine is None:
-        cmdLine = [python_exe] + sys.argv
-    elif type(cmdLine) not in (types.TupleType, types.ListType):
+    if cmd_line is None:
+        cmd_line = [python_exe] + sys.argv
+    elif type(cmd_line) not in (types.TupleType, types.ListType):
         raise ValueError("cmdLine is not a sequence.")
 
-    cmd = '"%s"' % (cmdLine[0],)
+    cmd = '"%s"' % (cmd_line[0],)
     # XXX TODO: isn't there a function or something we can call to massage command line params?
-    params = " ".join(['"%s"' % (x,) for x in cmdLine[1:]])
+    params = " ".join(['"%s"' % (x,) for x in cmd_line[1:]])
 
     showCmd = win32con.SW_SHOWNORMAL
     # showCmd = win32con.SW_HIDE
