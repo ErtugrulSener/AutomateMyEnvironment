@@ -24,6 +24,8 @@ FORMAT_FIELD_STYLES.update({
 
 @Singleton
 class Logger(logging.Logger):
+    logging.TRACE = 5
+
     def __init__(self):
         logging.Logger.__init__(self, __name__, DEFAULT_LOG_LEVEL)
 
@@ -33,6 +35,8 @@ class Logger(logging.Logger):
         file_handler.setFormatter(formatter)
         file_handler.setLevel(DEFAULT_LOG_LEVEL)
         self.addHandler(file_handler)
+
+        logging.addLevelName(logging.TRACE, "TRACE")
 
         # Use coloredlogs to get some pretty log messages
         coloredlogs.install(logger=self, level=logging.getLevelName(DEFAULT_LOG_LEVEL), fmt=FORMAT_STYLE,
@@ -62,3 +66,6 @@ class Logger(logging.Logger):
 
     def is_debug(self):
         return self.getEffectiveLevel() == logging.DEBUG
+
+    def is_trace(self):
+        return self.getEffectiveLevel() == logging.TRACE

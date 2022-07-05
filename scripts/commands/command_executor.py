@@ -21,7 +21,7 @@ class CommandExecutor:
         if self.is_powershell_command:
             command = CommandGenerator().powershell() + command
 
-        if logger.is_debug():
+        if logger.is_debug() or logger.is_trace():
             output = ""
 
             with subprocess.Popen(command.get(), stdout=subprocess.PIPE, stderr=subprocess.STDOUT,

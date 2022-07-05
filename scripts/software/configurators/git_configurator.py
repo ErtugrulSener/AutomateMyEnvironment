@@ -20,15 +20,14 @@ class GitConfigurator(ConfiguratorBase):
         self.global_config = []
         self.global_config_path = os.path.join(str(Path.home()), ".gitconfig")
 
-        self.parse_global_config()
+        self.load_global_config()
 
-    def parse_global_config(self):
+    def load_global_config(self):
         command = CommandGenerator() \
             .git() \
             .config() \
             .parameters("--global", "--list")
-
-        output = CommandExecutor(print_to_console=len(self.global_config) > 0).execute(command)
+        output = CommandExecutor(print_to_console=logger.is_trace()).execute(command)
 
         for line in output.splitlines():
             key, value = line.split("=")

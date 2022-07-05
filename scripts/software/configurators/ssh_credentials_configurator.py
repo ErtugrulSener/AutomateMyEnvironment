@@ -4,9 +4,12 @@ import psutil as psutil
 
 from scripts.commands.command_executor import CommandExecutor
 from scripts.commands.command_generator import CommandGenerator
+from scripts.logging.logger import Logger
 from scripts.managers.file_permission_manager import FilePermissionManager
 from scripts.singleton import Singleton
 from scripts.software.configurator_base import ConfiguratorBase
+
+logger = Logger.instance()
 
 
 @Singleton
@@ -20,14 +23,13 @@ class SSHCredentialsConfigurator(ConfiguratorBase):
         super().__init__(__file__)
 
         self.ssh_keys = []
-        self.refresh_ssh_keys_cache()
+        self.load_ssh_keys()
 
-    def refresh_ssh_keys_cache(self):
+    def load_ssh_keys(self):
         command = CommandGenerator() \
             .parameters("ssh-add", "-L")
 
-        first_time_loading = len(self.ssh_keys) == 0
-        output = CommandExecutor(print_to_console=not first_time_loading).execute(command)
+        output = CommandExecutor(print_to_console=logger.is_trace()).execute(command)
 
         for line in output.splitlines():
             key_type, key, comment = line.split()
