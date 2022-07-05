@@ -64,6 +64,9 @@ if %ERRORLEVEL% NEQ 0 (
 	echo Refreshing environment to make python available instantly
 	@call refreshenv
 
+	echo Updating pip to the newest version
+	@call python -m pip install --ugprade pip >NUL 2>&1
+
 :skipPythonInstallation
 
 
