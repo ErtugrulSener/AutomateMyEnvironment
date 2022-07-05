@@ -3,8 +3,11 @@ from enum import Enum
 
 from scripts.commands.command_executor import CommandExecutor
 from scripts.commands.command_generator import CommandGenerator
+from scripts.logging.logger import Logger
 from scripts.singleton import Singleton
 from scripts.software.configurator_base import ConfiguratorBase
+
+logger = Logger.instance()
 
 
 class PowerConfiguration(Enum):
@@ -15,6 +18,11 @@ class PowerConfiguration(Enum):
 
 @Singleton
 class WindowsEnergySavingPlanConfigurator(ConfiguratorBase):
+    POWERCONFIG_SETTINGS = [
+        ["SCHEME_MIN", "SUB_VIDEO", "VIDEOIDLE"],
+        ["SCHEME_MIN", "SUB_SLEEP", "STANDBYIDLE"],
+        ["SCHEME_MIN", "SUB_SLEEP", "HIBERNATEIDLE"],
+    ]
 
     def __init__(self):
         super().__init__(__file__)
@@ -37,7 +45,36 @@ class WindowsEnergySavingPlanConfigurator(ConfiguratorBase):
                 configuration_id = match.group(2)
                 self.power_configurations[PowerConfiguration(configuration_id)] = is_active
 
+    def get_setting_value(self, *args):
+        command = CommandGenerator() \
+            .powercfg() \
+            .parameters("/q", *args)
+        output = CommandExecutor(print_to_console=logger.is_trace()).execute(command)
+        lines = output.splitlines()
+
+        ac_value, dc_value = -1, -1
+
+        ac_value_line = lines[-3]
+        matcher = re.findall(r"(0[xX][\da-fA-F]+)", ac_value_line)
+
+        if matcher:
+            ac_value = int(matcher[0], 16)
+
+        dc_value_line = lines[-2]
+        matcher = re.findall(r"(0[xX][\da-fA-F]+)", dc_value_line)
+
+        if matcher:
+            dc_value = int(matcher[0], 16)
+
+        return ac_value, dc_value
+
     def is_configured_already(self):
+        for query in self.POWERCONFIG_SETTINGS:
+            ac_value, dc_value = self.get_setting_value(*query)
+
+            if ac_value != 0 or dc_value != 0:
+                return False
+
         return self.power_configurations[PowerConfiguration.TOP_PERFORMANCE]
 
     def configure(self):
@@ -47,3 +84,18 @@ class WindowsEnergySavingPlanConfigurator(ConfiguratorBase):
             .powercfg() \
             .parameters("/s", PowerConfiguration.TOP_PERFORMANCE.value)
         CommandExecutor().execute(command)
+
+        self.info("Prevent monitor from being closed")
+
+        powerconfig_monitor_settings = ["monitor-timeout-ac",
+                                        "monitor-timeout-dc",
+                                        "standby-timeout-ac",
+                                        "standby-timeout-dc",
+                                        "hibernate-timeout-ac",
+                                        "hibernate-timeout-ac"]
+
+        for monitor_setting in powerconfig_monitor_settings:
+            command = CommandGenerator() \
+                .powercfg() \
+                .parameters("/change", monitor_setting, 0)
+            CommandExecutor().execute(command)

@@ -18,7 +18,7 @@ class CommandGenerator:
         return self
 
     def add_to_command(self, partial_command):
-        self.command.append(partial_command)
+        self.command.append(str(partial_command))
 
     def __call__(self, *args, **kwargs):
         if not self.last_argument:
