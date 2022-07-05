@@ -9,7 +9,7 @@ from scripts.singleton import Singleton
 logger = Logger.instance()
 
 
-class RegeditPath(Enum):
+class RegistryPath(Enum):
     PROGRAM_FILES_PATH = [
         r"HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Environment",
         "ProgramFiles"
@@ -55,11 +55,21 @@ class RegeditPath(Enum):
         "TamperProtection"
     ]
 
+    WINDOWS_BACKGROUND_COLOR = [
+        r"HKEY_CURRENT_USER\Control Panel\Colors",
+        "Background"
+    ]
+
+    WINDOWS_WALLPAPER = [
+        r"HKEY_CURRENT_USER\Control Panel\Desktop",
+        "Background"
+    ]
+
 
 @Singleton
-class RegeditManager:
+class RegistryManager:
     def get_table(self, key, *args):
-        path, registry_key = key.value if isinstance(key, RegeditPath) else RegeditPath(key).value
+        path, registry_key = key.value if isinstance(key, RegistryPath) else RegistryPath(key).value
 
         if args:
             path = path.format(*args)
@@ -82,5 +92,5 @@ class RegeditManager:
             if self.get(key) == value:
                 return
 
-            logger.info(f"Setting value for regedit key {registry_key} to {value}")
+            logger.info(f"Setting value for registry key {registry_key} to {value}")
             client.write_entry(path, registry_key, value, value_type)

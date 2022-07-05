@@ -23,7 +23,7 @@ Exit codes:
 
 TODO:
     Cmder:
-        - Add 'open cmder here' to context menu of windows via regedit
+        - Add 'open cmder here' to context menu of windows via registry
         - Load cmder settings
 
     IntelliJ:

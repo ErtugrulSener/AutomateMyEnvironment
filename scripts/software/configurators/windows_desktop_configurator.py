@@ -3,6 +3,8 @@ from ctypes import byref
 from ctypes import c_int
 from ctypes.wintypes import RGB
 
+from scripts.registry_manager import RegistryManager
+from scripts.registry_manager import RegistryPath
 from scripts.software.configurator import Configurator
 
 
@@ -21,21 +23,29 @@ class WindowsDesktopConfigurator(Configurator):
 
         return dll.SystemParametersInfoA(self.SPI_GETDESKWALLPAPER, 200, buf, 0) and buf.value
 
-    def has_not_black_background_color(self):
+    def get_background_color(self):
         background_color = ctypes.windll.user32.GetSysColor(self.COLOR_BACKGROUND)
 
         b = background_color & 255
         g = (background_color >> 8) & 255
         r = (background_color >> 16) & 255
 
+        return [r, g, b]
+
+    def has_not_black_background_color(self):
+        r, g, b = self.get_background_color()
         return r != 0 or g != 0 or b != 0
 
     def set_background_color(self, color):
         if self.has_wallpaper():
             ctypes.windll.user32.SystemParametersInfoW(self.SPI_SETDESKWALLPAPER, 0, "", 3)
+            RegistryManager.instance().set(RegistryPath.WINDOWS_WALLPAPER, "")
 
         if self.has_not_black_background_color():
             ctypes.windll.user32.SetSysColors(self.COLOR_BACKGROUND, byref(c_int(1)), byref(c_int(color)))
+
+            r, g, b = self.get_background_color()
+            RegistryManager.instance().set(RegistryPath.WINDOWS_BACKGROUND_COLOR, f"{r} {g} {b}")
 
     def is_configured_already(self):
         if self.has_wallpaper():

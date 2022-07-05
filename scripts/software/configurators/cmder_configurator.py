@@ -10,7 +10,7 @@ logger = Logger.instance()
 
 
 class CmderConfigurator(Configurator):
-    REGEDIT_PATHS = {
+    REGISTRY_PATHS = {
         "left_panel_directory": r"HKEY_CLASSES_ROOT\Directory\Background\shell\cmder",
         "right_panel_directory": r"HKEY_CLASSES_ROOT\Directory\shell\cmder",
     }
@@ -21,7 +21,7 @@ class CmderConfigurator(Configurator):
     def configure(self):
         self.info("Adding 'open cmder here' to context menu for left panel")
         with WinRegistry() as client:
-            left_panel_directory = self.REGEDIT_PATHS["left_panel_directory"]
+            left_panel_directory = self.REGISTRY_PATHS["left_panel_directory"]
 
             client.create_key(left_panel_directory)
             client.write_entry(left_panel_directory, "Icon",

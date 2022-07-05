@@ -3,8 +3,8 @@ from shutil import which
 
 from scripts import admin
 from scripts.logger import Logger
-from scripts.regedit_manager import RegeditManager
-from scripts.regedit_manager import RegeditPath
+from scripts.registry_manager import RegistryManager
+from scripts.registry_manager import RegistryPath
 
 logger = Logger.instance()
 
@@ -53,7 +53,7 @@ class SystemChecker:
     def check_for_tamper_protection(self):
         logger.info('Checking if tamper protection feature of Windows Defender is disabled...')
 
-        if RegeditManager.instance().get(RegeditPath.WINDOWS_DEFENDER_TAMPER_PROTECTION) == 5:
+        if RegistryManager.instance().get(RegistryPath.WINDOWS_DEFENDER_TAMPER_PROTECTION) == 5:
             logger.error("The tamper protection feature of Windows Defender needs to be disabled!")
             exit(5)
 
