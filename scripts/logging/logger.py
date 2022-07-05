@@ -39,12 +39,26 @@ class Logger(logging.Logger):
                             field_styles=FORMAT_FIELD_STYLES, stream=sys.stdout)
 
     def set_log_level(self, level):
-        self.setLevel(level.upper())
-        self.info(f"Log level set to: {level.upper()}")
+        level = logging._checkLevel(level.upper())
+
+        if level == self.get_level():
+            return
+
+        for handler in self.handlers:
+            handler.setLevel(level)
+
+        self.setLevel(level)
+        self.info(f"Log level set to: {self.get_level_name(level)}")
+
+    def get_level(self):
+        return self.getEffectiveLevel()
+
+    def get_level_name(self, level):
+        return logging.getLevelName(level)
 
     @staticmethod
     def get_level_name_list():
-        return [name for name in logging._levelToName.values()]
+        return logging._levelToName.values()
 
     def is_debug(self):
         return self.getEffectiveLevel() == logging.DEBUG
