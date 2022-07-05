@@ -9,6 +9,8 @@ from scripts.managers.registry_manager import RegistryManager
 from scripts.managers.registry_manager import RegistryPath
 from scripts.singleton import Singleton
 from scripts.software.configurator_base import ConfiguratorBase
+from scripts.software.configurators.windows_services_configurator import ServiceStatus
+from scripts.software.configurators.windows_services_configurator import WindowsServicesConfigurator
 
 logger = Logger.instance()
 
@@ -26,6 +28,9 @@ class WindowsDefenderConfigurator(ConfiguratorBase):
         super().__init__(__file__)
 
     def is_configured_already(self):
+        if WindowsServicesConfigurator.instance().get_status("WinDefend") == ServiceStatus.RUNNING:
+            return False
+
         for registry_key, expected_value in self.EXPECTED_REGISTRY_ENTRIES.items():
             if RegistryManager.instance().get(registry_key) != expected_value:
                 return False

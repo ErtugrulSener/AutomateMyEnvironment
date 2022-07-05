@@ -5,10 +5,12 @@ from scripts.logging.logger import Logger
 from scripts.managers import admin_manager
 from scripts.managers.registry_manager import RegistryManager
 from scripts.managers.registry_manager import RegistryPath
+from scripts.singleton import Singleton
 
 logger = Logger.instance()
 
 
+@Singleton
 class SystemChecker:
     # Required dependencies
     REQUIRED_DEPENDENCIES = [

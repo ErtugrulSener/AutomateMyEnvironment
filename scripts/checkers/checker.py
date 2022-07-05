@@ -1,11 +1,12 @@
 from scripts.singleton import Singleton
 
+
 @Singleton
 class Checker:
     checkers = []
 
-    def register(self, checker):
-        instance = checker()
+    def check(self, checker):
+        instance = checker.instance()
 
         if instance not in self.checkers:
             self.checkers.append(instance)

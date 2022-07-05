@@ -6,7 +6,7 @@ import coloredlogs
 from scripts.singleton import Singleton
 
 # Let python log to stdout and file
-DEFAULT_LOG_LEVEL = logging.DEBUG
+DEFAULT_LOG_LEVEL = logging.INFO
 DEFAULT_INSTALL_SCRIPT_PATH = "install.log"
 
 # Format options for logger
@@ -40,6 +40,7 @@ class Logger(logging.Logger):
 
     def set_log_level(self, level):
         self.setLevel(level.upper())
+        self.info(f"Log level set to: {level.upper()}")
 
     @staticmethod
     def get_level_name_list():

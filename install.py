@@ -3,12 +3,13 @@ from scripts.checkers.system_checker import SystemChecker
 from scripts.logging.logger import Logger
 from scripts.parsers.argument_parser import ArgumentParser
 from scripts.parsers.config_parser import ConfigParser
+from scripts.parsers.parser import Parser
+from scripts.software.configurators.configurator import Configurator
 from scripts.software.configurators.git_configurator import GitConfigurator
 from scripts.software.configurators.uac_configurator import UACConfigurator
 from scripts.software.configurators.windows_defender_configurator import WindowsDefenderConfigurator
 from scripts.software.configurators.windows_desktop_configurator import WindowsDesktopConfigurator
 from scripts.software.configurators.windows_services_configurator import WindowsServicesConfigurator
-from scripts.software.software_configurator import Configurator
 from scripts.software.software_installer import SoftwareInstaller
 
 logger = Logger.instance()
@@ -30,12 +31,11 @@ TODO:
         - Load default configuration with settings for ultimate version (Like key bindings and so)
 """
 
-
 if __name__ == "__main__":
-    ArgumentParser.instance().parse()
+    Parser.instance().parse(ArgumentParser)
+    Parser.instance().parse(ConfigParser)
 
-    Checker.instance().register(SystemChecker)
-    ConfigParser.instance().parse()
+    Checker.instance().check(SystemChecker)
     SoftwareInstaller.instance().start()
 
     Configurator.instance().configure(WindowsDesktopConfigurator)

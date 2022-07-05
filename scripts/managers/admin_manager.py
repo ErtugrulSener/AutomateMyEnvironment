@@ -52,9 +52,9 @@ def run_as_admin(cmd_line=None, wait=True):
 
     cmd = '"%s"' % (cmd_line[0],)
     # XXX TODO: isn't there a function or something we can call to massage command line params?
-    params = " ".join(['"%s"' % (x,) for x in cmd_line[1:]])
+    parameters = " ".join(['"%s"' % (x,) for x in cmd_line[1:]])
 
-    showCmd = win32con.SW_SHOWNORMAL
+    show_command = win32con.SW_SHOWNORMAL
     # showCmd = win32con.SW_HIDE
     lpVerb = 'runas'  # causes UAC elevation prompt.
 
@@ -64,16 +64,16 @@ def run_as_admin(cmd_line=None, wait=True):
     # of the process, so we can't get anything useful from it. Therefore
     # the more complex ShellExecuteEx() must be used.
 
-    procInfo = ShellExecuteEx(nShow=showCmd,
-                              fMask=shellcon.SEE_MASK_NOCLOSEPROCESS,
-                              lpVerb=lpVerb,
-                              lpFile=cmd,
-                              lpParameters=params)
+    process_info = ShellExecuteEx(nShow=show_command,
+                                  fMask=shellcon.SEE_MASK_NOCLOSEPROCESS,
+                                  lpVerb=lpVerb,
+                                  lpFile=cmd,
+                                  lpParameters=parameters)
 
     if wait:
-        procHandle = procInfo['hProcess']
-        obj = win32event.WaitForSingleObject(procHandle, win32event.INFINITE)
-        rc = win32process.GetExitCodeProcess(procHandle)
+        process_handle = process_info['hProcess']
+        obj = win32event.WaitForSingleObject(process_handle, win32event.INFINITE)
+        rc = win32process.GetExitCodeProcess(process_handle)
     else:
         rc = None
 

@@ -13,6 +13,8 @@ class ArgumentParser(argparse.ArgumentParser):
         self.args = None
 
     def parse(self):
+        logger.info(f"Parsing command line arguments")
+
         self.add_argument("-l", "--log-level", required=False,
                           help='Specify the log level, possible values are: {}'.format(
                               ', '.join(logger.get_level_name_list())))
