@@ -10,6 +10,7 @@ from scripts.software.configurators.ssh_credentials_configurator import SSHCrede
 from scripts.software.configurators.uac_configurator import UACConfigurator
 from scripts.software.configurators.windows_desktop_configurator import WindowsDesktopConfigurator
 from scripts.software.configurators.windows_energy_saving_plan_configurator import WindowsEnergySavingPlanConfigurator
+from scripts.software.configurators.windows_folder_options_configurator import WindowsFolderOptionsConfigurator
 from scripts.software.configurators.windows_services_configurator import WindowsServicesConfigurator
 from scripts.software.software_installer import SoftwareInstaller
 
@@ -46,3 +47,4 @@ if __name__ == "__main__":
     Configurator.instance().configure(GitConfigurator)
     Configurator.instance().configure(SSHCredentialsConfigurator)
     Configurator.instance().configure(WindowsEnergySavingPlanConfigurator)
+    Configurator.instance().configure(WindowsFolderOptionsConfigurator)
