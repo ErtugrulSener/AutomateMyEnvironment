@@ -4,6 +4,8 @@ from enum import Enum
 from winregistry import WinRegistry
 
 from scripts.logging.logger import Logger
+
+logger = Logger.instance()
 from scripts.singleton import Singleton
 
 logger = Logger.instance()

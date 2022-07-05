@@ -7,3 +7,4 @@ winregistry
 py-console
 WMI
 requests
+psutil

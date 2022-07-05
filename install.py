@@ -6,8 +6,8 @@ from scripts.parsers.config_parser import ConfigParser
 from scripts.parsers.parser import Parser
 from scripts.software.configurators.configurator import Configurator
 from scripts.software.configurators.git_configurator import GitConfigurator
+from scripts.software.configurators.ssh_credentials_configurator import SSHCredentialsConfigurator
 from scripts.software.configurators.uac_configurator import UACConfigurator
-from scripts.software.configurators.windows_defender_configurator import WindowsDefenderConfigurator
 from scripts.software.configurators.windows_desktop_configurator import WindowsDesktopConfigurator
 from scripts.software.configurators.windows_services_configurator import WindowsServicesConfigurator
 from scripts.software.software_installer import SoftwareInstaller
@@ -38,8 +38,9 @@ if __name__ == "__main__":
     Checker.instance().check(SystemChecker)
     SoftwareInstaller.instance().start()
 
+    Configurator.instance().configure(UACConfigurator)
+    # Configurator.instance().configure(WindowsDefenderConfigurator)
     Configurator.instance().configure(WindowsDesktopConfigurator)
     Configurator.instance().configure(WindowsServicesConfigurator)
-    Configurator.instance().configure(UACConfigurator)
-    Configurator.instance().configure(WindowsDefenderConfigurator)
     Configurator.instance().configure(GitConfigurator)
+    Configurator.instance().configure(SSHCredentialsConfigurator)
