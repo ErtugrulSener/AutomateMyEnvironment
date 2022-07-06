@@ -28,7 +28,6 @@ Exit codes:
 
 TODO:
     Cmder:
-        - Add 'open cmder here' to context menu of windows via managers
         - Load cmder settings
 
     IntelliJ:
