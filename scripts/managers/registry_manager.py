@@ -85,6 +85,36 @@ class RegistryPath(Enum):
         "{59031a47-3f72-44a7-89c5-5595fe6b30ee}"
     ]
 
+    WINDOWS_LEFT_PANEL = [
+        r"HKEY_CLASSES_ROOT\Directory\Background\shell\{}",
+        ""
+    ]
+
+    WINDOWS_LEFT_PANEL_ICON = [
+        r"HKEY_CLASSES_ROOT\Directory\Background\shell\{}",
+        "Icon"
+    ]
+
+    WINDOWS_LEFT_PANEL_COMMAND = [
+        r"HKEY_CLASSES_ROOT\Directory\Background\shell\{}\command",
+        ""
+    ]
+
+    WINDOWS_RIGHT_PANEL = [
+        r"HKEY_CLASSES_ROOT\Directory\shell\{}",
+        ""
+    ]
+
+    WINDOWS_RIGHT_PANEL_ICON = [
+        r"HKEY_CLASSES_ROOT\Directory\shell\{}",
+        "Icon"
+    ]
+
+    WINDOWS_RIGHT_PANEL_COMMAND = [
+        r"HKEY_CLASSES_ROOT\Directory\shell\{}\command",
+        ""
+    ]
+
 
 @Singleton
 class RegistryManager:
@@ -96,21 +126,30 @@ class RegistryManager:
 
         return path, registry_key
 
-    def get(self, key):
+    def get(self, key, *args):
         with WinRegistry() as client:
-            path, registry_key = self.get_table(key)
+            path, registry_key = self.get_table(key, *args)
 
             try:
                 return client.read_entry(path, registry_key).value
             except FileNotFoundError:
                 return None
 
-    def set(self, key, value, value_type=winreg.REG_SZ):
+    def set(self, key, value, value_type=winreg.REG_SZ, *args):
         with WinRegistry() as client:
-            path, registry_key = self.get_table(key)
+            path, registry_key = self.get_table(key, *args)
+            current_value = self.get(key, *args)
 
-            if self.get(key) == value:
+            if current_value == value:
                 return
 
-            logger.info(f"Setting value for registry key {registry_key} to {value}")
+            if not current_value:
+                logger.debug(f"Creating new path [{path}] since it didn't exist")
+                client.create_key(path)
+
+            if not registry_key:
+                logger.info(f"Setting default value for path [{path}] to [{value}]")
+            else:
+                logger.info(f"Setting value for registry key [{registry_key}] to [{value}]")
+
             client.write_entry(path, registry_key, value, value_type)

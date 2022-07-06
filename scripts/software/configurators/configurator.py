@@ -14,7 +14,7 @@ class Configurator:
         if instance not in self.configurators:
             self.configurators.append(instance)
 
-        logger.info(f"Configuring {instance.get_name()} now")
+        logger.info(f"Configuring {instance.get_name().upper()} now")
 
         if instance.is_configured_already():
             instance.skip()

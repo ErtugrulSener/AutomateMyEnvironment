@@ -31,4 +31,4 @@ class ConfiguratorBase:
         logger.debug(f"<{self.name}>: {text}")
 
     def skip(self):
-        logger.info(f"{self.name.capitalize()} is configured properly, skipping...")
+        logger.info(f"{self.name.upper()} is configured properly, skipping...")

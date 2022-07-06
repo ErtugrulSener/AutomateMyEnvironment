@@ -4,6 +4,7 @@ from scripts.logging.logger import Logger
 from scripts.parsers.argument_parser import ArgumentParser
 from scripts.parsers.config_parser import ConfigParser
 from scripts.parsers.parser import Parser
+from scripts.software.configurators.cmder_configurator import CmderConfigurator
 from scripts.software.configurators.configurator import Configurator
 from scripts.software.configurators.git_configurator import GitConfigurator
 from scripts.software.configurators.ssh_credentials_configurator import SSHCredentialsConfigurator
@@ -45,8 +46,10 @@ if __name__ == "__main__":
     # Configurator.instance().configure(WindowsDefenderConfigurator)
     Configurator.instance().configure(WindowsDesktopConfigurator)
     Configurator.instance().configure(WindowsServicesConfigurator)
-    Configurator.instance().configure(GitConfigurator)
-    Configurator.instance().configure(SSHCredentialsConfigurator)
     Configurator.instance().configure(WindowsEnergySavingPlanConfigurator)
     Configurator.instance().configure(WindowsFolderOptionsConfigurator)
     Configurator.instance().configure(WindowsDesktopIconConfigurator)
+
+    Configurator.instance().configure(GitConfigurator)
+    Configurator.instance().configure(SSHCredentialsConfigurator)
+    Configurator.instance().configure(CmderConfigurator)

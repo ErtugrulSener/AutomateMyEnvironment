@@ -47,7 +47,12 @@ class SoftwareInstaller:
         return software in self.installed_software
 
     def get_path(self, software):
-        pass
+        command = CommandGenerator() \
+            .scoop() \
+            .which() \
+            .parameters(software)
+
+        return CommandExecutor(print_to_console=logger.is_trace()).execute(command)
 
     def install(self, software, parameters):
         if self.is_installed(software):
