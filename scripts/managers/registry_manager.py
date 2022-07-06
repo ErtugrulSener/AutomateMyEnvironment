@@ -75,6 +75,16 @@ class RegistryPath(Enum):
         "HideFileExt"
     ]
 
+    WINDOWS_THIS_PC_DESKTOP_ICON = [
+        r"HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\NewStartPanel",
+        "{20D04FE0-3AEA-1069-A2D8-08002B30309D}"
+    ]
+
+    WINDOWS_USER_HOME_DIRECTORY_DESKTOP_ICON = [
+        r"HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\NewStartPanel",
+        "{59031a47-3f72-44a7-89c5-5595fe6b30ee}"
+    ]
+
 
 @Singleton
 class RegistryManager:
