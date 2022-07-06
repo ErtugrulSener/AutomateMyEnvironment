@@ -31,7 +31,7 @@ class CmderConfigurator(ConfiguratorBase):
     def create_panel_entries(self, key, key_icon, key_command):
         executable_path = SoftwareInstaller.instance().get_path(self.EXECUTABLE_NAME).rstrip("\r").rstrip("\n")
         path, filename = os.path.split(executable_path)
-        icon_path = os.path.join(path, f"icons\{self.EXECUTABLE_NAME}.ico")
+        icon_path = os.path.join(path, rf"icons\{self.EXECUTABLE_NAME}.ico")
 
         RegistryManager.instance().set(key, f"{self.EXECUTABLE_NAME} hier öffnen", winreg.REG_SZ, self.EXECUTABLE_NAME)
         RegistryManager.instance().set(key_icon, f"{icon_path},0", winreg.REG_SZ, self.EXECUTABLE_NAME)
