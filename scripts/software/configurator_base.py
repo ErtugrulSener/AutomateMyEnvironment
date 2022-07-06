@@ -1,6 +1,8 @@
 from os.path import basename
 from os.path import splitext
 
+from termcolor import colored
+
 from scripts.logging.logger import Logger
 
 logger = Logger.instance()
@@ -31,4 +33,4 @@ class ConfiguratorBase:
         logger.debug(f"<{self.name}>: {text}")
 
     def skip(self):
-        logger.info(f"{self.name.upper()} is configured properly, skipping...")
+        logger.info(f"{colored(self.name.upper(), 'magenta')} is configured properly, skipping...")

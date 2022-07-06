@@ -31,10 +31,10 @@ class Logger(logging.Logger):
 
         formatter = logging.Formatter(FORMAT_STYLE)
 
-        file_handler = logging.FileHandler(DEFAULT_INSTALL_SCRIPT_PATH)
+        """file_handler = logging.FileHandler(DEFAULT_INSTALL_SCRIPT_PATH)
         file_handler.setFormatter(formatter)
         file_handler.setLevel(DEFAULT_LOG_LEVEL)
-        self.addHandler(file_handler)
+        self.addHandler(file_handler)"""
 
         logging.addLevelName(logging.TRACE, "TRACE")
 

@@ -1,6 +1,8 @@
+import os
 import winreg
 from enum import Enum
 
+from termcolor import colored
 from winregistry import WinRegistry
 
 from scripts.logging.logger import Logger
@@ -144,12 +146,11 @@ class RegistryManager:
                 return
 
             if not current_value:
-                logger.debug(f"Creating new path [{path}] since it didn't exist")
+                logger.debug(f"Creating new path [{colored(path, 'yellow')}] since it didn't exist")
                 client.create_key(path)
 
-            if not registry_key:
-                logger.info(f"Setting default value for path [{path}] to [{value}]")
-            else:
-                logger.info(f"Setting value for registry key [{registry_key}] to [{value}]")
+            logger.info(
+                f"Setting value for registry key [{colored(os.path.join(path, registry_key), 'yellow')}] to "
+                f"[{colored(value, 'yellow')}]")
 
             client.write_entry(path, registry_key, value, value_type)

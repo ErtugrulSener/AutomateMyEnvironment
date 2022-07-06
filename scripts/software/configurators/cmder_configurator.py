@@ -15,18 +15,31 @@ logger = Logger.instance()
 class CmderConfigurator(ConfiguratorBase):
     EXECUTABLE_NAME = "cmder"
 
+    LEFT_PANEL_KEYS = [
+        RegistryPath.WINDOWS_LEFT_PANEL,
+        RegistryPath.WINDOWS_LEFT_PANEL_ICON,
+        RegistryPath.WINDOWS_LEFT_PANEL_COMMAND,
+    ]
+
+    RIGHT_PANEL_KEYS = [
+        RegistryPath.WINDOWS_RIGHT_PANEL,
+        RegistryPath.WINDOWS_RIGHT_PANEL_ICON,
+        RegistryPath.WINDOWS_RIGHT_PANEL_COMMAND,
+    ]
+
     def __init__(self):
         super().__init__(__file__)
 
-    def is_configured_already(self):
-        registry_key_list = [RegistryPath.WINDOWS_LEFT_PANEL,
-                             RegistryPath.WINDOWS_LEFT_PANEL_ICON,
-                             RegistryPath.WINDOWS_LEFT_PANEL_COMMAND,
-                             RegistryPath.WINDOWS_RIGHT_PANEL,
-                             RegistryPath.WINDOWS_RIGHT_PANEL_ICON,
-                             RegistryPath.WINDOWS_RIGHT_PANEL_COMMAND]
+    def check_if_configured_already(self, *args):
+        for arg in args:
+            if not RegistryManager.instance().get(arg, self.EXECUTABLE_NAME):
+                return False
 
-        return all([RegistryManager.instance().get(key, self.EXECUTABLE_NAME) for key in registry_key_list])
+        return True
+
+    def is_configured_already(self):
+        registry_key_list = self.LEFT_PANEL_KEYS + self.RIGHT_PANEL_KEYS
+        return self.check_if_configured_already(*registry_key_list)
 
     def create_panel_entries(self, key, key_icon, key_command):
         executable_path = SoftwareInstaller.instance().get_path(self.EXECUTABLE_NAME).rstrip("\r").rstrip("\n")
@@ -38,10 +51,10 @@ class CmderConfigurator(ConfiguratorBase):
         RegistryManager.instance().set(key_command, f'"{executable_path}" "%V"', winreg.REG_SZ, self.EXECUTABLE_NAME)
 
     def configure(self):
-        self.info("Checking registry entries for left panel")
-        self.create_panel_entries(RegistryPath.WINDOWS_LEFT_PANEL, RegistryPath.WINDOWS_LEFT_PANEL_ICON,
-                                  RegistryPath.WINDOWS_LEFT_PANEL_COMMAND)
+        if not self.check_if_configured_already(*self.LEFT_PANEL_KEYS):
+            self.info("Checking registry entries for left panel")
+            self.create_panel_entries(*self.LEFT_PANEL_KEYS)
 
-        self.info("Checking registry entries for right panel")
-        self.create_panel_entries(RegistryPath.WINDOWS_RIGHT_PANEL, RegistryPath.WINDOWS_RIGHT_PANEL_ICON,
-                                  RegistryPath.WINDOWS_RIGHT_PANEL_COMMAND)
+        if not self.check_if_configured_already(*self.RIGHT_PANEL_KEYS):
+            self.info("Checking registry entries for right panel")
+            self.create_panel_entries(*self.RIGHT_PANEL_KEYS)

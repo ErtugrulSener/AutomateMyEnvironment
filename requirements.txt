@@ -8,3 +8,4 @@ py-console
 WMI
 requests
 psutil
+termcolor
