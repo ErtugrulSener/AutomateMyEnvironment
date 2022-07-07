@@ -17,8 +17,10 @@ logger = Logger.instance()
 
 @Singleton
 class CmderConfigurator(ConfiguratorBase):
-    EXECUTABLE_NAME = "cmder"
-    LOCAL_SETTINGS_FILE_LOCATION = rf"external/configurations/{EXECUTABLE_NAME}/ConEmu.xml"
+    SOFTWARE = "cmder"
+    EXECUTABLE_NAME = "Cmder.exe"
+
+    LOCAL_SETTINGS_FILE_LOCATION = rf"external/configurations/{SOFTWARE}/ConEmu.xml"
     CMDER_SETTINGS_FILE_LOCATION = rf"vendor\conemu-maximus5\ConEmu.xml"
 
     LEFT_PANEL_KEYS = [
@@ -36,16 +38,16 @@ class CmderConfigurator(ConfiguratorBase):
     def __init__(self):
         super().__init__(__file__)
 
-        self.executable_path = SoftwareInstaller.instance().get_path(self.EXECUTABLE_NAME).rstrip("\r\n")
-        self.base_path, self.filename = os.path.split(self.executable_path)
-        self.icon_path = os.path.join(self.base_path, rf"icons\{self.EXECUTABLE_NAME}.ico")
+        self.base_path = SoftwareInstaller.instance().get_base_path(self.SOFTWARE)
+        self.executable_path = SoftwareInstaller.instance().get_path(self.SOFTWARE, self.EXECUTABLE_NAME)
 
+        self.icon_path = os.path.join(self.base_path, rf"icons\{self.SOFTWARE}.ico")
         self.local_settings_path = os.path.join(os.getcwd(), self.LOCAL_SETTINGS_FILE_LOCATION)
         self.cmder_settings_path = os.path.join(self.base_path, self.CMDER_SETTINGS_FILE_LOCATION)
 
     def check_if_configured_already(self, *args):
         for arg in args:
-            if not RegistryManager.instance().get(arg, self.EXECUTABLE_NAME):
+            if not RegistryManager.instance().get(arg, self.SOFTWARE):
                 return False
 
         return True
@@ -71,10 +73,10 @@ class CmderConfigurator(ConfiguratorBase):
         return True
 
     def create_panel_entries(self, key, key_icon, key_command):
-        RegistryManager.instance().set(key, f"{self.EXECUTABLE_NAME} hier öffnen", winreg.REG_SZ, self.EXECUTABLE_NAME)
-        RegistryManager.instance().set(key_icon, f"{self.icon_path},0", winreg.REG_SZ, self.EXECUTABLE_NAME)
+        RegistryManager.instance().set(key, f"{self.SOFTWARE} hier öffnen", winreg.REG_SZ, self.SOFTWARE)
+        RegistryManager.instance().set(key_icon, f"{self.icon_path},0", winreg.REG_SZ, self.SOFTWARE)
         RegistryManager.instance().set(key_command, f'"{self.executable_path}" "%V"', winreg.REG_SZ,
-                                       self.EXECUTABLE_NAME)
+                                       self.SOFTWARE)
 
     def configure(self):
         if not self.check_if_configured_already(*self.LEFT_PANEL_KEYS):

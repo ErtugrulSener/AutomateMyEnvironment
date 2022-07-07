@@ -1,3 +1,4 @@
+import os
 import re
 
 from scripts.commands.command_executor import CommandExecutor
@@ -46,13 +47,11 @@ class SoftwareInstaller:
     def is_installed(self, software):
         return software in self.installed_software
 
-    def get_path(self, software):
-        command = CommandGenerator() \
-            .scoop() \
-            .which() \
-            .parameters(software)
+    def get_path(self, software, executable_name):
+        return os.path.join(self.get_base_path(software), executable_name)
 
-        return CommandExecutor(print_to_console=logger.is_trace()).execute(command)
+    def get_base_path(self, software):
+        return os.path.join(os.environ["SCOOP_GLOBAL"], rf"apps\{software.lower()}\current")
 
     def install(self, software, parameters):
         if self.is_installed(software):
