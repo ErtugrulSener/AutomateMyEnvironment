@@ -17,7 +17,7 @@ logger = Logger.instance()
 
 @Singleton
 class WindowsDefenderConfigurator(ConfiguratorBase):
-    DEFENDER_CONTROL_LOCAL_PATH = r"external\defender-control"
+    DEFENDER_CONTROL_LOCAL_PATH = r"external\executables\defender-control"
     DEFENDER_CONTROL_API_URL = "https://api.github.com/repos/qtkite/defender-control/releases/latest"
 
     EXPECTED_REGISTRY_ENTRIES = {

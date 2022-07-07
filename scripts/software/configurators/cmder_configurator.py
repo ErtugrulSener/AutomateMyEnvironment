@@ -18,7 +18,7 @@ logger = Logger.instance()
 @Singleton
 class CmderConfigurator(ConfiguratorBase):
     EXECUTABLE_NAME = "cmder"
-    LOCAL_SETTINGS_FILE_LOCATION = rf"software/{EXECUTABLE_NAME}/ConEmu.xml"
+    LOCAL_SETTINGS_FILE_LOCATION = rf"external/configurations/{EXECUTABLE_NAME}/ConEmu.xml"
     CMDER_SETTINGS_FILE_LOCATION = rf"vendor\conemu-maximus5\ConEmu.xml"
 
     LEFT_PANEL_KEYS = [
