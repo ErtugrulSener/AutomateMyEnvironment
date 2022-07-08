@@ -9,3 +9,4 @@ WMI
 requests
 psutil
 termcolor
+aenum
