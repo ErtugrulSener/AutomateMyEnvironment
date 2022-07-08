@@ -40,6 +40,9 @@ if %ERRORLEVEL% NEQ 0 (
 	echo Installing Git since it's needed to install buckets
 	@call scoop install -g git >NUL 2>&1
 
+	echo Refreshing environment to make git available instantly
+	@call refreshenv
+
 :skipGitInstallation
 
 
@@ -106,5 +109,5 @@ if %ERRORLEVEL% NEQ 0 (
 :skipInstallingPythonDependencies
 
 
-@cls
+REM @cls
 python install.py %*
