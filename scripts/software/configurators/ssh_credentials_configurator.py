@@ -1,6 +1,5 @@
 import os
 
-import psutil as psutil
 from winerror import ERROR_INVALID_FUNCTION
 
 from scripts.commands.command_executor import CommandExecutor
@@ -48,11 +47,6 @@ class SSHCredentialsConfigurator(ConfiguratorBase):
         private_key_path = os.path.join(os.path.join(os.environ['USERPROFILE']), r'Desktop\private_openssh')
 
         self.info("Checking file permissions, setting to 600 (Only owner is allowed to read)")
-
-        users = psutil.users()
-        for user in users:
-            FilePermissionManager.instance().remove_permission(private_key_path, user.name)
-
         FilePermissionManager.instance().set_read_only(private_key_path, os.getlogin())
 
         self.info("Adding private key to windows ssh-agent")

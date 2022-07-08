@@ -20,6 +20,7 @@ class FilePermissionManager:
     def set_read_only(filepath, username):
         logger.info(f"Setting read only permission for user {username} to file {filepath}")
         command = CommandGenerator() \
-            .CACLS() \
-            .parameters(f'"{filepath}"', "/e", "/p", f"{username}:R")
+            .icacls() \
+            .parameters(f'"{filepath}"', "/inheritance:r", "/grant:r", f"{username}:R")
         CommandExecutor().execute(command)
+

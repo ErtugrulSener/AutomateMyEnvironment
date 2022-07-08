@@ -7,6 +7,5 @@ winregistry
 py-console
 WMI
 requests
-psutil
 termcolor
 aenum
