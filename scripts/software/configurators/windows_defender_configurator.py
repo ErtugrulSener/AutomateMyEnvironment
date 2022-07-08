@@ -1,10 +1,9 @@
 import os
 
-import requests
-
 from scripts.commands.command_executor import CommandExecutor
 from scripts.commands.command_generator import CommandGenerator
 from scripts.logging.logger import Logger
+from scripts.managers.github_file_downloader import GithubFileDownloader
 from scripts.managers.registry_manager import RegistryManager
 from scripts.managers.registry_manager import RegistryPath
 from scripts.singleton import Singleton
@@ -44,24 +43,10 @@ class WindowsDefenderConfigurator(ConfiguratorBase):
             .parameters("Add-MpPreference", "-ExclusionPath", f'"{os.getcwd()}"')
         CommandExecutor(is_powershell_command=True).execute(command)
 
-        logger.info("Checking if the needed tools need to be downloaded...")
-
-        if not os.path.exists(self.DEFENDER_CONTROL_LOCAL_PATH):
-            self.debug(f"Created {self.DEFENDER_CONTROL_LOCAL_PATH} folder")
-            os.makedirs(self.DEFENDER_CONTROL_LOCAL_PATH)
-
-        if not os.path.exists(os.path.join(self.DEFENDER_CONTROL_LOCAL_PATH, "enable-defender.exe")) or \
-                not os.path.exists(os.path.join(self.DEFENDER_CONTROL_LOCAL_PATH, "disable-defender.exe")):
-            response = requests.get(url=self.DEFENDER_CONTROL_API_URL).json()
-
-            for asset in response["assets"]:
-                url = asset["browser_download_url"]
-
-                command = CommandGenerator() \
-                    .wget() \
-                    .parameters("--no-clobber", "-P", self.DEFENDER_CONTROL_LOCAL_PATH, url)
-
-                CommandExecutor().execute(command)
+        GithubFileDownloader.instance().download(self.DEFENDER_CONTROL_API_URL, self.DEFENDER_CONTROL_LOCAL_PATH,
+                                                 "enable-defender.exe")
+        GithubFileDownloader.instance().download(self.DEFENDER_CONTROL_API_URL, self.DEFENDER_CONTROL_LOCAL_PATH,
+                                                 "disable-defender.exe")
 
         self.info(f"Disabling windows defender completely")
 
