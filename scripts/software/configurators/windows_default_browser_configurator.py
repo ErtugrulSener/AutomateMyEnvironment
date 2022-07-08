@@ -64,23 +64,18 @@ class WindowsDefaultBrowserConfigurator(ConfiguratorBase):
         return True
 
     def find_default_type_browser_by_identifier(self, browser_identifier):
-        if "." in browser_identifier:
-            browser_identifier = browser_identifier.split(".")[1]
-
         for real_identifier_type, identifier in self.default_browsers:
             real_identifier = identifier
 
             if "." in identifier:
-                identifier = identifier.split(".")[1]
+                identifier = identifier.split(".")[0]
 
             if identifier == browser_identifier:
                 return real_identifier_type, real_identifier
 
     def configure(self):
         self.info(f"Setting {colored('Brave', 'yellow')} as the default browser")
-
-        brave_file_identifier = self.associated_file_extensions[FileExtension.HTM.value]
-        brave_type, brave_browser_identifier = self.find_default_type_browser_by_identifier(brave_file_identifier)
+        brave_type, brave_browser_identifier = self.find_default_type_browser_by_identifier("Brave")
 
         command = CommandGenerator() \
             .parameters(self.SET_DEFAULT_BROWSER_LOCAL_PATH, brave_type, brave_browser_identifier)
