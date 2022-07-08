@@ -11,7 +11,7 @@ from scripts.software.configurator_base import ConfiguratorBase
 
 
 class ServiceStartType(Enum):
-    AUTO = "Auto"
+    AUTO = "Automatic"
     MANUAL = "Manual"
     DISABLED = "Disabled"
 
