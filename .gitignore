@@ -88,6 +88,3 @@ isos
 
 # Ignore log files
 install.log
-
-# Ignore directory for external files needed by the scripts
-external/
