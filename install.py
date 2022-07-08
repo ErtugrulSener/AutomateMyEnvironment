@@ -7,6 +7,7 @@ from scripts.parsers.parser import Parser
 from scripts.software.configurators.cmder_configurator import CmderConfigurator
 from scripts.software.configurators.configurator import Configurator
 from scripts.software.configurators.git_configurator import GitConfigurator
+from scripts.software.configurators.notepadplusplus_configurator import NotepadPlusPlusConfigurator
 from scripts.software.configurators.ssh_credentials_configurator import SSHCredentialsConfigurator
 from scripts.software.configurators.uac_configurator import UACConfigurator
 from scripts.software.configurators.windows_default_browser_configurator import WindowsDefaultBrowserConfigurator
@@ -29,9 +30,6 @@ Exit codes:
     5 -> Tamper Protection needs to be disabled manually.
 
 TODO:
-    Cmder:
-        - Load cmder settings
-
     IntelliJ:
         - Load default configuration with settings for ultimate version (Like key bindings and so)
 """
@@ -55,3 +53,4 @@ if __name__ == "__main__":
     Configurator.instance().configure(GitConfigurator)
     Configurator.instance().configure(SSHCredentialsConfigurator)
     Configurator.instance().configure(CmderConfigurator)
+    Configurator.instance().configure(NotepadPlusPlusConfigurator)
