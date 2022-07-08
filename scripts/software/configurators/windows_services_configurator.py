@@ -1,6 +1,7 @@
 import argparse
 from enum import Enum
 
+from termcolor import colored
 from winerror import ERROR_SUCCESS
 from wmi import WMI
 
@@ -111,10 +112,12 @@ class WindowsServicesConfigurator(ConfiguratorBase):
 
             if actual_start_mode != expected_start_mode:
                 self.debug(
-                    f"Service '{service}' -> Start type was '{actual_start_mode.name}', "
-                    f"but should be '{expected_start_mode.name}'")
-                self.debug(
-                    f"Setting start type to '{expected_start_mode.name}' for service '{service}' now...")
+                    f"Service '{colored(service, 'yellow')}' -> Start type was"
+                    f"'{colored(actual_start_mode.name, 'yellow')}', "
+                    f"but should be '{colored(expected_start_mode.name, 'yellow')}'")
+                self.info(
+                    f"Setting start type to '{colored(expected_start_mode.name, 'yellow')}' for service "
+                    f"'{colored(service, 'yellow')}' now...")
                 self.configure_start_mode(service, start_mode)
 
             # Set status to the expected one for ex. start or stop service
@@ -123,7 +126,9 @@ class WindowsServicesConfigurator(ConfiguratorBase):
 
             if actual_status != expected_status:
                 self.debug(
-                    f"Service '{service}' -> Status was '{actual_status.name}', but should be '{expected_status.name}'")
-                self.debug(
-                    f"Performing action '{action.name.lower()}' for service '{service}' now...")
+                    f"Service '{colored(service, 'yellow')}' -> Status was "
+                    f"'{colored(actual_status.name, 'yellow')}', but should be"
+                    f"'{colored(expected_status.name, 'yellow')}'")
+                self.info(
+                    f"Performing action '{colored(action.name.lower(), 'yellow')}' for service '{colored(service, 'yellow')}' now...")
                 self.configure_status(service, action)
