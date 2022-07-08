@@ -1,6 +1,7 @@
 import argparse
 from enum import Enum
 
+from aenum import MultiValueEnum
 from termcolor import colored
 from winerror import ERROR_SUCCESS
 from wmi import WMI
@@ -10,8 +11,8 @@ from scripts.singleton import Singleton
 from scripts.software.configurator_base import ConfiguratorBase
 
 
-class ServiceStartType(Enum):
-    AUTO = "Automatic"
+class ServiceStartType(MultiValueEnum):
+    AUTOMATIC = "Automatic", "Auto"
     MANUAL = "Manual"
     DISABLED = "Disabled"
 
