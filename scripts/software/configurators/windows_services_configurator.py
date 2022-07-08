@@ -87,7 +87,7 @@ class WindowsServicesConfigurator(ConfiguratorBase):
 
     def is_configured_already(self):
         for service, arguments in ConfigParser.instance().items("WINDOWS-SERVICES"):
-            args = parser.parse_args(arguments.split(" "))
+            args = parser.parse_args(arguments.split())
             expected_status = self.get_expected_status_for_action(ServiceAction(args.action))
             expected_start_mode = ServiceStartType(args.start_mode)
 
@@ -103,7 +103,7 @@ class WindowsServicesConfigurator(ConfiguratorBase):
         self.info(f"Checking if there are windows services that need to be updated...")
 
         for service, arguments in ConfigParser.instance().items("WINDOWS-SERVICES"):
-            args = parser.parse_args(arguments.split(" "))
+            args = parser.parse_args(arguments.split())
             start_mode = ServiceStartType(args.start_mode)
             action = ServiceAction(args.action)
 
