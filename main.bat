@@ -48,6 +48,7 @@ if %ERRORLEVEL% NEQ 0 (
 
 @call scoop bucket add extras >NUL 2>&1
 @call scoop bucket add java >NUL 2>&1
+@call scoop bucket add versions >NUL 2>&1
 
 
 
