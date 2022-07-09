@@ -32,6 +32,7 @@ Exit codes:
     3 -> You are missing important dependencies to run this script!
     4 -> Failed to install software.
     5 -> Tamper Protection needs to be disabled manually.
+    6 -> Problem with the internet, a persistent connection is needed.
 
 TODO:
     IntelliJ:

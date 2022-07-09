@@ -1,6 +1,8 @@
 import platform
 from shutil import which
 
+import http.client as httplib
+
 from scripts.logging.logger import Logger
 from scripts.managers import admin_manager
 from scripts.managers.registry_manager import RegistryManager
@@ -59,8 +61,21 @@ class SystemChecker:
             logger.error("The tamper protection feature of Windows Defender needs to be disabled!")
             exit(5)
 
+    def check_for_internet_connection(self):
+        logger.info('Checking if user has a persistent internet connection.')
+        conn = httplib.HTTPSConnection("8.8.8.8", timeout=5)
+
+        try:
+            conn.request("HEAD", "/")
+        except Exception:
+            logger.error("You need a persistent internet connection to run this script!")
+            exit(6)
+        finally:
+            conn.close()
+
     def check(self):
         self.check_for_admin_rights()
         self.check_if_os_is_suitable()
         self.check_for_required_dependencies()
         self.check_for_tamper_protection()
+        self.check_for_internet_connection()
