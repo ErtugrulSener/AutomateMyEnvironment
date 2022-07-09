@@ -7,6 +7,8 @@ from scripts.commands.command_generator import CommandGenerator
 from scripts.configurators.configurator_base import ConfiguratorBase
 from scripts.logging.logger import Logger
 from scripts.managers.file_permission_manager import FilePermissionManager
+from scripts.managers.secret_manager import Secret
+from scripts.managers.secret_manager import SecretManager
 from scripts.singleton import Singleton
 
 logger = Logger.instance()
@@ -43,14 +45,16 @@ class SSHCredentialsConfigurator(ConfiguratorBase):
         return self.PUBLIC_KEY in self.ssh_keys
 
     def configure(self):
-        # TODO: Download private key with git-secrets here
-        private_key_path = os.path.join(os.path.join(os.environ['USERPROFILE']), r'Desktop\private_openssh')
+        if SecretManager.instance().is_encrypted(Secret.PRIVATE_KEY_OPENSSH):
+            SecretManager.instance().unlock()
+
+        private_key_filepath = SecretManager.instance().get_filepath(Secret.PRIVATE_KEY_OPENSSH)
 
         self.info("Checking file permissions, setting to 600 (Only owner is allowed to read)")
-        FilePermissionManager.instance().set_read_only(private_key_path, os.getlogin())
+        FilePermissionManager.instance().set_read_only(private_key_filepath, os.getlogin())
 
         self.info("Adding private key to windows ssh-agent")
 
         command = CommandGenerator() \
-            .parameters("ssh-add", private_key_path)
+            .parameters("ssh-add", private_key_filepath)
         CommandExecutor().execute(command)

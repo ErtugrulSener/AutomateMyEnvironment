@@ -18,6 +18,8 @@ from scripts.configurators.windows.windows_folder_options_configurator import Wi
 from scripts.configurators.windows.windows_services_configurator import WindowsServicesConfigurator
 from scripts.configurators.windows.windows_taskbar_configurator import WindowsTaskbarConfigurator
 from scripts.logging.logger import Logger
+from scripts.managers.secret_manager import Secret
+from scripts.managers.secret_manager import SecretManager
 from scripts.managers.software_manager import SoftwareManager
 from scripts.parsers.argument_parser import ArgumentParser
 from scripts.parsers.config_parser import ConfigParser
@@ -45,6 +47,8 @@ if __name__ == "__main__":
 
     Checker.instance().check(SystemChecker)
     SoftwareManager.instance().start()
+
+    SecretManager.instance().is_encrypted(Secret.PRIVATE_KEY_OPENSSH)
 
     Configurator.instance().configure(UACConfigurator)
     Configurator.instance().configure(WindowsDefenderConfigurator)
