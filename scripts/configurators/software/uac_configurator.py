@@ -1,19 +1,17 @@
 import winreg
 
-from scripts.logging.logger import Logger
+from scripts.configurators.configurator_base import ConfiguratorBase
 from scripts.managers.registry_manager import RegistryManager
 from scripts.managers.registry_manager import RegistryPath
 from scripts.singleton import Singleton
-from scripts.software.configurator_base import ConfiguratorBase
-
-logger = Logger.instance()
 
 
 @Singleton
-class WindowsFolderOptionsConfigurator(ConfiguratorBase):
+class UACConfigurator(ConfiguratorBase):
     EXPECTED_REGISTRY_ENTRIES = {
-        RegistryPath.WINDOWS_SEE_HIDDEN_FOLDERS_AND_FILES: 1,
-        RegistryPath.WINDOWS_HIDE_FILE_EXTENSIONS: 0,
+        RegistryPath.UAC_CONSENT_PROMPT_BEHAVIOR_ADMIN: 0,
+        RegistryPath.UAC_ENABLE_LUA: 0,
+        RegistryPath.UAC_PROMPT_ON_SECURE_DESKTOP: 0
     }
 
     def __init__(self):
@@ -27,7 +25,8 @@ class WindowsFolderOptionsConfigurator(ConfiguratorBase):
         return True
 
     def configure(self):
-        self.info("Setting folder option to see hidden files and directories and known file extensions")
+        self.info("Setting UAC level to lowest to suppress the prompts")
 
+        # Set UAC level to the lowest by setting the managers keys
         for registry_key, expected_value in self.EXPECTED_REGISTRY_ENTRIES.items():
             RegistryManager.instance().set(registry_key, expected_value, winreg.REG_DWORD)

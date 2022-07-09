@@ -1,25 +1,26 @@
 from scripts.checkers.checker import Checker
 from scripts.checkers.system_checker import SystemChecker
+from scripts.configurators.configurator import Configurator
+from scripts.configurators.software.cmder_configurator import CmderConfigurator
+from scripts.configurators.software.git_configurator import GitConfigurator
+from scripts.configurators.software.notepadplusplus_configurator import NotepadPlusPlusConfigurator
+
+from scripts.configurators.software.uac_configurator import UACConfigurator
+from scripts.configurators.windows.ssh_credentials_configurator import SSHCredentialsConfigurator
+from scripts.configurators.windows.windows_dark_mode_configurator import WindowsDarkModeConfigurator
+from scripts.configurators.windows.windows_default_browser_configurator import WindowsDefaultBrowserConfigurator
+from scripts.configurators.windows.windows_defender_configurator import WindowsDefenderConfigurator
+from scripts.configurators.windows.windows_desktop_configurator import WindowsDesktopConfigurator
+from scripts.configurators.windows.windows_desktop_icon_configurator import WindowsDesktopIconConfigurator
+from scripts.configurators.windows.windows_energy_saving_plan_configurator import WindowsEnergySavingPlanConfigurator
+from scripts.configurators.windows.windows_folder_options_configurator import WindowsFolderOptionsConfigurator
+from scripts.configurators.windows.windows_services_configurator import WindowsServicesConfigurator
+from scripts.configurators.windows.windows_taskbar_configurator import WindowsTaskbarConfigurator
 from scripts.logging.logger import Logger
+from scripts.managers.software_manager import SoftwareManager
 from scripts.parsers.argument_parser import ArgumentParser
 from scripts.parsers.config_parser import ConfigParser
 from scripts.parsers.parser import Parser
-from scripts.software.configurators.cmder_configurator import CmderConfigurator
-from scripts.software.configurators.configurator import Configurator
-from scripts.software.configurators.git_configurator import GitConfigurator
-from scripts.software.configurators.notepadplusplus_configurator import NotepadPlusPlusConfigurator
-from scripts.software.configurators.ssh_credentials_configurator import SSHCredentialsConfigurator
-from scripts.software.configurators.uac_configurator import UACConfigurator
-from scripts.software.configurators.windows_dark_mode_configurator import WindowsDarkModeConfigurator
-from scripts.software.configurators.windows_default_browser_configurator import WindowsDefaultBrowserConfigurator
-from scripts.software.configurators.windows_defender_configurator import WindowsDefenderConfigurator
-from scripts.software.configurators.windows_desktop_configurator import WindowsDesktopConfigurator
-from scripts.software.configurators.windows_desktop_icon_configurator import WindowsDesktopIconConfigurator
-from scripts.software.configurators.windows_energy_saving_plan_configurator import WindowsEnergySavingPlanConfigurator
-from scripts.software.configurators.windows_folder_options_configurator import WindowsFolderOptionsConfigurator
-from scripts.software.configurators.windows_services_configurator import WindowsServicesConfigurator
-from scripts.software.configurators.windows_taskbar_configurator import WindowsTaskbarConfigurator
-from scripts.software.software_installer import SoftwareInstaller
 
 logger = Logger.instance()
 
@@ -41,7 +42,7 @@ if __name__ == "__main__":
     Parser.instance().parse(ConfigParser)
 
     Checker.instance().check(SystemChecker)
-    SoftwareInstaller.instance().start()
+    SoftwareManager.instance().start()
 
     Configurator.instance().configure(UACConfigurator)
     Configurator.instance().configure(WindowsDefenderConfigurator)

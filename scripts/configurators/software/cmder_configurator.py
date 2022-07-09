@@ -4,13 +4,13 @@ import winreg
 
 from termcolor import colored
 
+from scripts.configurators.configurator_base import ConfiguratorBase
 from scripts.logging.logger import Logger
 from scripts.managers.md5_manager import MD5Manager
 from scripts.managers.registry_manager import RegistryManager
 from scripts.managers.registry_manager import RegistryPath
+from scripts.managers.software_manager import SoftwareManager
 from scripts.singleton import Singleton
-from scripts.software.configurator_base import ConfiguratorBase
-from scripts.software.software_installer import SoftwareInstaller
 
 logger = Logger.instance()
 
@@ -38,8 +38,8 @@ class CmderConfigurator(ConfiguratorBase):
     def __init__(self):
         super().__init__(__file__)
 
-        self.base_path = SoftwareInstaller.instance().get_base_path(self.SOFTWARE)
-        self.executable_path = SoftwareInstaller.instance().get_path(self.SOFTWARE, self.EXECUTABLE_NAME)
+        self.base_path = SoftwareManager.instance().get_base_path(self.SOFTWARE)
+        self.executable_path = SoftwareManager.instance().get_path(self.SOFTWARE, self.EXECUTABLE_NAME)
 
         self.icon_path = os.path.join(self.base_path, rf"icons\{self.SOFTWARE}.ico")
         self.local_settings_path = os.path.join(os.getcwd(), self.LOCAL_SETTINGS_FILE_LOCATION)

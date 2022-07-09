@@ -4,10 +4,10 @@ from itertools import chain
 
 from termcolor import colored
 
+from scripts.configurators.configurator_base import ConfiguratorBase
 from scripts.managers.github_file_downloader import GithubFileDownloader
+from scripts.managers.software_manager import SoftwareManager
 from scripts.singleton import Singleton
-from scripts.software.configurator_base import ConfiguratorBase
-from scripts.software.software_installer import SoftwareInstaller
 
 
 @Singleton
@@ -24,7 +24,7 @@ class NotepadPlusPlusConfigurator(ConfiguratorBase):
     def __init__(self):
         super().__init__(__file__)
 
-        self.base_path = SoftwareInstaller.instance().get_base_path(self.SOFTWARE)
+        self.base_path = SoftwareManager.instance().get_base_path(self.SOFTWARE)
         self.plugins_path = os.path.join(self.base_path, "plugins")
 
     def is_configured_already(self):

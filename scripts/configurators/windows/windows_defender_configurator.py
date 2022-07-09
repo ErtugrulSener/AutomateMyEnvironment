@@ -2,14 +2,14 @@ import os
 
 from scripts.commands.command_executor import CommandExecutor
 from scripts.commands.command_generator import CommandGenerator
+from scripts.configurators.configurator_base import ConfiguratorBase
+from scripts.configurators.windows.windows_services_configurator import ServiceStatus
+from scripts.configurators.windows.windows_services_configurator import WindowsServicesConfigurator
 from scripts.logging.logger import Logger
 from scripts.managers.github_file_downloader import GithubFileDownloader
 from scripts.managers.registry_manager import RegistryManager
 from scripts.managers.registry_manager import RegistryPath
 from scripts.singleton import Singleton
-from scripts.software.configurator_base import ConfiguratorBase
-from scripts.software.configurators.windows_services_configurator import ServiceStatus
-from scripts.software.configurators.windows_services_configurator import WindowsServicesConfigurator
 
 logger = Logger.instance()
 

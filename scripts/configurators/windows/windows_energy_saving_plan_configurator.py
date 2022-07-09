@@ -3,9 +3,9 @@ from enum import Enum
 
 from scripts.commands.command_executor import CommandExecutor
 from scripts.commands.command_generator import CommandGenerator
+from scripts.configurators.configurator_base import ConfiguratorBase
 from scripts.logging.logger import Logger
 from scripts.singleton import Singleton
-from scripts.software.configurator_base import ConfiguratorBase
 
 logger = Logger.instance()
 

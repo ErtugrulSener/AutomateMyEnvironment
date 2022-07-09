@@ -17,7 +17,7 @@ parser.add_argument('--additional_arguments')
 
 
 @Singleton
-class SoftwareInstaller:
+class SoftwareManager:
     def __init__(self):
         self.installed_software = []
         self.refresh_installed_software_cache()

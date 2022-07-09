@@ -1,17 +1,19 @@
+import os
 import winreg
 
+from scripts.configurators.configurator_base import ConfiguratorBase
 from scripts.managers.registry_manager import RegistryManager
 from scripts.managers.registry_manager import RegistryPath
 from scripts.singleton import Singleton
-from scripts.software.configurator_base import ConfiguratorBase
+
+DESKTOP_PATH = os.path.join(os.path.join(os.environ['USERPROFILE']), r'Desktop')
 
 
 @Singleton
-class UACConfigurator(ConfiguratorBase):
+class WindowsDesktopIconConfigurator(ConfiguratorBase):
     EXPECTED_REGISTRY_ENTRIES = {
-        RegistryPath.UAC_CONSENT_PROMPT_BEHAVIOR_ADMIN: 0,
-        RegistryPath.UAC_ENABLE_LUA: 0,
-        RegistryPath.UAC_PROMPT_ON_SECURE_DESKTOP: 0
+        RegistryPath.WINDOWS_THIS_PC_DESKTOP_ICON: 0,
+        RegistryPath.WINDOWS_USER_HOME_DIRECTORY_DESKTOP_ICON: 0,
     }
 
     def __init__(self):
@@ -25,8 +27,7 @@ class UACConfigurator(ConfiguratorBase):
         return True
 
     def configure(self):
-        self.info("Setting UAC level to lowest to suppress the prompts")
+        self.info("Enabling needed desktop icons (to user home directory and this pc) in registry")
 
-        # Set UAC level to the lowest by setting the managers keys
         for registry_key, expected_value in self.EXPECTED_REGISTRY_ENTRIES.items():
             RegistryManager.instance().set(registry_key, expected_value, winreg.REG_DWORD)

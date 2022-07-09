@@ -1,25 +1,19 @@
 import winreg
 
+from scripts.configurators.configurator_base import ConfiguratorBase
 from scripts.logging.logger import Logger
-from scripts.managers.explorer_manager import ExplorerManager
 from scripts.managers.registry_manager import RegistryManager
 from scripts.managers.registry_manager import RegistryPath
 from scripts.singleton import Singleton
-from scripts.software.configurator_base import ConfiguratorBase
 
 logger = Logger.instance()
 
 
 @Singleton
-class WindowsTaskbarConfigurator(ConfiguratorBase):
+class WindowsFolderOptionsConfigurator(ConfiguratorBase):
     EXPECTED_REGISTRY_ENTRIES = {
-        RegistryPath.WINDOWS_PEN_WORKSPACE_BUTTON_VISIBILITY: 0,
-        RegistryPath.WINDOWS_TIPBAND_DESIRED_VISIBILITY: 0,
-        RegistryPath.WINDOWS_PEOPLE_BAND: 0,
-        RegistryPath.WINDOWS_SHOW_TASK_VIEW_BUTTON: 0,
-        RegistryPath.WINDOWS_SHOW_CORTANA_BUTTON: 0,
-        RegistryPath.WINDOWS_ENABLE_FEEDS: 0,
-        RegistryPath.WINDOWS_SHALL_FEEDS_TASKBAR_VIEW_MODE: 2,
+        RegistryPath.WINDOWS_SEE_HIDDEN_FOLDERS_AND_FILES: 1,
+        RegistryPath.WINDOWS_HIDE_FILE_EXTENSIONS: 0,
     }
 
     def __init__(self):
@@ -33,9 +27,7 @@ class WindowsTaskbarConfigurator(ConfiguratorBase):
         return True
 
     def configure(self):
-        self.info("Hiding unnecessary taskbar elements like the windows ink tray icon")
+        self.info("Setting folder option to see hidden files and directories and known file extensions")
 
         for registry_key, expected_value in self.EXPECTED_REGISTRY_ENTRIES.items():
             RegistryManager.instance().set(registry_key, expected_value, winreg.REG_DWORD)
-
-        ExplorerManager.instance().restart()

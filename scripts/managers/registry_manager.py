@@ -132,11 +132,6 @@ class RegistryPath(Enum):
         "ShowCortanaButton"
     ]
 
-    WINDOWS_SHALL_FEEDS_TASKBAR_VIEW_MODE = [
-        r"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Feeds",
-        "ShellFeedsTaskbarViewMode"
-    ]
-
     WINDOWS_ENABLE_FEEDS = [
         r"HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Windows Feeds",
         "EnableFeeds"
