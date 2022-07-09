@@ -18,6 +18,7 @@ class WindowsTaskbarConfigurator(ConfiguratorBase):
         RegistryPath.WINDOWS_PEOPLE_BAND: 0,
         RegistryPath.WINDOWS_SHOW_TASK_VIEW_BUTTON: 0,
         RegistryPath.WINDOWS_SHOW_CORTANA_BUTTON: 0,
+        RegistryPath.WINDOWS_ENABLE_FEEDS: 0,
         RegistryPath.WINDOWS_SHALL_FEEDS_TASKBAR_VIEW_MODE: 2,
     }
 
