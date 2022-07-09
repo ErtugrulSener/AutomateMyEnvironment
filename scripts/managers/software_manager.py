@@ -32,7 +32,8 @@ class SoftwareManager:
             .list()
 
         first_time_loading = len(self.installed_software) == 0
-        output = CommandExecutor(print_to_console=not first_time_loading).execute(command).splitlines()
+        output = CommandExecutor(print_to_console=not first_time_loading and logger.is_trace()).execute(
+            command).splitlines()
         output = output[4:-2]
 
         # Fetch name out of the acquired string, looking like for example: 'python 3.9.0'

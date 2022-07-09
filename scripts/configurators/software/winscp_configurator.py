@@ -25,8 +25,6 @@ class WinscpConfigurator(ConfiguratorBase):
 
     def load_winscp_configuration(self):
         self.winscp_configuration = configparser.ConfigParser()
-        self.winscp_configuration.optionxform = str
-
         self.winscp_configuration.read(self.winscp_configuration_filepath)
 
     def set_configuration_parameter(self, section, key, value):
