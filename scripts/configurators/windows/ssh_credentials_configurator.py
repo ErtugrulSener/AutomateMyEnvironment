@@ -50,11 +50,10 @@ class SSHCredentialsConfigurator(ConfiguratorBase):
         self.info("Checking file permissions, setting to 600 (Only owner is allowed to read & write)")
         FilePermissionManager.instance().set_read_and_write_only(private_key_filepath, os.getlogin())
 
-        logger.info(os.getcwd())
         if SecretManager.instance().is_encrypted(Secret.PRIVATE_KEY_OPENSSH):
             SecretManager.instance().unlock()
 
         self.info("Adding private key to windows ssh-agent")
-        """command = CommandGenerator() \
+        command = CommandGenerator() \
             .parameters("ssh-add", private_key_filepath)
-        CommandExecutor().execute(command)"""
+        CommandExecutor().execute(command)

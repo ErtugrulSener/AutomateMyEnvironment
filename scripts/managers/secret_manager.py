@@ -31,14 +31,14 @@ class SecretManager:
             return filetype == "GITCRYPT"
 
     def lock(self):
-        logger.info("Locking all secrets now.")
+        logger.info("Locking all secrets now...")
 
         command = CommandGenerator() \
             .parameters("git-crypt", "lock")
         CommandExecutor().execute(command)
 
     def unlock(self):
-        logger.info("Unlocking all secrets now.")
+        logger.info("Unlocking all secrets now...")
         pgp_key_filepath = os.path.join(os.path.join(os.environ['USERPROFILE']), r'Desktop/secret.pgp')
 
         command = CommandGenerator() \
