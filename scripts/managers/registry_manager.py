@@ -133,7 +133,7 @@ class RegistryPath(Enum):
     ]
 
     WINDOWS_SHALL_FEEDS_TASKBAR_VIEW_MODE = [
-        r"HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Feeds",
+        r"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Feeds",
         "ShellFeedsTaskbarViewMode"
     ]
 
