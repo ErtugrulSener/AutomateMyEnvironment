@@ -70,7 +70,7 @@ if %ERRORLEVEL% NEQ 0 (
 	@call refreshenv
 
 	echo Updating pip to the newest version
-	@call python -m pip install --ugprade pip >NUL 2>&1
+	@call python -m pip install --upgrade pip >NUL 2>&1
 
 :skipPythonInstallation
 
