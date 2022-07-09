@@ -18,6 +18,8 @@ if %ERRORLEVEL% NEQ 0 (
 	echo Setting global environments parameters
 	@setx SCOOP_GLOBAL "C:\Software" /M
 
+	@powershell Set-ExecutionPolicy Unrestricted
+
 	echo Installing scoop windows package manager
 	@powershell -File .\install_scoop.ps1
 
