@@ -6,6 +6,7 @@ from scripts.configurators.software.git_configurator import GitConfigurator
 from scripts.configurators.software.notepadplusplus_configurator import NotepadPlusPlusConfigurator
 
 from scripts.configurators.software.uac_configurator import UACConfigurator
+from scripts.configurators.software.winscp_configurator import WinscpConfigurator
 from scripts.configurators.windows.ssh_credentials_configurator import SSHCredentialsConfigurator
 from scripts.configurators.windows.windows_dark_mode_configurator import WindowsDarkModeConfigurator
 from scripts.configurators.windows.windows_default_browser_configurator import WindowsDefaultBrowserConfigurator
@@ -59,3 +60,4 @@ if __name__ == "__main__":
     Configurator.instance().configure(SSHCredentialsConfigurator)
     Configurator.instance().configure(CmderConfigurator)
     Configurator.instance().configure(NotepadPlusPlusConfigurator)
+    Configurator.instance().configure(WinscpConfigurator)
