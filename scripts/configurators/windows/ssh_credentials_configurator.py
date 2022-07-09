@@ -45,13 +45,13 @@ class SSHCredentialsConfigurator(ConfiguratorBase):
         return self.PUBLIC_KEY in self.ssh_keys
 
     def configure(self):
-        if SecretManager.instance().is_encrypted(Secret.PRIVATE_KEY_OPENSSH):
-            SecretManager.instance().unlock()
-
         private_key_filepath = SecretManager.instance().get_filepath(Secret.PRIVATE_KEY_OPENSSH)
 
         self.info("Checking file permissions, setting to 600 (Only owner is allowed to read & write)")
         FilePermissionManager.instance().set_read_and_write_only(private_key_filepath, os.getlogin())
+
+        if SecretManager.instance().is_encrypted(Secret.PRIVATE_KEY_OPENSSH):
+            SecretManager.instance().unlock()
 
         self.info("Adding private key to windows ssh-agent")
         command = CommandGenerator() \
