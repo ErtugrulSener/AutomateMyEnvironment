@@ -13,8 +13,12 @@ class CommandExecutor:
     def __init__(self,
                  execute_in_shell=True,
                  is_powershell_command=False,
-                 print_to_console=True,
+                 print_to_console=None,
                  expected_return_codes=None):
+
+        if print_to_console is None:
+            print_to_console = logger.is_trace() or logger.is_debug()
+
         if expected_return_codes is None:
             expected_return_codes = [ERROR_SUCCESS]
         else:

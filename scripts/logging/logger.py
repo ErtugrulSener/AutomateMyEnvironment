@@ -29,9 +29,9 @@ class Logger(logging.Logger):
     def __init__(self):
         logging.Logger.__init__(self, __name__, DEFAULT_LOG_LEVEL)
 
-        formatter = logging.Formatter(FORMAT_STYLE)
+        """formatter = logging.Formatter(FORMAT_STYLE)
 
-        """file_handler = logging.FileHandler(DEFAULT_INSTALL_SCRIPT_PATH)
+        file_handler = logging.FileHandler(DEFAULT_INSTALL_SCRIPT_PATH)
         file_handler.setFormatter(formatter)
         file_handler.setLevel(DEFAULT_LOG_LEVEL)
         self.addHandler(file_handler)"""
