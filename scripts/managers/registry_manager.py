@@ -117,6 +117,16 @@ class RegistryPath(Enum):
         ""
     ]
 
+    WINDOWS_APPS_USE_LIGHT_THEME = [
+        r"HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize",
+        "AppsUseLightTheme"
+    ]
+
+    WINDOWS_SYSTEM_USES_LIGHT_THEME = [
+        r"HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize",
+        "SystemUsesLightTheme"
+    ]
+
 
 @Singleton
 class RegistryManager:
