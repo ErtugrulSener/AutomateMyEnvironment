@@ -1,6 +1,9 @@
 import os
+import re
 from itertools import chain
 from pathlib import Path
+
+from winerror import ERROR_WAIT_NO_CHILDREN
 
 from scripts.commands.command_executor import CommandExecutor
 from scripts.commands.command_generator import CommandGenerator
@@ -27,7 +30,11 @@ class GitConfigurator(ConfiguratorBase):
             .git() \
             .config() \
             .parameters("--global", "--list")
-        output = CommandExecutor(print_to_console=logger.is_trace()).execute(command)
+        output = CommandExecutor(print_to_console=logger.is_trace(),
+                                 expected_return_codes=[ERROR_WAIT_NO_CHILDREN]).execute(command)
+
+        if re.match("^fatal: unable to read config file.*No such file or directory\n?$", output):
+            return
 
         for line in output.splitlines():
             key, value = line.split("=")
