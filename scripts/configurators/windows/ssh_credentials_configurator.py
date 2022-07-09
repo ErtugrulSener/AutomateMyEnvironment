@@ -54,6 +54,6 @@ class SSHCredentialsConfigurator(ConfiguratorBase):
             SecretManager.instance().unlock()
 
         self.info("Adding private key to windows ssh-agent")
-        command = CommandGenerator() \
+        """command = CommandGenerator() \
             .parameters("ssh-add", private_key_filepath)
-        CommandExecutor().execute(command)
+        CommandExecutor().execute(command)"""
