@@ -12,26 +12,6 @@ logger = Logger.instance()
 
 
 class RegistryPath(Enum):
-    PROGRAM_FILES_PATH = [
-        r"HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Environment",
-        "ProgramFiles"
-    ]
-
-    DEFAULT_INSTALLATION_PATH = [
-        r"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion",
-        "ProgramFilesDir"
-    ]
-
-    DEFAULT_INSTALLATION_PATH_x86 = [
-        r"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion",
-        "ProgramFilesDir (x86)"
-    ]
-
-    DEFAULT_UNINSTALLATION_PATH = [
-        r"HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{}",
-        "InstallLocation"
-    ]
-
     UAC_CONSENT_PROMPT_BEHAVIOR_ADMIN = [
         r"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System",
         "ConsentPromptBehaviorAdmin"
@@ -118,13 +98,43 @@ class RegistryPath(Enum):
     ]
 
     WINDOWS_APPS_USE_LIGHT_THEME = [
-        r"HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize",
+        r"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize",
         "AppsUseLightTheme"
     ]
 
     WINDOWS_SYSTEM_USES_LIGHT_THEME = [
-        r"HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize",
+        r"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize",
         "SystemUsesLightTheme"
+    ]
+
+    WINDOWS_PEN_WORKSPACE_BUTTON_VISIBILITY = [
+        r"HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\PenWorkspace",
+        "PenWorkspaceButtonDesiredVisibility"
+    ]
+
+    WINDOWS_TIPBAND_DESIRED_VISIBILITY = [
+        r"HKEY_CURRENT_USER\SOFTWARE\Microsoft\TabletTip\1.7",
+        "TipbandDesiredVisibility"
+    ]
+
+    WINDOWS_PEOPLE_BAND = [
+        r"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced\People",
+        "PeopleBand"
+    ]
+
+    WINDOWS_SHOW_TASK_VIEW_BUTTON = [
+        r"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced",
+        "ShowTaskViewButton"
+    ]
+
+    WINDOWS_SHOW_CORTANA_BUTTON = [
+        r"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced",
+        "ShowCortanaButton"
+    ]
+
+    WINDOWS_SHALL_FEEDS_TASKBAR_VIEW_MODE = [
+        r"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Feeds",
+        "ShellFeedsTaskbarViewMode"
     ]
 
 

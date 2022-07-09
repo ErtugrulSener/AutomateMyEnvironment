@@ -18,6 +18,7 @@ from scripts.software.configurators.windows_desktop_icon_configurator import Win
 from scripts.software.configurators.windows_energy_saving_plan_configurator import WindowsEnergySavingPlanConfigurator
 from scripts.software.configurators.windows_folder_options_configurator import WindowsFolderOptionsConfigurator
 from scripts.software.configurators.windows_services_configurator import WindowsServicesConfigurator
+from scripts.software.configurators.windows_taskbar_configurator import WindowsTaskbarConfigurator
 from scripts.software.software_installer import SoftwareInstaller
 
 logger = Logger.instance()
@@ -51,6 +52,7 @@ if __name__ == "__main__":
     Configurator.instance().configure(WindowsDesktopIconConfigurator)
     Configurator.instance().configure(WindowsDefaultBrowserConfigurator)
     Configurator.instance().configure(WindowsDarkModeConfigurator)
+    Configurator.instance().configure(WindowsTaskbarConfigurator)
 
     Configurator.instance().configure(GitConfigurator)
     Configurator.instance().configure(SSHCredentialsConfigurator)
