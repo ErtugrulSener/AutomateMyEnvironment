@@ -19,16 +19,14 @@ class SystemChecker:
         "scoop",
     ]
 
-    @staticmethod
-    def check_for_admin_rights():
+    def check_for_admin_rights(self):
         logger.info('Checking if script was called as admin (Required)')
 
         if not admin_manager.is_user_admin():
             logger.error('You need administrator privileges to run this script!')
             exit(1)
 
-    @staticmethod
-    def check_if_os_is_suitable():
+    def check_if_os_is_suitable(self):
         logger.info('Checking if it is a suitable OS (Only windows is supported by now)')
         is_windows = any(platform.win32_ver())
 
@@ -62,7 +60,7 @@ class SystemChecker:
             exit(5)
 
     def check_for_internet_connection(self):
-        logger.info('Checking if user has a persistent internet connection.')
+        logger.info('Checking if user has a persistent internet connection')
         conn = httplib.HTTPSConnection("8.8.8.8", timeout=5)
 
         try:

@@ -92,3 +92,5 @@ install.log
 # Ignore defender-control executables
 external/executables/defender-control/*.exe
 
+# Ignore decrypted secret to not expose anything to the public ;)
+secret_decrypted

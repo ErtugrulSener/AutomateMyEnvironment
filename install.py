@@ -1,4 +1,5 @@
 from scripts.checkers.checker import Checker
+from scripts.checkers.secrets_checker import SecretsChecker
 from scripts.checkers.system_checker import SystemChecker
 from scripts.configurators.configurator import Configurator
 from scripts.configurators.software.cmder_configurator import CmderConfigurator
@@ -18,6 +19,7 @@ from scripts.configurators.windows.windows_folder_options_configurator import Wi
 from scripts.configurators.windows.windows_services_configurator import WindowsServicesConfigurator
 from scripts.configurators.windows.windows_taskbar_configurator import WindowsTaskbarConfigurator
 from scripts.logging.logger import Logger
+from scripts.managers.aes_manager import AESManager
 from scripts.managers.software_manager import SoftwareManager
 from scripts.parsers.argument_parser import ArgumentParser
 from scripts.parsers.config_parser import ConfigParser
@@ -33,6 +35,7 @@ Exit codes:
     4 -> Failed to install software.
     5 -> Tamper Protection needs to be disabled manually.
     6 -> Problem with the internet, a persistent connection is needed.
+    7 -> The password given to decrypt the git-crypt symmetric key was invalid.
 
 TODO:
     IntelliJ:
@@ -44,6 +47,7 @@ if __name__ == "__main__":
     Parser.instance().parse(ConfigParser)
 
     Checker.instance().check(SystemChecker)
+    Checker.instance().check(SecretsChecker)
     SoftwareManager.instance().start()
 
     Configurator.instance().configure(UACConfigurator)

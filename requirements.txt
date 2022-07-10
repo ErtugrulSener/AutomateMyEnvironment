@@ -9,3 +9,4 @@ WMI
 requests
 termcolor
 aenum
+pyaes
