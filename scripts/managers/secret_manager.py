@@ -39,8 +39,7 @@ class SecretManager:
 
     def unlock(self):
         logger.info("Unlocking all secrets now...")
-        pgp_key_filepath = os.path.join(os.path.join(os.environ['USERPROFILE']), r'Desktop/secret.pgp')
 
         command = CommandGenerator() \
-            .parameters("git-crypt", "unlock", pgp_key_filepath)
+            .parameters("git-crypt", "unlock", "secret_decrypted")
         CommandExecutor().execute(command)
