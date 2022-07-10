@@ -27,10 +27,15 @@ class WinscpConfigurator(ConfiguratorBase):
         self.winscp_configuration = configparser.ConfigParser(strict=False)
         self.winscp_configuration.read(self.winscp_configuration_filepath)
 
-    def set_configuration_parameter(self, section, key, value):
-        self.info(f"Setting configuration parameter in section [{colored(section, 'yellow')}] and "
-                  f"key [{colored(key, 'yellow')}] to [{colored(value, 'yellow')}]")
-        self.winscp_configuration.set(section, key, value)
+    def set_configuration_option(self, section, option, value):
+        self.info(f"Setting option [{colored(option, 'yellow')}] in section [{colored(section, 'yellow')}] "
+                  f"to [{colored(value, 'yellow')}]")
+
+        if not self.winscp_configuration.has_section(section):
+            self.info(f"Creating section [{colored(section, 'yellow')}] since it was missing")
+            self.winscp_configuration.add_section(section)
+
+        self.winscp_configuration.set(section, option, value)
 
     def save_configuration(self):
         self.info(f"Saving configuration file [{colored(self.winscp_configuration_filepath, 'yellow')}] now...")
@@ -40,13 +45,13 @@ class WinscpConfigurator(ConfiguratorBase):
 
     def is_configured_already(self):
         for section, key, value in chain(self.CONFIGURATION_PARAMETERS):
-            if not self.winscp_configuration.get(section, key) == value:
+            if not self.winscp_configuration.get(section, key, fallback=None) == value:
                 return False
 
         return True
 
     def configure(self):
         for section, key, value in chain(self.CONFIGURATION_PARAMETERS):
-            self.set_configuration_parameter(section, key, value)
+            self.set_configuration_option(section, key, value)
 
         self.save_configuration()
