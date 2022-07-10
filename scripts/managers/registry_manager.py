@@ -137,6 +137,11 @@ class RegistryPath(Enum):
         "EnableFeeds"
     ]
 
+    WINDOWS_SYSINTERNALS_AUTORUNS_EULA_ACCEPTED = [
+        r"HKEY_CURRENT_USER\SOFTWARE\Sysinternals\Autoruns",
+        "EulaAccepted"
+    ]
+
 
 @Singleton
 class RegistryManager:
