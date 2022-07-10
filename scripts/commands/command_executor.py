@@ -15,9 +15,10 @@ class CommandExecutor:
                  is_powershell_command=False,
                  print_to_console=None,
                  expected_return_codes=None):
-
         if print_to_console is None:
-            print_to_console = logger.is_trace() or logger.is_debug()
+            print_to_console = logger.is_trace()
+        else:
+            print_to_console = print_to_console and logger.is_trace()
 
         if expected_return_codes is None:
             expected_return_codes = [ERROR_SUCCESS]
@@ -37,7 +38,7 @@ class CommandExecutor:
 
         with subprocess.Popen(command.get(), stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
                               bufsize=1, universal_newlines=True,
-                              text=True, shell=self.execute_in_shell, encoding="ansi") as p:
+                              text=True, shell=self.execute_in_shell, encoding="cp850") as p:
             for line in p.stdout:
                 output += line
 

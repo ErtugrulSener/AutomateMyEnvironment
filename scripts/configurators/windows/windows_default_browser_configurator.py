@@ -50,7 +50,7 @@ class WindowsDefaultBrowserConfigurator(ConfiguratorBase):
         command = CommandGenerator() \
             .parameters(self.SET_USER_FTA_LOCAL_PATH, "get")
 
-        output = CommandExecutor(print_to_console=logger.is_trace()).execute(command)
+        output = CommandExecutor().execute(command)
 
         for line in output.splitlines():
             extension, association = line.split(", ")

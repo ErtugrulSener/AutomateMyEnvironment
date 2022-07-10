@@ -30,8 +30,7 @@ class GitConfigurator(ConfiguratorBase):
             .git() \
             .config() \
             .parameters("--global", "--list")
-        output = CommandExecutor(print_to_console=logger.is_trace(),
-                                 expected_return_codes=[ERROR_WAIT_NO_CHILDREN]).execute(command)
+        output = CommandExecutor(expected_return_codes=[ERROR_WAIT_NO_CHILDREN]).execute(command)
 
         if re.match("^fatal: unable to read config file.*No such file or directory\n?$", output):
             return

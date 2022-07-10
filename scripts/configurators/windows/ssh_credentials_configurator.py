@@ -31,8 +31,7 @@ class SSHCredentialsConfigurator(ConfiguratorBase):
         command = CommandGenerator() \
             .parameters("ssh-add", "-L")
 
-        output = CommandExecutor(print_to_console=logger.is_trace(),
-                                 expected_return_codes=[ERROR_INVALID_FUNCTION]).execute(command)
+        output = CommandExecutor(expected_return_codes=[ERROR_INVALID_FUNCTION]).execute(command)
 
         if output.rstrip("\r\n") == "The agent has no identities.":
             return

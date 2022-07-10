@@ -31,8 +31,7 @@ class SoftwareManager:
             .scoop() \
             .list()
 
-        first_time_loading = len(self.installed_software) == 0
-        output = CommandExecutor(print_to_console=not first_time_loading and logger.is_trace()).execute(
+        output = CommandExecutor().execute(
             command).splitlines()
         output = output[4:-2]
 
