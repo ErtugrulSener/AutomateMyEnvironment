@@ -22,6 +22,7 @@ class SecretsChecker:
 
         if os.path.exists(self.SECRET_DECRYPTED_FILEPATH) and \
                 SecretManager.instance().is_git_cryptkey(self.SECRET_DECRYPTED_FILEPATH):
+            SecretManager.instance().unlock()
             return
 
         password = stdiomask.getpass("Password to decrypt the git-crypt symmetric key: ", mask="*")
@@ -38,6 +39,8 @@ class SecretsChecker:
 
         with open(self.SECRET_DECRYPTED_FILEPATH, "wb") as fw:
             fw.write(base64_decoded_data)
+
+        SecretManager.instance().unlock()
 
     def check(self):
         self.check_git_crypt_symmetric_key()

@@ -21,6 +21,11 @@ class SecretManager:
     def get_filepath(self, secret):
         return secret.value
 
+    def get_content(self, secret, mode="r"):
+        filepath = self.get_filepath(secret)
+        content = open(filepath, mode)
+        return content
+
     def is_filetype(self, filepath, filetype):
         with open(filepath, "rb") as f:
             f.seek(1)
@@ -35,6 +40,9 @@ class SecretManager:
         return self.is_filetype(filepath, "GITCRYPTKEY")
 
     def lock(self):
+        if self.is_encrypted(Secret.PRIVATE_KEY_OPENSSH):
+            return
+
         logger.info("Locking all secrets now...")
 
         command = CommandGenerator() \
@@ -42,6 +50,9 @@ class SecretManager:
         CommandExecutor().execute(command)
 
     def unlock(self):
+        if not self.is_encrypted(Secret.PRIVATE_KEY_OPENSSH):
+            return
+
         logger.info("Unlocking all secrets now...")
 
         command = CommandGenerator() \
