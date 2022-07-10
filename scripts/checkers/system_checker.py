@@ -55,7 +55,7 @@ class SystemChecker:
     def check_for_tamper_protection(self):
         logger.info('Checking if tamper protection feature of Windows Defender is disabled...')
 
-        if RegistryManager.instance().get(RegistryPath.WINDOWS_DEFENDER_TAMPER_PROTECTION) != 4:
+        if RegistryManager.instance().get(RegistryPath.WINDOWS_DEFENDER_TAMPER_PROTECTION) not in [0, 4]:
             logger.error("The tamper protection feature of Windows Defender needs to be disabled!")
             exit(5)
 
