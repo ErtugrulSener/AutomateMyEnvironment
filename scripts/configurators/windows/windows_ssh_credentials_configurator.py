@@ -15,7 +15,7 @@ logger = Logger.instance()
 
 
 @Singleton
-class SSHCredentialsConfigurator(ConfiguratorBase):
+class WindowsSSHCredentialsConfigurator(ConfiguratorBase):
     PUBLIC_KEY = "AAAAB3NzaC1yc2EAAAADAQABAAABAQCcG3VA0HWVhCZGFu2eGFS5dDFmB+iz7C6+MC4cv2dLtTg8+3hsXRtoYBwMd5AWg3Nn" \
                  "C4rnbL8jbT4mYdKA/UIPWMtTvV3D+k1UYuxE8aDdt2cQX2ziHtkpLyHXBVoGhwJTs7mpWomBO9DVH7fJH3ckfCA/nWJxyz" \
                  "JL2r/ZE/TvJAtK+EEJ4oei+Fmcl/T5SftdzliCoYrppV0ptTL3qxGSuotUzvwBcv6/xPntmkHIXjPK3d03KcNsVxzJbtg" \
