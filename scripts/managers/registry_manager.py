@@ -149,18 +149,23 @@ class RegistryManager:
         return path, registry_key
 
     def get(self, key, *args):
-        with WinRegistry() as client:
-            path, registry_key = self.get_table(key, *args)
+        path, registry_key = self.get_table(key, *args)
+        return self.get_entry(path, registry_key).value
 
+    def get_entry(self, path, registry_key):
+        with WinRegistry() as client:
             try:
-                return client.read_entry(path, registry_key).value
+                return client.read_entry(path, registry_key)
             except FileNotFoundError:
                 return None
 
     def set(self, key, value, value_type=winreg.REG_SZ, *args):
+        path, registry_key = self.get_table(key, *args)
+        self.set_entry(path, registry_key, value, value_type)
+
+    def set_entry(self, path, registry_key, value, value_type=winreg.REG_SZ):
         with WinRegistry() as client:
-            path, registry_key = self.get_table(key, *args)
-            current_value = self.get(key, *args)
+            current_value = self.get_entry(path, registry_key)
 
             if current_value == value:
                 return
@@ -174,3 +179,12 @@ class RegistryManager:
                 f"[{colored(value, 'yellow')}]")
 
             client.write_entry(path, registry_key, value, value_type)
+
+    def delete(self, key, *args):
+        path, registry_key = self.get_table(key, *args)
+        self.delete_entry(path, registry_key)
+
+    def delete_entry(self, path, registry_key):
+        with WinRegistry() as client:
+            logger.info(f"Removing entry [{colored(os.path.join(path, registry_key), 'yellow')}]")
+            client.delete_entry(path, registry_key)
