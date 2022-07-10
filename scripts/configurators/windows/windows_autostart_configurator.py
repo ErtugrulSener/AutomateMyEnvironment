@@ -1,7 +1,5 @@
 import os
 
-from iteration_utilities import unique_everseen
-
 from scripts.commands.command_executor import CommandExecutor
 from scripts.commands.command_generator import CommandGenerator
 from scripts.configurators.configurator_base import ConfiguratorBase
@@ -49,7 +47,7 @@ class WindowsAutostartConfigurator(ConfiguratorBase):
                 )
 
         if self.autostart_list:
-            self.autostart_list = list(unique_everseen(self.autostart_list))
+            self.autostart_list = list({frozenset(item.items()): item for item in self.autostart_list}.values())
 
     def is_configured_already(self):
         return len(self.autostart_list) == 0
