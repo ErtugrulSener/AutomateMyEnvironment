@@ -21,14 +21,18 @@ class SecretManager:
     def get_filepath(self, secret):
         return secret.value
 
-    def is_encrypted(self, secret):
-        filepath = secret.value
-
+    def is_filetype(self, filepath, filetype):
         with open(filepath, "rb") as f:
             f.seek(1)
-            filetype = f.read(8).decode("utf-8")
+            found_filetype = f.read(len(filetype)).decode("utf-8")
 
-            return filetype == "GITCRYPT"
+            return found_filetype == filetype
+
+    def is_encrypted(self, secret):
+        return self.is_filetype(secret.value, "GITCRYPT")
+
+    def is_git_cryptkey(self, filepath):
+        return self.is_filetype(filepath, "GITCRYPTKEY")
 
     def lock(self):
         logger.info("Locking all secrets now...")
