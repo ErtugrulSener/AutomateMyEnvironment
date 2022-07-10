@@ -76,6 +76,14 @@ if %ERRORLEVEL% NEQ 0 (
 
 
 
+:: Check if Automation folder exits already
+if exist Automation\ (
+	goto skipFetchingGitRepository
+) else (
+	goto fetchGitRepository
+)
+
+
 :: Check if git repo is checked out here already
 @SET remote_url_in_folder=
 FOR /F "tokens=*" %%a in ('git config --get remote.origin.url') do SET remote_url_in_folder=%%a
