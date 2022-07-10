@@ -77,6 +77,26 @@ if %ERRORLEVEL% NEQ 0 (
 :skipGitInstallation
 
 
+
+:: Check for git-crypt installation on system
+@call git-crypt --version >NUL 2>&1
+
+if %ERRORLEVEL% NEQ 0 (
+	goto installGitCryptViaScoop
+) else (
+	goto skipGitCryptInstallation
+)
+
+:installGitCryptViaScoop
+	echo Installing Git since it's needed to decrypt the repository later
+	@call scoop install -g git-crypt >NUL 2>&1
+
+	echo Refreshing environment to make git-crypt available instantly
+	@call refreshenv
+
+:skipGitCryptInstallation
+
+
 @call scoop bucket add extras >NUL 2>&1
 @call scoop bucket add java >NUL 2>&1
 @call scoop bucket add versions >NUL 2>&1
