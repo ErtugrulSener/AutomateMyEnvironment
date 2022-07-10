@@ -23,6 +23,9 @@ class WindowsAutostartConfigurator(ConfiguratorBase):
         self.load_autostart_list()
 
     def load_autostart_list(self):
+        RegistryManager.instance().set(RegistryPath.WINDOWS_SYSINTERNALS_AUTORUNS_EULA_ACCEPTED, 1,
+                                       value_type=winreg.REG_DWORD)
+
         command = CommandGenerator() \
             .parameters(self.AUTORUNS_LOCAL_PATH, "-nobanner", "-m", "-a", "l", "-ct")
 
@@ -56,9 +59,6 @@ class WindowsAutostartConfigurator(ConfiguratorBase):
 
     def configure(self):
         self.info("Disabling all programs in autostart for user")
-
-        RegistryManager.instance().set(RegistryPath.WINDOWS_SYSINTERNALS_AUTORUNS_EULA_ACCEPTED, 1,
-                                       value_type=winreg.REG_DWORD)
 
         for entry in self.autostart_list:
             registry_path, registry_key = entry["registry_path"], entry["registry_key"]
