@@ -88,3 +88,7 @@ isos
 
 # Ignore log files
 install.log
+
+# Ignore defender-control executables
+external/executables/defender-control/*.exe
+
