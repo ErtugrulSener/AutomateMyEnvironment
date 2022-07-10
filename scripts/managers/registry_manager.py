@@ -150,7 +150,10 @@ class RegistryManager:
 
     def get(self, key, *args):
         path, registry_key = self.get_table(key, *args)
-        return self.get_entry(path, registry_key).value
+        entry = self.get_entry(path, registry_key)
+
+        if entry:
+            return entry.value
 
     def get_entry(self, path, registry_key):
         with WinRegistry() as client:
