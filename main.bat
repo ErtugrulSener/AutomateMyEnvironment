@@ -2,7 +2,16 @@
 @cls
 
 :: Variables
-set GIT_REMOTE_URL=https://github.com/ErtugrulSener/Automation.git
+set GIT_REMOTE_URL=https://github.com/ErtugrulSener/AutomateMyEnvironment.git
+
+set SCOOP=C:\Software\scoop
+set SCOOP_GLOBAL=C:\Software
+
+set scoop_path=%SCOOP_GLOBAL%\scoop\shims
+set refreshenv_path=%SCOOP_GLOBAL%\apps\refreshenv\current
+
+set PATH=%PATH%;%scoop_path%;%refreshenv_path%
+
 
 
 :: Check for scoop installation on system
@@ -16,16 +25,37 @@ if %ERRORLEVEL% NEQ 0 (
 
 :installScoop
 	echo Setting global environments parameters
-	@setx SCOOP_GLOBAL "C:\Software" /M
+	@setx SCOOP "%SCOOP%" /M
+	@setx SCOOP_GLOBAL "%SCOOP_GLOBAL%" /M
 
 	echo Installing scoop windows package manager
 	@powershell Set-ExecutionPolicy Unrestricted
 	@powershell iex """& {$(irm get.scoop.sh)} -RunAsAdmin"""
 
-	echo Refreshing environment to make scoop available instantly
-	@call refreshenv
+	
 
 :skipScoopInstallation
+
+
+
+:: Check for refreshenv installation on system
+@call refreshenv >NUL 2>&1
+
+if %ERRORLEVEL% NEQ 0 (
+	goto installRefreshenv
+) else (
+	goto skipRefreshenvInstallation
+)
+
+:installRefreshenv
+	echo Installing refreshenv since it's needed to refresh path dynamically
+	@call scoop install -g refreshenv >NUL 2>&1
+
+	echo Refreshing environment to test refreshing works
+	@call refreshenv
+
+:skipRefreshenvInstallation
+
 
 
 :: Check for git installation on system
@@ -78,11 +108,13 @@ if %ERRORLEVEL% NEQ 0 (
 
 :: Check if Automation folder exits already
 if exist Automation\ (
+	@cd Automation
 	goto skipFetchingGitRepository
 ) else (
-	goto fetchGitRepository
+	goto skipCheckingForAutomationFolder
 )
 
+:skipCheckingForAutomationFolder
 
 :: Check if git repo is checked out here already
 @SET remote_url_in_folder=
