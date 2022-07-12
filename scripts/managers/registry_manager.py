@@ -174,14 +174,13 @@ class RegistryManager:
     def set_entry(self, path, registry_key, value, value_type=winreg.REG_SZ):
         with WinRegistry() as client:
             entry = self.get_entry(path, registry_key)
-            current_value = entry.value
 
-            if current_value == value:
-                return
-
-            if not current_value:
+            if not entry:
                 logger.debug(f"Creating new path [{colored(path, 'yellow')}] since it didn't exist")
                 client.create_key(path)
+
+            if entry and entry.value == value:
+                return
 
             logger.info(
                 f"Setting value for registry key [{colored(os.path.join(path, registry_key), 'yellow')}] to "
