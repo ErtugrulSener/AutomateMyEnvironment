@@ -1,4 +1,5 @@
 import argparse
+import os
 
 from scripts.logging.logger import Logger
 from scripts.singleton import Singleton
@@ -21,11 +22,21 @@ class ArgumentParser(argparse.ArgumentParser):
         self.add_argument("--reinstall", required=False,
                           help='If specified, will uninstall installed software for re-installation.',
                           action='store_true')
+        self.add_argument("--proxy", required=False,
+                          help='If specified, the proxy will be used to download software via scoop or external tools'
+                               'needed via wget. Also the requests for connection tests will be tunneled through the'
+                               'proxy.')
 
         args = self.parse_args()
 
         if args.log_level:
             logger.set_log_level(args.log_level)
+
+        if args.proxy:
+            os.environ['http_proxy'] = args.proxy
+            os.environ['HTTP_PROXY'] = args.proxy
+            os.environ['https_proxy'] = args.proxy
+            os.environ['HTTPS_PROXY'] = args.proxy
 
         self.args = args
 
