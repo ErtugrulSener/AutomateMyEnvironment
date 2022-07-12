@@ -142,6 +142,11 @@ class RegistryPath(Enum):
         "EulaAccepted"
     ]
 
+    WINDOWS_APP_COMPAT_FLAGS_LAYERS = [
+        r"HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers",
+        ""
+    ]
+
 
 @Singleton
 class RegistryManager:
