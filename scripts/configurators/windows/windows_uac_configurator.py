@@ -7,7 +7,7 @@ from scripts.singleton import Singleton
 
 
 @Singleton
-class UACConfigurator(ConfiguratorBase):
+class WindowsUACConfigurator(ConfiguratorBase):
     EXPECTED_REGISTRY_ENTRIES = {
         RegistryPath.UAC_CONSENT_PROMPT_BEHAVIOR_ADMIN: 0,
         RegistryPath.UAC_ENABLE_LUA: 0,

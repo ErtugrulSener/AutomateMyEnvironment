@@ -5,7 +5,6 @@ from scripts.configurators.configurator import Configurator
 from scripts.configurators.software.cmder_configurator import CmderConfigurator
 from scripts.configurators.software.git_configurator import GitConfigurator
 from scripts.configurators.software.notepadplusplus_configurator import NotepadPlusPlusConfigurator
-from scripts.configurators.software.uac_configurator import UACConfigurator
 from scripts.configurators.software.winscp_configurator import WinscpConfigurator
 from scripts.configurators.windows.windows_autostart_configurator import WindowsAutostartConfigurator
 from scripts.configurators.windows.windows_dark_mode_configurator import WindowsDarkModeConfigurator
@@ -18,6 +17,7 @@ from scripts.configurators.windows.windows_folder_options_configurator import Wi
 from scripts.configurators.windows.windows_services_configurator import WindowsServicesConfigurator
 from scripts.configurators.windows.windows_ssh_credentials_configurator import WindowsSSHCredentialsConfigurator
 from scripts.configurators.windows.windows_taskbar_configurator import WindowsTaskbarConfigurator
+from scripts.configurators.windows.windows_uac_configurator import WindowsUACConfigurator
 from scripts.logging.logger import Logger
 from scripts.managers.software_manager import SoftwareManager
 from scripts.parsers.argument_parser import ArgumentParser
@@ -49,7 +49,7 @@ if __name__ == "__main__":
     Checker.instance().check(SecretsChecker)
     SoftwareManager.instance().start()
 
-    Configurator.instance().configure(UACConfigurator)
+    Configurator.instance().configure(WindowsUACConfigurator)
     Configurator.instance().configure(WindowsDefenderConfigurator)
     Configurator.instance().configure(WindowsDesktopConfigurator)
     Configurator.instance().configure(WindowsServicesConfigurator)
