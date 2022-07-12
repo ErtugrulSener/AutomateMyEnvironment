@@ -173,7 +173,8 @@ class RegistryManager:
 
     def set_entry(self, path, registry_key, value, value_type=winreg.REG_SZ):
         with WinRegistry() as client:
-            current_value = self.get_entry(path, registry_key)
+            entry = self.get_entry(path, registry_key)
+            current_value = entry.value
 
             if current_value == value:
                 return
