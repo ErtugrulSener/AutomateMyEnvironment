@@ -148,7 +148,7 @@ if "%remote_url_in_folder%"=="%GIT_REMOTE_URL%" (
 
 :fetchGitRepository:
 	echo Fetching git repository since it's missing
-	@git clone --quiet %GIT_REMOTE_URL% Automation > nul
+	@git clone --quiet %GIT_REMOTE_URL% Automation >NUL 2>&1
 	@cd Automation
 
 :skipFetchingGitRepository
@@ -172,4 +172,5 @@ if %ERRORLEVEL% NEQ 0 (
 
 
 REM @cls
+git pull --quiet >NUL 2>&1
 python install.py %*

@@ -22,21 +22,26 @@ class ArgumentParser(argparse.ArgumentParser):
         self.add_argument("--reinstall", required=False,
                           help='If specified, will uninstall installed software for re-installation.',
                           action='store_true')
-        self.add_argument("--proxy", required=False,
+        self.add_argument("--http-proxy", required=False,
                           help='If specified, the proxy will be used to download software via scoop or external tools'
                                'needed via wget. Also the requests for connection tests will be tunneled through the'
                                'proxy.')
+        self.add_argument("--https-proxy", required=False,
+                          help='Mimics usage of http-proxy for https connections.')
 
         args = self.parse_args()
 
         if args.log_level:
             logger.set_log_level(args.log_level)
 
-        if args.proxy:
-            os.environ['http_proxy'] = args.proxy
-            os.environ['HTTP_PROXY'] = args.proxy
-            os.environ['https_proxy'] = args.proxy
-            os.environ['HTTPS_PROXY'] = args.proxy
+        if args.http_proxy:
+            http_proxy = args.http_proxy
+            https_proxy = args.http_proxy if not args.https_proxy else args.https_proxy
+
+            os.environ['http_proxy'] = http_proxy
+            os.environ['HTTP_PROXY'] = http_proxy
+            os.environ['https_proxy'] = https_proxy
+            os.environ['HTTPS_PROXY'] = https_proxy
 
         self.args = args
 

@@ -1,7 +1,7 @@
 import platform
 from shutil import which
 
-import http.client as httplib
+import requests
 
 from scripts.logging.logger import Logger
 from scripts.managers import admin_manager
@@ -61,15 +61,13 @@ class SystemChecker:
 
     def check_for_internet_connection(self):
         logger.info('Checking if user has a persistent internet connection')
-        conn = httplib.HTTPSConnection("8.8.8.8", timeout=5)
 
         try:
-            conn.request("HEAD", "/")
-        except Exception:
+            _ = requests.head("https://8.8.8.8", timeout=5)
+            return True
+        except requests.ConnectionError:
             logger.error("You need a persistent internet connection to run this script!")
             exit(6)
-        finally:
-            conn.close()
 
     def check(self):
         self.check_for_admin_rights()
