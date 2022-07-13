@@ -5,14 +5,11 @@ import winreg
 from termcolor import colored
 
 from scripts.configurators.configurator_base import ConfiguratorBase
-from scripts.logging.logger import Logger
 from scripts.managers.md5_manager import MD5Manager
 from scripts.managers.registry_manager import RegistryManager
 from scripts.managers.registry_manager import RegistryPath
 from scripts.managers.software_manager import SoftwareManager
 from scripts.singleton import Singleton
-
-logger = Logger.instance()
 
 
 @Singleton

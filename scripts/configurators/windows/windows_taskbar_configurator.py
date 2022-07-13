@@ -1,13 +1,10 @@
 import winreg
 
 from scripts.configurators.configurator_base import ConfiguratorBase
-from scripts.logging.logger import Logger
 from scripts.managers.explorer_manager import ExplorerManager
 from scripts.managers.registry_manager import RegistryManager
 from scripts.managers.registry_manager import RegistryPath
 from scripts.singleton import Singleton
-
-logger = Logger.instance()
 
 
 @Singleton

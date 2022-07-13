@@ -9,13 +9,10 @@ from winerror import ERROR_FILE_NOT_FOUND
 from scripts.commands.command_executor import CommandExecutor
 from scripts.commands.command_generator import CommandGenerator
 from scripts.configurators.configurator_base import ConfiguratorBase
-from scripts.logging.logger import Logger
 from scripts.managers.registry_manager import RegistryManager
 from scripts.managers.registry_manager import RegistryPath
 from scripts.managers.software_manager import SoftwareManager
 from scripts.singleton import Singleton
-
-logger = Logger.instance()
 
 
 class FileExtension(Enum):

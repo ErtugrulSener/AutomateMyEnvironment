@@ -5,13 +5,10 @@ from winerror import ERROR_INVALID_FUNCTION
 from scripts.commands.command_executor import CommandExecutor
 from scripts.commands.command_generator import CommandGenerator
 from scripts.configurators.configurator_base import ConfiguratorBase
-from scripts.logging.logger import Logger
 from scripts.managers.file_permission_manager import FilePermissionManager
 from scripts.managers.secret_manager import Secret
 from scripts.managers.secret_manager import SecretManager
 from scripts.singleton import Singleton
-
-logger = Logger.instance()
 
 
 @Singleton

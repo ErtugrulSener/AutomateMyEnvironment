@@ -5,13 +5,10 @@ from scripts.commands.command_generator import CommandGenerator
 from scripts.configurators.configurator_base import ConfiguratorBase
 from scripts.configurators.windows.windows_services_configurator import ServiceStatus
 from scripts.configurators.windows.windows_services_configurator import WindowsServicesConfigurator
-from scripts.logging.logger import Logger
 from scripts.managers.github_file_downloader import GithubFileDownloader
 from scripts.managers.registry_manager import RegistryManager
 from scripts.managers.registry_manager import RegistryPath
 from scripts.singleton import Singleton
-
-logger = Logger.instance()
 
 
 @Singleton
@@ -37,7 +34,7 @@ class WindowsDefenderConfigurator(ConfiguratorBase):
         return True
 
     def configure(self):
-        logger.info("Adding myself as exception, to prevent defender from removing the defender-control tools")
+        self.info("Adding myself as exception, to prevent defender from removing the defender-control tools")
 
         command = CommandGenerator() \
             .parameters("Add-MpPreference", "-ExclusionPath", f'"{os.getcwd()}"')

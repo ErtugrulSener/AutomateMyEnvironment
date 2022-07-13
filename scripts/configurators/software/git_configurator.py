@@ -8,11 +8,8 @@ from winerror import ERROR_WAIT_NO_CHILDREN
 from scripts.commands.command_executor import CommandExecutor
 from scripts.commands.command_generator import CommandGenerator
 from scripts.configurators.configurator_base import ConfiguratorBase
-from scripts.logging.logger import Logger
 from scripts.parsers.config_parser import ConfigParser
 from scripts.singleton import Singleton
-
-logger = Logger.instance()
 
 
 @Singleton
@@ -54,8 +51,8 @@ class GitConfigurator(ConfiguratorBase):
         return True
 
     def configure(self):
-        logger.info(f"Found global config file in path: {self.global_config_path}")
-        logger.info(f"Checking if there are config parameters that need to be updated...")
+        self.info(f"Found global config file in path: {self.global_config_path}")
+        self.info(f"Checking if there are config parameters that need to be updated...")
 
         for key, value in ConfigParser.instance().items("GIT"):
             if not self.is_config_set(key):
