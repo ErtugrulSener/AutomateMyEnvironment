@@ -90,57 +90,45 @@ class WindowsDefaultBrowserConfigurator(ConfiguratorBase):
         executable_path = software_manager.get_path(self.SOFTWARE, self.EXECUTABLE_NAME)
 
         # Register browser itself
-        registry_manager.set_entry(RegistryPath.WINDOWS_REGISTERED_APPLICATIONS.get_path(), self.PROG_ID,
+        registry_manager.set_entry(RegistryPath.WINDOWS_REGISTERED_APPLICATIONS.get_path(self.PROG_ID),
                                    rf"Software\Clients\StartMenuInternet\{self.PROG_ID}\Capabilities")
 
-        registry_manager.set(RegistryPath.WINDOWS_START_MENU_INTERNET, self.DEFAULT_BROWSER, winreg.REG_SZ,
-                             self.PROG_ID)
-        registry_manager.set(RegistryPath.WINDOWS_START_MENU_INTERNET_APPLICATION_DESCRIPTION,
-                             self.DEFAULT_BROWSER, winreg.REG_SZ,
-                             self.PROG_ID)
-        registry_manager.set(RegistryPath.WINDOWS_START_MENU_INTERNET_APPLICATION_ICON,
-                             f"{executable_path},0",
+        for key in [RegistryPath.WINDOWS_START_MENU_INTERNET,
+                    RegistryPath.WINDOWS_START_MENU_INTERNET_APPLICATION_DESCRIPTION,
+                    RegistryPath.WINDOWS_START_MENU_INTERNET_APPLICATION_NAME]:
+            registry_manager.set(key, self.DEFAULT_BROWSER, winreg.REG_SZ, self.PROG_ID)
+
+        for key in [RegistryPath.WINDOWS_START_MENU_INTERNET_APPLICATION_ICON,
+                    RegistryPath.WINDOWS_START_MENU_INTERNET_DEFAULT_ICON]:
+            registry_manager.set(key,
+                                 f"{executable_path},0",
+                                 winreg.REG_SZ,
+                                 self.PROG_ID)
+
+        registry_manager.set(RegistryPath.WINDOWS_START_MENU_INTERNET_STARTMENU,
+                             self.PROG_ID,
                              winreg.REG_SZ,
-                             self.PROG_ID)
-        registry_manager.set(RegistryPath.WINDOWS_START_MENU_INTERNET_APPLICATION_NAME, self.DEFAULT_BROWSER,
-                             winreg.REG_SZ,
-                             self.PROG_ID)
-        registry_manager.set(RegistryPath.WINDOWS_START_MENU_INTERNET_STARTMENU, self.PROG_ID, winreg.REG_SZ,
-                             self.PROG_ID)
-        registry_manager.set(RegistryPath.WINDOWS_START_MENU_INTERNET_DEFAULT_ICON,
-                             f"{executable_path},0", winreg.REG_SZ,
                              self.PROG_ID)
         registry_manager.set(RegistryPath.WINDOWS_START_MENU_INTERNET_SHELL_OPEN_COMMAND,
-                             f'"{executable_path}"', winreg.REG_SZ,
+                             f'"{executable_path}"',
+                             winreg.REG_SZ,
                              self.PROG_ID)
 
         # Register browser handler
+        for key in [RegistryPath.WINDOWS_APP_USER_MODEL_ID,
+                    RegistryPath.WINDOWS_SPECIFIC_APP_USER_MODEL_ID,
+                    RegistryPath.WINDOWS_SPECIFIC_APP_NAME,
+                    RegistryPath.WINDOWS_SPECIFIC_APP_COMPANY]:
+            registry_manager.set(key, self.PROG_ID, winreg.REG_SZ, self.DEFAULT_BROWSER_HTM)
+
+        for key in [RegistryPath.WINDOWS_SPECIFIC_APP_ICON,
+                    RegistryPath.WINDOWS_SPECIFIC_APP_DEFAULT_ICON]:
+            registry_manager.set(key, f"{executable_path},0", winreg.REG_SZ, self.DEFAULT_BROWSER_HTM)
+
         registry_manager.set(RegistryPath.WINDOWS_CLASSES, f"{self.DEFAULT_BROWSER} Handler", winreg.REG_SZ,
                              self.DEFAULT_BROWSER_HTM)
 
-        registry_manager.set(RegistryPath.WINDOWS_APP_USER_MODEL_ID, self.PROG_ID, winreg.REG_SZ,
-                             self.DEFAULT_BROWSER_HTM)
-
-        registry_manager.set(RegistryPath.WINDOWS_SPECIFIC_APP_USER_MODEL_ID, self.PROG_ID, winreg.REG_SZ,
-                             self.DEFAULT_BROWSER_HTM)
-
-        registry_manager.set(RegistryPath.WINDOWS_SPECIFIC_APP_ICON,
-                             f"{executable_path},0",
-                             winreg.REG_SZ,
-                             self.DEFAULT_BROWSER_HTM)
-
-        registry_manager.set(RegistryPath.WINDOWS_SPECIFIC_APP_NAME, self.PROG_ID, winreg.REG_SZ,
-                             self.DEFAULT_BROWSER_HTM)
-
         registry_manager.set(RegistryPath.WINDOWS_SPECIFIC_APP_DESCRIPTION, "Browse the web", winreg.REG_SZ,
-                             self.DEFAULT_BROWSER_HTM)
-
-        registry_manager.set(RegistryPath.WINDOWS_SPECIFIC_APP_COMPANY, self.PROG_ID, winreg.REG_SZ,
-                             self.DEFAULT_BROWSER_HTM)
-
-        registry_manager.set(RegistryPath.WINDOWS_SPECIFIC_APP_DEFAULT_ICON,
-                             f"{executable_path},0",
-                             winreg.REG_SZ,
                              self.DEFAULT_BROWSER_HTM)
 
         registry_manager.set(RegistryPath.WINDOWS_SPECIFIC_APP_SHELL_OPEN_COMMAND,
@@ -150,13 +138,13 @@ class WindowsDefaultBrowserConfigurator(ConfiguratorBase):
 
         for association in [".htm", ".html"]:
             registry_manager.set_entry(
-                RegistryPath.WINDOWS_START_MENU_INTERNET_FILE_ASSOCIATIONS.get_path().format(self.PROG_ID),
+                RegistryPath.WINDOWS_START_MENU_INTERNET_FILE_ASSOCIATIONS.get_path(self.PROG_ID),
                 association,
                 self.DEFAULT_BROWSER_HTM)
 
         for association in ["http", "https"]:
             registry_manager.set_entry(
-                RegistryPath.WINDOWS_START_MENU_INTERNET_URL_ASSOCIATIONS.get_path().format(self.PROG_ID),
+                RegistryPath.WINDOWS_START_MENU_INTERNET_URL_ASSOCIATIONS.get_path(self.PROG_ID),
                 association,
                 self.DEFAULT_BROWSER_HTM)
 

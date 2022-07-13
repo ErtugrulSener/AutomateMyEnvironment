@@ -242,11 +242,21 @@ class RegistryPath(Enum):
         ""
     ]
 
-    def get_path(self):
-        return self.value[0]
+    def get_path(self, *args):
+        path = self.value[0]
 
-    def get_registry_key(self):
-        return self.value[1]
+        if args:
+            path = path.format(*args)
+
+        return path
+
+    def get_registry_key(self, *args):
+        registry_key = self.value[1]
+
+        if args:
+            registry_key = registry_key.format(*args)
+
+        return registry_key
 
 
 @Singleton
