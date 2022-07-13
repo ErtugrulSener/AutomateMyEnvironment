@@ -137,6 +137,11 @@ class RegistryPath(Enum):
         "EnableFeeds"
     ]
 
+    WINDOWS_HIDE_SCA_MEET_NOW = [
+        r"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies",
+        "HideSCAMeetNow"
+    ]
+
     WINDOWS_SYSINTERNALS_AUTORUNS_EULA_ACCEPTED = [
         r"HKEY_CURRENT_USER\SOFTWARE\Sysinternals\Autoruns",
         "EulaAccepted"

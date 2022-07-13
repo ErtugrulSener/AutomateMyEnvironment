@@ -16,6 +16,7 @@ class WindowsTaskbarConfigurator(ConfiguratorBase):
         RegistryPath.WINDOWS_SHOW_TASK_VIEW_BUTTON: 0,
         RegistryPath.WINDOWS_SHOW_CORTANA_BUTTON: 0,
         RegistryPath.WINDOWS_ENABLE_FEEDS: 0,
+        RegistryPath.WINDOWS_HIDE_SCA_MEET_NOW: 1,
     }
 
     def __init__(self):
