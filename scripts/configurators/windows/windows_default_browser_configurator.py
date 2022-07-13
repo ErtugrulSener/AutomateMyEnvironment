@@ -90,7 +90,7 @@ class WindowsDefaultBrowserConfigurator(ConfiguratorBase):
         executable_path = software_manager.get_path(self.SOFTWARE, self.EXECUTABLE_NAME)
 
         # Register browser itself
-        registry_manager.set_entry(RegistryPath.WINDOWS_REGISTERED_APPLICATIONS.get_path(self.PROG_ID),
+        registry_manager.set_entry(RegistryPath.WINDOWS_REGISTERED_APPLICATIONS.get_path(), self.PROG_ID,
                                    rf"Software\Clients\StartMenuInternet\{self.PROG_ID}\Capabilities")
 
         for key in [RegistryPath.WINDOWS_START_MENU_INTERNET,
