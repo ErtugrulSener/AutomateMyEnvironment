@@ -48,11 +48,9 @@ if %ERRORLEVEL% NEQ 0 (
 )
 
 :installRefreshenv
-	echo Installing refreshenv since it's needed to refresh path dynamically
+	echo Installing refreshenv
 	@call scoop install -g refreshenv >NUL 2>&1
-
-	echo Refreshing environment to test refreshing works
-	@call refreshenv
+	@call refreshenv >NUL 2>&1
 
 :skipRefreshenvInstallation
 
@@ -68,11 +66,9 @@ if %ERRORLEVEL% NEQ 0 (
 )
 
 :installGitViaScoop
-	echo Installing Git since it's needed to install buckets
+	echo Installing git
 	@call scoop install -g git >NUL 2>&1
-
-	echo Refreshing environment to make git available instantly
-	@call refreshenv
+	@call refreshenv >NUL 2>&1
 
 :skipGitInstallation
 
@@ -88,11 +84,9 @@ if %ERRORLEVEL% NEQ 0 (
 )
 
 :installGitCryptViaScoop
-	echo Installing Git since it's needed to decrypt the repository later
+	echo Installing git-crypt
 	@call scoop install -g git-crypt >NUL 2>&1
-
-	echo Refreshing environment to make git-crypt available instantly
-	@call refreshenv
+	@call refreshenv >NUL 2>&1
 
 :skipGitCryptInstallation
 
@@ -113,11 +107,9 @@ if %ERRORLEVEL% NEQ 0 (
 )
 
 :installPythonViaScoop:
-	echo Installing Python3 since it's missing
+	echo Installing python
 	@call scoop install -g python >NUL 2>&1
-
-	echo Refreshing environment to make python available instantly
-	@call refreshenv
+	@call refreshenv >NUL 2>&1
 
 	echo Updating pip to the newest version
 	@call python -m pip install --upgrade pip >NUL 2>&1
@@ -165,7 +157,7 @@ if %ERRORLEVEL% NEQ 0 (
 )
 
 :installPythonDependencies:
-	echo Installing python dependencies since they're missing
+	echo Installing python dependencies
 	@pip install --ignore-installed -r requirements.txt
 
 :skipInstallingPythonDependencies
