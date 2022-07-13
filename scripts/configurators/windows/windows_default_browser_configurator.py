@@ -44,10 +44,10 @@ class WindowsDefaultBrowserConfigurator(ConfiguratorBase):
         self.default_browsers = []
         self.associated_file_extensions = {}
 
-        self.load_default_browsers()
+        self.refresh_default_browser_cache()
         self.load_associated_file_extensions()
 
-    def load_default_browsers(self):
+    def refresh_default_browser_cache(self):
         command = CommandGenerator() \
             .parameters(self.SET_DEFAULT_BROWSER_LOCAL_PATH)
         output = CommandExecutor(expected_return_codes=[ERROR_FILE_NOT_FOUND]).execute(command)
@@ -162,6 +162,8 @@ class WindowsDefaultBrowserConfigurator(ConfiguratorBase):
                 RegistryPath.WINDOWS_START_MENU_INTERNET_URL_ASSOCIATIONS.get_path().format(self.PROG_ID),
                 association,
                 self.DEFAULT_BROWSER_HTM)
+
+        self.refresh_default_browser_cache()
 
     def set_default_browser(self, browser_name):
         self.info(f"Setting {colored(f'{browser_name}', 'yellow')} as the default browser")
