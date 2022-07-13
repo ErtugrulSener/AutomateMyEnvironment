@@ -42,7 +42,7 @@ class SoftwareInfo(Enum):
 @Singleton
 class SoftwareManager:
     SCOOP_APPS_SHORTCUT_PATH = os.path.join(os.environ["PROGRAMDATA"],
-                                            "Microsoft\Windows\Start Menu\Programs\Scoop Apps")
+                                            r"Microsoft\Windows\Start Menu\Programs\Scoop Apps")
 
     def __init__(self):
         self.installed_software = []

@@ -147,6 +147,107 @@ class RegistryPath(Enum):
         ""
     ]
 
+    WINDOWS_REGISTERED_APPLICATIONS = [
+        r"HKEY_CURRENT_USER\SOFTWARE\RegisteredApplications",
+        ""
+    ]
+
+    WINDOWS_START_MENU_INTERNET = [
+        r"HKEY_CURRENT_USER\Software\Clients\StartMenuInternet\{}",
+        ""
+    ]
+
+    WINDOWS_START_MENU_INTERNET_APPLICATION_DESCRIPTION = [
+        r"HKEY_CURRENT_USER\Software\Clients\StartMenuInternet\{}\Capabilities",
+        "ApplicationDescription"
+    ]
+
+    WINDOWS_START_MENU_INTERNET_APPLICATION_ICON = [
+        r"HKEY_CURRENT_USER\Software\Clients\StartMenuInternet\{}\Capabilities",
+        "ApplicationIcon"
+    ]
+
+    WINDOWS_START_MENU_INTERNET_APPLICATION_NAME = [
+        r"HKEY_CURRENT_USER\Software\Clients\StartMenuInternet\{}\Capabilities",
+        "ApplicationName"
+    ]
+
+    WINDOWS_START_MENU_INTERNET_STARTMENU = [
+        r"HKEY_CURRENT_USER\Software\Clients\StartMenuInternet\{}\Capabilities\Startmenu",
+        "StartMenuInternet"
+    ]
+
+    WINDOWS_START_MENU_INTERNET_FILE_ASSOCIATIONS = [
+        r"HKEY_CURRENT_USER\Software\Clients\StartMenuInternet\{}\Capabilities\FileAssociations",
+        ""
+    ]
+
+    WINDOWS_START_MENU_INTERNET_URL_ASSOCIATIONS = [
+        r"HKEY_CURRENT_USER\Software\Clients\StartMenuInternet\{}\Capabilities\URLAssociations",
+        ""
+    ]
+
+    WINDOWS_START_MENU_INTERNET_DEFAULT_ICON = [
+        r"HKEY_CURRENT_USER\Software\Clients\StartMenuInternet\{}\DefaultIcon",
+        ""
+    ]
+
+    WINDOWS_START_MENU_INTERNET_SHELL_OPEN_COMMAND = [
+        r"HKEY_CURRENT_USER\Software\Clients\StartMenuInternet\{}\shell\open\command",
+        ""
+    ]
+
+    WINDOWS_CLASSES = [
+        r"HKEY_CURRENT_USER\Software\Classes\{}",
+        ""
+    ]
+
+    WINDOWS_APP_USER_MODEL_ID = [
+        r"HKEY_CURRENT_USER\Software\Classes\{}",
+        "AppUserModelId"
+    ]
+
+    WINDOWS_SPECIFIC_APP_USER_MODEL_ID = [
+        r"HKEY_CURRENT_USER\Software\Classes\{}\Application",
+        "AppUserModelId"
+    ]
+
+    WINDOWS_SPECIFIC_APP_ICON = [
+        r"HKEY_CURRENT_USER\Software\Classes\{}\Application",
+        "ApplicationIcon"
+    ]
+
+    WINDOWS_SPECIFIC_APP_NAME = [
+        r"HKEY_CURRENT_USER\Software\Classes\{}\Application",
+        "ApplicationName"
+    ]
+
+    WINDOWS_SPECIFIC_APP_DESCRIPTION = [
+        r"HKEY_CURRENT_USER\Software\Classes\{}\Application",
+        "ApplicationDescription"
+    ]
+
+    WINDOWS_SPECIFIC_APP_COMPANY = [
+        r"HKEY_CURRENT_USER\Software\Classes\{}\Application",
+        "ApplicationCompany"
+    ]
+
+    WINDOWS_SPECIFIC_APP_DEFAULT_ICON = [
+        r"HKEY_CURRENT_USER\Software\Classes\{}\DefaultIcon",
+        ""
+    ]
+
+    WINDOWS_SPECIFIC_APP_SHELL_OPEN_COMMAND = [
+        r"HKEY_CURRENT_USER\Software\Classes\{}\shell\open\command",
+        ""
+    ]
+
+    def get_path(self):
+        return self.value[0]
+
+    def get_registry_key(self):
+        return self.value[1]
+
 
 @Singleton
 class RegistryManager:
@@ -178,11 +279,13 @@ class RegistryManager:
 
     def set_entry(self, path, registry_key, value, value_type=winreg.REG_SZ):
         with WinRegistry() as client:
-            entry = self.get_entry(path, registry_key)
-
-            if not entry:
-                logger.debug(f"Creating new path [{colored(path, 'yellow')}] since it didn't exist")
+            try:
+                client.read_key(path)
+            except FileNotFoundError:
+                logger.debug(f"Creating new path [{path}] since it didn't exist")
                 client.create_key(path)
+
+            entry = self.get_entry(path, registry_key)
 
             if entry and entry.value == value:
                 return
