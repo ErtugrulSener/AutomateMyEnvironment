@@ -4,6 +4,7 @@ from scripts.checkers.system_checker import SystemChecker
 from scripts.configurators.configurator import Configurator
 from scripts.configurators.software.cmder_configurator import CmderConfigurator
 from scripts.configurators.software.git_configurator import GitConfigurator
+from scripts.configurators.software.intellij_configurator import IntelliJConfigurator
 from scripts.configurators.software.notepadplusplus_configurator import NotepadPlusPlusConfigurator
 from scripts.configurators.software.winscp_configurator import WinscpConfigurator
 from scripts.configurators.windows.windows_autostart_configurator import WindowsAutostartConfigurator
@@ -68,3 +69,4 @@ if __name__ == "__main__":
     Configurator.instance().configure(CmderConfigurator)
     Configurator.instance().configure(NotepadPlusPlusConfigurator)
     Configurator.instance().configure(WinscpConfigurator)
+    Configurator.instance().configure(IntelliJConfigurator)
