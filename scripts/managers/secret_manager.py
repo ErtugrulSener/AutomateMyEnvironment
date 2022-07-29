@@ -1,23 +1,19 @@
-import os
 from enum import Enum
 
 from scripts.commands.command_executor import CommandExecutor
 from scripts.commands.command_generator import CommandGenerator
-from scripts.singleton import Singleton
 from scripts.logging.logger import Logger
+from scripts.singleton import Singleton
 
 logger = Logger.instance()
 
 
 class Secret(Enum):
-    PRIVATE_KEY_OPENSSH = r"keys/private_openssh"
+    PRIVATE_KEY_OPENSSH = r"secrets/keys/private_openssh"
 
 
 @Singleton
 class SecretManager:
-    def __init__(self):
-        pass
-
     def get_filepath(self, secret):
         return secret.value
 

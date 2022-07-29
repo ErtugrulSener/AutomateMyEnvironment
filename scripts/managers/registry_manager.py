@@ -247,9 +247,14 @@ class RegistryPath(Enum):
         ""
     ]
 
-    INTELLIJ_EULA_VERSION = [
+    JETBRAINS_EULA_VERSION = [
         r"HKEY_CURRENT_USER\SOFTWARE\JavaSoft\Prefs\jetbrains\privacy_policy",
         "eua_accepted_version"
+    ]
+
+    JETBRAINS_COMMUNITY_EULA_VERSION = [
+        r"HKEY_CURRENT_USER\SOFTWARE\JavaSoft\Prefs\jetbrains\privacy_policy",
+        "euacommunity_accepted_version"
     ]
 
     def get_path(self, *args):

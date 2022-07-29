@@ -6,6 +6,7 @@ from scripts.configurators.software.cmder_configurator import CmderConfigurator
 from scripts.configurators.software.git_configurator import GitConfigurator
 from scripts.configurators.software.intellij_configurator import IntelliJConfigurator
 from scripts.configurators.software.notepadplusplus_configurator import NotepadPlusPlusConfigurator
+from scripts.configurators.software.pycharm_configurator import PyCharmConfigurator
 from scripts.configurators.software.winscp_configurator import WinscpConfigurator
 from scripts.configurators.windows.windows_autostart_configurator import WindowsAutostartConfigurator
 from scripts.configurators.windows.windows_dark_mode_configurator import WindowsDarkModeConfigurator
@@ -21,6 +22,7 @@ from scripts.configurators.windows.windows_ssh_credentials_configurator import W
 from scripts.configurators.windows.windows_taskbar_configurator import WindowsTaskbarConfigurator
 from scripts.configurators.windows.windows_uac_configurator import WindowsUACConfigurator
 from scripts.logging.logger import Logger
+from scripts.managers.push_notifier_manager import PushNotifierManager
 from scripts.managers.software_manager import SoftwareManager
 from scripts.parsers.argument_parser import ArgumentParser
 from scripts.parsers.config_parser import ConfigParser
@@ -49,7 +51,14 @@ if __name__ == "__main__":
 
     Checker.instance().check(SystemChecker)
     Checker.instance().check(SecretsChecker)
+
+    PushNotifierManager.instance().send_text(
+        "[AUTOMATION] Installing software now...")
+
     SoftwareManager.instance().start()
+
+    PushNotifierManager.instance().send_text(
+        "[AUTOMATION] Configuring windows now...")
 
     Configurator.instance().configure(WindowsUACConfigurator)
     Configurator.instance().configure(WindowsDefenderConfigurator)
@@ -64,9 +73,16 @@ if __name__ == "__main__":
     Configurator.instance().configure(WindowsAutostartConfigurator)
     Configurator.instance().configure(WindowsScreenResolutionConfigurator)
 
+    PushNotifierManager.instance().send_text(
+        "[AUTOMATION] Configuring software now...")
+
     Configurator.instance().configure(GitConfigurator)
     Configurator.instance().configure(WindowsSSHCredentialsConfigurator)
     Configurator.instance().configure(CmderConfigurator)
     Configurator.instance().configure(NotepadPlusPlusConfigurator)
     Configurator.instance().configure(WinscpConfigurator)
     Configurator.instance().configure(IntelliJConfigurator)
+    Configurator.instance().configure(PyCharmConfigurator)
+
+    PushNotifierManager.instance().send_text(
+        "[AUTOMATION] The installation is finished successfully. Please review the results now.")
