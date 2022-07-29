@@ -2,9 +2,12 @@ import os
 import shutil
 import time
 
+from scripts.commands.command_executor import CommandExecutor
+from scripts.commands.command_generator import CommandGenerator
 from scripts.configurators.configurator_base import ConfiguratorBase
 from scripts.managers.registry_manager import RegistryManager
 from scripts.managers.registry_manager import RegistryPath
+from scripts.parsers.config_parser import ConfigParser
 from scripts.singleton import Singleton
 
 
@@ -30,10 +33,17 @@ class IntelliJConfigurator(ConfiguratorBase):
             if element.lower().startswith("intellijidea"):
                 return os.path.join(base_path, element)
 
+    def get_settings_repository_folder_path(self):
+        config_folder = self.get_config_folder_path()
+        return os.path.join(config_folder, "settingsRepository")
+
     def is_licensed(self):
         config_folder = self.get_config_folder_path()
         files_in_folder = os.listdir(config_folder)
         return all(file in files_in_folder for file in self.INTELLIJ_LICENSE_FILES)
+
+    def has_settings_repository(self):
+        return os.path.exists(self.get_settings_repository_folder_path())
 
     def is_configured_already(self):
         if not os.path.exists(self.JETBRAINS_CONSENT_OPTIONS_FILEPATH):
@@ -43,6 +53,9 @@ class IntelliJConfigurator(ConfiguratorBase):
             return False
 
         if not self.is_licensed():
+            return False
+
+        if not self.has_settings_repository():
             return False
 
         return True
@@ -72,3 +85,17 @@ class IntelliJConfigurator(ConfiguratorBase):
 
                 if not os.path.exists(target_file):
                     shutil.copyfile(local_file, target_file)
+
+        if not self.has_settings_repository():
+            self.info("Cloning settings repository to synchronize settings")
+            repository_settings_folder = self.get_settings_repository_folder_path()
+
+            if not os.path.exists(repository_settings_folder):
+                os.makedirs(repository_settings_folder)
+
+            command = CommandGenerator() \
+                .git() \
+                .clone() \
+                .parameters(ConfigParser.instance().get("INTELLIJ", "settings-repository"), "--quiet",
+                            os.path.join(repository_settings_folder, "repository"))
+            CommandExecutor().execute(command)
