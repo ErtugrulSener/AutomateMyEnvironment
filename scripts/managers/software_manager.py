@@ -82,6 +82,9 @@ class SoftwareManager:
     def get_path(self, software, executable_name):
         return os.path.join(self.get_base_path(software), executable_name)
 
+    def get_persist_path(self, software):
+        return os.path.join(os.environ["SCOOP_GLOBAL"], rf"persist\{software.lower()}")
+
     def get_base_path(self, software):
         return os.path.join(os.environ["SCOOP_GLOBAL"], rf"apps\{software.lower()}\current")
 
