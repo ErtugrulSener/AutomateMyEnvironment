@@ -132,7 +132,7 @@ class WindowsDefaultBrowserConfigurator(ConfiguratorBase):
                              self.DEFAULT_BROWSER_HTM)
 
         registry_manager.set(RegistryPath.WINDOWS_SPECIFIC_APP_SHELL_OPEN_COMMAND,
-                             f'"{executable_path}" --single-argument "%1"',
+                             f'"{executable_path}" --single-argument %1',
                              winreg.REG_SZ,
                              self.DEFAULT_BROWSER_HTM)
 
