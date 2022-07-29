@@ -138,7 +138,7 @@ class RegistryPath(Enum):
     ]
 
     WINDOWS_HIDE_SCA_MEET_NOW = [
-        r"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies",
+        r"HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer",
         "HideSCAMeetNow"
     ]
 
