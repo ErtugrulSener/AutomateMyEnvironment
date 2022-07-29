@@ -53,12 +53,12 @@ if __name__ == "__main__":
     Checker.instance().check(SecretsChecker)
 
     PushNotifierManager.instance().send_text(
-        "[AUTOMATION] Installing software now...")
+        "1/4 - [AUTOMATION] Installing software now...")
 
     SoftwareManager.instance().start()
 
     PushNotifierManager.instance().send_text(
-        "[AUTOMATION] Configuring windows now...")
+        "2/4 - [AUTOMATION] Configuring windows now...")
 
     Configurator.instance().configure(WindowsUACConfigurator)
     Configurator.instance().configure(WindowsDefenderConfigurator)
@@ -74,7 +74,7 @@ if __name__ == "__main__":
     Configurator.instance().configure(WindowsScreenResolutionConfigurator)
 
     PushNotifierManager.instance().send_text(
-        "[AUTOMATION] Configuring software now...")
+        "3/4 - [AUTOMATION] Configuring software now...")
 
     Configurator.instance().configure(GitConfigurator)
     Configurator.instance().configure(WindowsSSHCredentialsConfigurator)
@@ -85,4 +85,4 @@ if __name__ == "__main__":
     Configurator.instance().configure(PyCharmConfigurator)
 
     PushNotifierManager.instance().send_text(
-        "[AUTOMATION] The installation is finished successfully. Please review the results now.")
+        "4/4 - [AUTOMATION] The installation is finished successfully. Please review the results now.")
