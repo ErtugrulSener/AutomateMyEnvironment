@@ -72,6 +72,11 @@ class IntelliJConfigurator(ConfiguratorBase):
         if not os.path.exists(os.path.dirname(self.JETBRAINS_CONSENT_OPTIONS_FILEPATH)):
             os.makedirs(os.path.dirname(self.JETBRAINS_CONSENT_OPTIONS_FILEPATH))
 
+        repository_settings_folder = self.get_settings_repository_folder_path()
+
+        if not os.path.exists(repository_settings_folder):
+            os.makedirs(repository_settings_folder)
+
         if not os.path.exists(self.JETBRAINS_CONSENT_OPTIONS_FILEPATH):
             self.info("Disable consent to send anonymous data to Jetbrains")
 
@@ -89,14 +94,13 @@ class IntelliJConfigurator(ConfiguratorBase):
 
             for file in self.INTELLIJ_LICENSE_FILES:
                 local_file = os.path.join(self.INTELLIJ_LICENSE_FILEPATH, file)
-                target_file = os.path.join(self.get_config_folder_path(), file)
+                target_file = os.path.join(repository_settings_folder, file)
 
                 if not os.path.exists(target_file):
                     shutil.copyfile(local_file, target_file)
 
         if not self.has_settings_repository():
             self.info("Cloning settings repository to synchronize settings")
-            repository_settings_folder = self.get_settings_repository_folder_path()
 
             if not os.path.exists(repository_settings_folder):
                 os.makedirs(repository_settings_folder)
