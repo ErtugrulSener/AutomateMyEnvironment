@@ -329,3 +329,16 @@ class RegistryManager:
         with WinRegistry() as client:
             logger.info(f"Removing entry [{colored(os.path.join(path, registry_key), 'yellow')}]")
             client.delete_entry(path, registry_key)
+
+    def delete_tree(self, key, *args):
+        path, registry_key = self.get_table(key, *args)
+        self.delete_tree_entry(path)
+
+    def delete_tree_entry(self, path):
+        with WinRegistry() as client:
+            logger.info(f"Removing tree [{colored(os.path.join(path), 'yellow')}]")
+
+            try:
+                client.delete_key_tree(path)
+            except FileNotFoundError:
+                return None
