@@ -1,3 +1,4 @@
+import json
 import os
 import shutil
 import time
@@ -7,6 +8,7 @@ from scripts.commands.command_generator import CommandGenerator
 from scripts.configurators.configurator_base import ConfiguratorBase
 from scripts.managers.registry_manager import RegistryManager
 from scripts.managers.registry_manager import RegistryPath
+from scripts.managers.software_manager import SoftwareManager
 from scripts.parsers.config_parser import ConfigParser
 from scripts.singleton import Singleton
 
@@ -28,10 +30,12 @@ class IntelliJConfigurator(ConfiguratorBase):
 
     def get_config_folder_path(self):  #
         base_path = os.path.join(os.environ["APPDATA"], "JetBrains")
+        product_info_filepath = os.path.join(SoftwareManager.instance().get_base_path(self.SOFTWARE),
+                                             r"IDE\product-info.json")
 
-        for element in os.listdir(base_path):
-            if element.lower().startswith("intellijidea"):
-                return os.path.join(base_path, element)
+        with open(product_info_filepath, "r") as f:
+            product_info_json = json.load(f)
+            return os.path.join(base_path, product_info_json["dataDirectoryName"])
 
     def get_settings_repository_folder_path(self):
         config_folder = self.get_config_folder_path()
