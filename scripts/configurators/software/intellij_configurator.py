@@ -43,6 +43,10 @@ class IntelliJConfigurator(ConfiguratorBase):
 
     def is_licensed(self):
         config_folder = self.get_config_folder_path()
+
+        if not os.path.exists(config_folder):
+            return False
+
         files_in_folder = os.listdir(config_folder)
         return all(file in files_in_folder for file in self.INTELLIJ_LICENSE_FILES)
 
