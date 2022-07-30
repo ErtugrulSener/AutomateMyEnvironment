@@ -1,3 +1,4 @@
+import os
 import winreg
 
 from scripts.configurators.configurator_base import ConfiguratorBase
@@ -9,6 +10,8 @@ from scripts.singleton import Singleton
 
 @Singleton
 class WindowsTaskbarConfigurator(ConfiguratorBase):
+    USER_PINNED_QUICK_LAUNCH_PATH = os.path.join(os.environ["APPDATA"],
+                                                 fr"Microsoft\Internet Explorer\Quick Launch\User Pinned\TaskBar")
     EXPECTED_REGISTRY_ENTRIES = {
         RegistryPath.WINDOWS_PEN_WORKSPACE_BUTTON_VISIBILITY: 0,
         RegistryPath.WINDOWS_TIPBAND_DESIRED_VISIBILITY: 0,
@@ -34,5 +37,11 @@ class WindowsTaskbarConfigurator(ConfiguratorBase):
 
         for registry_key, expected_value in self.EXPECTED_REGISTRY_ENTRIES.items():
             RegistryManager.instance().set(registry_key, expected_value, winreg.REG_DWORD)
+
+        self.info("Clearing taskbar icons that are there by default")
+        RegistryManager.instance().delete_tree(RegistryPath.WINDOWS_EXPLORER_TASKBAND)
+
+        for file in os.listdir(self.USER_PINNED_QUICK_LAUNCH_PATH):
+            os.remove(os.path.join(self.USER_PINNED_QUICK_LAUNCH_PATH, file))
 
         ExplorerManager.instance().restart()

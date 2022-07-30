@@ -82,6 +82,24 @@ class SoftwareManager:
     def get_path(self, software, executable_name):
         return os.path.join(self.get_base_path(software), executable_name)
 
+    def get_shortcut_name(self, software):
+        shortcuts = self.get_info(software, SoftwareInfo.SHORTCUTS)
+        possible_shortcuts = shortcuts.split(" | ")
+        return possible_shortcuts[0]
+
+    def get_shortcut_path(self, shortcut):
+        return os.path.join(self.SCOOP_APPS_SHORTCUT_PATH, f"{shortcut}.lnk")
+
+    def get_shortcut_target_path(self, shortcut_filepath):
+        shell = win32com.client.Dispatch("WScript.Shell")
+        target_of_shortcut_filepath = shell.CreateShortCut(shortcut_filepath).Targetpath
+        return target_of_shortcut_filepath
+
+    def get_executable_path(self, software):
+        shortcut = self.get_shortcut_name(software)
+        shortcut_filepath = self.get_shortcut_path(shortcut)
+        return self.get_shortcut_target_path(shortcut_filepath)
+
     def get_persist_path(self, software):
         return os.path.join(os.environ["SCOOP_GLOBAL"], rf"persist\{software.lower()}")
 
@@ -140,15 +158,13 @@ class SoftwareManager:
         shortcuts = self.get_info(software, SoftwareInfo.SHORTCUTS)
 
         for shortcut in shortcuts.split(" | "):
-            shortcut_filepath = os.path.join(self.SCOOP_APPS_SHORTCUT_PATH, f"{shortcut}.lnk")
+            shortcut_filepath = self.get_shortcut_path(shortcut)
 
             if os.path.exists(shortcut_filepath):
                 logger.debug(f"Found shortcut at path [{shortcut_filepath}], adding 'Run as Admin' "
                              f"flag for it now...")
 
-                shell = win32com.client.Dispatch("WScript.Shell")
-                target_of_shortcut_filepath = shell.CreateShortCut(shortcut_filepath).Targetpath
-
+                target_of_shortcut_filepath = self.get_shortcut_target_path(shortcut_filepath)
                 RegistryManager.instance().set_entry(RegistryPath.WINDOWS_APP_COMPAT_FLAGS_LAYERS.value[0],
                                                      target_of_shortcut_filepath,
                                                      "~ RUNASADMIN")

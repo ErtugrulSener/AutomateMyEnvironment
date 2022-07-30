@@ -257,6 +257,11 @@ class RegistryPath(Enum):
         "euacommunity_accepted_version"
     ]
 
+    WINDOWS_EXPLORER_TASKBAND = [
+        r"HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Taskband",
+        ""
+    ]
+
     def get_path(self, *args):
         path = self.value[0]
 
