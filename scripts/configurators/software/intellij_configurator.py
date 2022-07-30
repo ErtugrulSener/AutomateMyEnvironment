@@ -94,7 +94,7 @@ class IntelliJConfigurator(ConfiguratorBase):
 
             for file in self.INTELLIJ_LICENSE_FILES:
                 local_file = os.path.join(self.INTELLIJ_LICENSE_FILEPATH, file)
-                target_file = os.path.join(repository_settings_folder, file)
+                target_file = os.path.join(self.get_config_folder_path(), file)
 
                 if not os.path.exists(target_file):
                     shutil.copyfile(local_file, target_file)
