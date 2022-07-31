@@ -142,6 +142,11 @@ class RegistryPath(Enum):
         "HideSCAMeetNow"
     ]
 
+    WINDOWS_ENABLE_AUTO_TRAY = [
+        r"HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Explorer",
+        "EnableAutoTray"
+    ]
+
     WINDOWS_SYSINTERNALS_AUTORUNS_EULA_ACCEPTED = [
         r"HKEY_CURRENT_USER\SOFTWARE\Sysinternals\Autoruns",
         "EulaAccepted"
