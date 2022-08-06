@@ -2,6 +2,7 @@ from scripts.checkers.checker import Checker
 from scripts.checkers.secrets_checker import SecretsChecker
 from scripts.checkers.system_checker import SystemChecker
 from scripts.configurators.configurator import Configurator
+from scripts.configurators.software.brave_configurator import BraveConfigurator
 from scripts.configurators.software.cmder_configurator import CmderConfigurator
 from scripts.configurators.software.git_configurator import GitConfigurator
 from scripts.configurators.software.intellij_configurator import IntelliJConfigurator
@@ -76,6 +77,7 @@ if __name__ == "__main__":
     PushNotifierManager.instance().send_text(
         "3/4 - [AUTOMATION] Configuring software now...")
 
+    Configurator.instance().configure(BraveConfigurator)
     Configurator.instance().configure(GitConfigurator)
     Configurator.instance().configure(WindowsSSHCredentialsConfigurator)
     Configurator.instance().configure(CmderConfigurator)
