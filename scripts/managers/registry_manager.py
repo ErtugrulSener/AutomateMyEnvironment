@@ -267,6 +267,11 @@ class RegistryPath(Enum):
         ""
     ]
 
+    PUTTY_DEFAULT_PUBLIC_KEY_FILE = [
+        r"HKEY_CURRENT_USER\SOFTWARE\SimonTatham\PuTTY\Sessions\Default%20Settings",
+        "PublicKeyFile"
+    ]
+
     def get_path(self, *args):
         path = self.value[0]
 

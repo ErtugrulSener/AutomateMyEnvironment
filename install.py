@@ -7,6 +7,7 @@ from scripts.configurators.software.cmder_configurator import CmderConfigurator
 from scripts.configurators.software.git_configurator import GitConfigurator
 from scripts.configurators.software.intellij_configurator import IntelliJConfigurator
 from scripts.configurators.software.notepadplusplus_configurator import NotepadPlusPlusConfigurator
+from scripts.configurators.software.putty_configurator import PuttyConfigurator
 from scripts.configurators.software.pycharm_configurator import PyCharmConfigurator
 from scripts.configurators.software.winscp_configurator import WinscpConfigurator
 from scripts.configurators.windows.windows_autostart_configurator import WindowsAutostartConfigurator
@@ -77,6 +78,7 @@ if __name__ == "__main__":
     PushNotifierManager.instance().send_text(
         "3/4 - [AUTOMATION] Configuring software now...")
 
+    Configurator.instance().configure(PuttyConfigurator)
     Configurator.instance().configure(BraveConfigurator)
     Configurator.instance().configure(GitConfigurator)
     Configurator.instance().configure(WindowsSSHCredentialsConfigurator)
