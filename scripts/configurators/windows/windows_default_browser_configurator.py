@@ -66,7 +66,7 @@ class WindowsDefaultBrowserConfigurator(ConfiguratorBase):
 
     def is_configured_already(self):
         for file_extension in self.FILE_EXTENSIONS_TO_CHECK:
-            if not self.associated_file_extensions[file_extension.value] == self.DEFAULT_BROWSER_HTM:
+            if self.associated_file_extensions[file_extension.value] != self.DEFAULT_BROWSER_HTM:
                 return False
 
         return True

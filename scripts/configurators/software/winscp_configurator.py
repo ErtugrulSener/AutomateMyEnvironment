@@ -45,7 +45,7 @@ class WinscpConfigurator(ConfiguratorBase):
 
     def is_configured_already(self):
         for section, key, value in chain(self.CONFIGURATION_PARAMETERS):
-            if not self.winscp_configuration.get(section, key, fallback=None) == value:
+            if self.winscp_configuration.get(section, key, fallback=None) != value:
                 return False
 
         return True

@@ -130,7 +130,7 @@ class SoftwareManager:
         self.refresh_installed_software_cache()
 
         if args.install_context:
-            self.install_context(software, args, output)
+            self.install_context(software, output)
 
         if args.run_as_admin:
             self.add_run_as_admin_flag(software)
@@ -138,7 +138,7 @@ class SoftwareManager:
     def install(self, software, args):
         self.install_software(software, args)
 
-    def install_context(self, software, args, output):
+    def install_context(self, software, output):
         logger.info(f"Installing context for {software}...")
 
         matcher = re.findall(r'^Add.*as a context menu option by running:.*(\r\n|\r|\n)?(".*.reg")$', output,

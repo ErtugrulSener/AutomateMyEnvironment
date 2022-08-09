@@ -68,6 +68,9 @@ crashlytics.properties
 crashlytics-build.properties
 fabric.properties
 
+# SonarLint
+.idea/sonarlint/issuestore
+
 # Editor-based Rest Client
 .idea/httpRequests
 
