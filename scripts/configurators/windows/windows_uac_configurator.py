@@ -1,5 +1,3 @@
-import winreg
-
 from scripts.configurators.configurator_base import ConfiguratorBase
 from scripts.managers.registry_manager import RegistryManager
 from scripts.managers.registry_manager import RegistryPath
@@ -18,9 +16,8 @@ class WindowsUACConfigurator(ConfiguratorBase):
         super().__init__(__file__)
 
     def is_configured_already(self):
-        for registry_key, expected_value in self.EXPECTED_REGISTRY_ENTRIES.items():
-            if RegistryManager.instance().get(registry_key) != expected_value:
-                return False
+        if not RegistryManager.instance().check_all(self.EXPECTED_REGISTRY_ENTRIES):
+            return False
 
         return True
 
@@ -28,5 +25,4 @@ class WindowsUACConfigurator(ConfiguratorBase):
         self.info("Setting UAC level to lowest to suppress the prompts")
 
         # Set UAC level to the lowest by setting the managers keys
-        for registry_key, expected_value in self.EXPECTED_REGISTRY_ENTRIES.items():
-            RegistryManager.instance().set(registry_key, expected_value, winreg.REG_DWORD)
+        RegistryManager.instance().set_all(self.EXPECTED_REGISTRY_ENTRIES)

@@ -27,9 +27,8 @@ class WindowsDefenderConfigurator(ConfiguratorBase):
         if WindowsServicesConfigurator.instance().get_status("WinDefend") == ServiceStatus.RUNNING:
             return False
 
-        for registry_key, expected_value in self.EXPECTED_REGISTRY_ENTRIES.items():
-            if RegistryManager.instance().get(registry_key) != expected_value:
-                return False
+        if not RegistryManager.instance().check_all(self.EXPECTED_REGISTRY_ENTRIES):
+            return False
 
         return True
 

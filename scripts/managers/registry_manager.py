@@ -357,3 +357,25 @@ class RegistryManager:
                 client.delete_key_tree(path)
             except FileNotFoundError:
                 return None
+
+    def check_all(self, expected_entries):
+        for registry_key, expected_value in expected_entries.items():
+            if self.get(registry_key) != expected_value:
+                return False
+
+        return True
+
+    def set_all(self, expected_entries):
+        for registry_key, expected_value in expected_entries.items():
+            registry_value = expected_value
+            registry_key_type = None
+
+            match expected_value:
+                case int(expected_value):
+                    registry_key_type = winreg.REG_DWORD
+                case str(expected_value):
+                    registry_key_type = winreg.REG_SZ
+                case tuple(expected_value):
+                    registry_value, registry_key_type = expected_value
+
+            self.set(registry_key, registry_value, registry_key_type)
