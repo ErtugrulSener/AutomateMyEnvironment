@@ -1,4 +1,3 @@
-import os
 from collections import defaultdict
 
 import win32api
@@ -7,14 +6,12 @@ from termcolor import colored
 from scripts.commands.command_executor import CommandExecutor
 from scripts.commands.command_generator import CommandGenerator
 from scripts.configurators.configurator_base import ConfiguratorBase
+from scripts.constants.Enums import ExecutablePaths
 from scripts.singleton import Singleton
 
 
 @Singleton
 class WindowsScreenResolutionConfigurator(ConfiguratorBase):
-    CHANGE_SCREEN_RESOLUTION_LOCAL_PATH = \
-        os.path.join(os.getcwd(), r"external/executables/change-screen-resolution/ChangeScreenResolution.exe")
-
     def __init__(self):
         super().__init__(__file__)
 
@@ -34,7 +31,7 @@ class WindowsScreenResolutionConfigurator(ConfiguratorBase):
     def load_device_modes(self):
         for device_name in self.get_device_names():
             command = CommandGenerator() \
-                .parameters(self.CHANGE_SCREEN_RESOLUTION_LOCAL_PATH, "/m", f"/d={device_name}")
+                .parameters(ExecutablePaths.CHANGE_SCREEN_RESOLUTION.value(), "/m", f"/d={device_name}")
             output = CommandExecutor().execute(command)
 
             for line in output.splitlines()[1:]:
@@ -52,7 +49,7 @@ class WindowsScreenResolutionConfigurator(ConfiguratorBase):
 
     def set_refresh_rate(self, device_name, refresh_rate):
         command = CommandGenerator() \
-            .parameters(self.CHANGE_SCREEN_RESOLUTION_LOCAL_PATH, f"/d={device_name}", f"/f={refresh_rate}")
+            .parameters(ExecutablePaths.CHANGE_SCREEN_RESOLUTION.value(), f"/d={device_name}", f"/f={refresh_rate}")
         CommandExecutor().execute(command)
 
     def get_highest_possible_refresh_rate(self, device_name):

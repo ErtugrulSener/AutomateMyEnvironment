@@ -1,4 +1,3 @@
-import os
 import re
 import winreg
 from enum import Enum
@@ -9,6 +8,7 @@ from winerror import ERROR_FILE_NOT_FOUND
 from scripts.commands.command_executor import CommandExecutor
 from scripts.commands.command_generator import CommandGenerator
 from scripts.configurators.configurator_base import ConfiguratorBase
+from scripts.constants.Enums import ExecutablePaths
 from scripts.managers.file_association_manager import FileAssociationManager
 from scripts.managers.registry_manager import RegistryManager
 from scripts.managers.registry_manager import RegistryPath
@@ -32,9 +32,6 @@ class WindowsDefaultBrowserConfigurator(ConfiguratorBase):
     PROG_ID = f"{DEFAULT_BROWSER}"
 
     FILE_EXTENSIONS_TO_CHECK = [value for value in FileExtension]
-    SET_DEFAULT_BROWSER_LOCAL_PATH = os.path.join(os.getcwd(),
-                                                  r"external/executables/set-default-browser/SetDefaultBrowser.exe")
-    SET_USER_FTA_LOCAL_PATH = os.path.join(os.getcwd(), r"external/executables/set-user-fta/SetUserFTA.exe")
 
     def __init__(self):
         super().__init__(__file__)
@@ -44,7 +41,7 @@ class WindowsDefaultBrowserConfigurator(ConfiguratorBase):
 
     def refresh_default_browser_cache(self):
         command = CommandGenerator() \
-            .parameters(self.SET_DEFAULT_BROWSER_LOCAL_PATH)
+            .parameters(ExecutablePaths.SET_DEFAULT_BROWSER.value())
         output = CommandExecutor(expected_return_codes=[ERROR_FILE_NOT_FOUND]).execute(command)
 
         matcher = re.findall(r"^(HKLM|HKCU)\s(.*)\n\s{2}name: .*\n\s{2}path: .*$", output, re.MULTILINE)
@@ -143,7 +140,7 @@ class WindowsDefaultBrowserConfigurator(ConfiguratorBase):
         brave_type, brave_browser_identifier = self.find_default_type_browser_by_identifier(browser_name)
 
         command = CommandGenerator() \
-            .parameters(self.SET_DEFAULT_BROWSER_LOCAL_PATH, brave_type, brave_browser_identifier)
+            .parameters(ExecutablePaths.SET_DEFAULT_BROWSER.value(), brave_type, brave_browser_identifier)
         CommandExecutor().execute(command)
 
     def configure(self):

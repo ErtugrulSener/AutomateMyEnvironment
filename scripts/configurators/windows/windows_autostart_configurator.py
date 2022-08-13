@@ -4,6 +4,7 @@ import winreg
 from scripts.commands.command_executor import CommandExecutor
 from scripts.commands.command_generator import CommandGenerator
 from scripts.configurators.configurator_base import ConfiguratorBase
+from scripts.constants.Enums import ExecutablePaths
 from scripts.managers.registry_manager import RegistryManager
 from scripts.managers.registry_manager import RegistryPath
 from scripts.singleton import Singleton
@@ -11,8 +12,6 @@ from scripts.singleton import Singleton
 
 @Singleton
 class WindowsAutostartConfigurator(ConfiguratorBase):
-    AUTORUNS_LOCAL_PATH = os.path.join(os.getcwd(), r"external/executables/autoruns/autorunsc64.exe")
-
     def __init__(self):
         super().__init__(__file__)
 
@@ -24,7 +23,7 @@ class WindowsAutostartConfigurator(ConfiguratorBase):
                                        value_type=winreg.REG_DWORD)
 
         command = CommandGenerator() \
-            .parameters(self.AUTORUNS_LOCAL_PATH, "-nobanner", "-m", "-a", "l", "-ct")
+            .parameters(ExecutablePaths.AUTORUNS.value(), "-nobanner", "-m", "-a", "l", "-ct")
 
         output = CommandExecutor().execute(command)
         output = output.replace("\x00", "")

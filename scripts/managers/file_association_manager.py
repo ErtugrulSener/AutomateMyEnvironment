@@ -1,7 +1,6 @@
-import os
-
 from scripts.commands.command_executor import CommandExecutor
 from scripts.commands.command_generator import CommandGenerator
+from scripts.constants.Enums import ExecutablePaths
 from scripts.logging.logger import Logger
 from scripts.singleton import Singleton
 
@@ -10,15 +9,13 @@ logger = Logger.instance()
 
 @Singleton
 class FileAssociationManager:
-    SET_USER_FTA_LOCAL_PATH = os.path.join(os.getcwd(), r"external/executables/set-user-fta/SetUserFTA.exe")
-
     def __init__(self):
         self.associated_file_extensions = {}
         self.load_associated_file_extensions()
 
     def load_associated_file_extensions(self):
         command = CommandGenerator() \
-            .parameters(self.SET_USER_FTA_LOCAL_PATH, "get")
+            .parameters(ExecutablePaths.SET_USER_TFA.value(), "get")
 
         output = CommandExecutor().execute(command)
 
