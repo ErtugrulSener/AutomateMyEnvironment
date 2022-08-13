@@ -42,7 +42,7 @@ class WindowsDefenderConfigurator(ConfiguratorBase):
         GithubFileDownloader.instance().download(self.DEFENDER_CONTROL_API_URL,
                                                  *os.path.split(ExecutablePaths.ENABLE_DEFENDER.value()))
         GithubFileDownloader.instance().download(self.DEFENDER_CONTROL_API_URL,
-                                                 *os.path.split(ExecutablePaths.ENABLE_DEFENDER.value()))
+                                                 *os.path.split(ExecutablePaths.DISABLE_DEFENDER.value()))
 
         self.info(f"Disabling windows defender completely")
 
