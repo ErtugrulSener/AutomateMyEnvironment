@@ -9,6 +9,7 @@ from winerror import ERROR_FILE_NOT_FOUND
 from scripts.commands.command_executor import CommandExecutor
 from scripts.commands.command_generator import CommandGenerator
 from scripts.configurators.configurator_base import ConfiguratorBase
+from scripts.configurators.windows.windows_file_association_configurator import WindowsFileAssociationConfigurator
 from scripts.managers.registry_manager import RegistryManager
 from scripts.managers.registry_manager import RegistryPath
 from scripts.managers.software_manager import SoftwareManager
@@ -39,10 +40,7 @@ class WindowsDefaultBrowserConfigurator(ConfiguratorBase):
         super().__init__(__file__)
 
         self.default_browsers = []
-        self.associated_file_extensions = {}
-
         self.refresh_default_browser_cache()
-        self.load_associated_file_extensions()
 
     def refresh_default_browser_cache(self):
         command = CommandGenerator() \
@@ -54,19 +52,9 @@ class WindowsDefaultBrowserConfigurator(ConfiguratorBase):
         for match in matcher:
             self.default_browsers.append(match)
 
-    def load_associated_file_extensions(self):
-        command = CommandGenerator() \
-            .parameters(self.SET_USER_FTA_LOCAL_PATH, "get")
-
-        output = CommandExecutor().execute(command)
-
-        for line in output.splitlines():
-            extension, association = line.split(", ")
-            self.associated_file_extensions[extension] = association
-
     def is_configured_already(self):
         for file_extension in self.FILE_EXTENSIONS_TO_CHECK:
-            if self.associated_file_extensions[file_extension.value] != self.DEFAULT_BROWSER_HTM:
+            if WindowsFileAssociationConfigurator.instance().get(file_extension.value) != self.DEFAULT_BROWSER_HTM:
                 return False
 
         return True

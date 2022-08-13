@@ -17,6 +17,7 @@ from scripts.configurators.windows.windows_defender_configurator import WindowsD
 from scripts.configurators.windows.windows_desktop_configurator import WindowsDesktopConfigurator
 from scripts.configurators.windows.windows_desktop_icon_configurator import WindowsDesktopIconConfigurator
 from scripts.configurators.windows.windows_energy_saving_plan_configurator import WindowsEnergySavingPlanConfigurator
+from scripts.configurators.windows.windows_file_association_configurator import WindowsFileAssociationConfigurator
 from scripts.configurators.windows.windows_folder_options_configurator import WindowsFolderOptionsConfigurator
 from scripts.configurators.windows.windows_screen_resolution_configurator import WindowsScreenResolutionConfigurator
 from scripts.configurators.windows.windows_services_configurator import WindowsServicesConfigurator
@@ -69,6 +70,7 @@ if __name__ == "__main__":
     Configurator.instance().configure(WindowsEnergySavingPlanConfigurator)
     Configurator.instance().configure(WindowsFolderOptionsConfigurator)
     Configurator.instance().configure(WindowsDesktopIconConfigurator)
+    Configurator.instance().configure(WindowsFileAssociationConfigurator)
     Configurator.instance().configure(WindowsDefaultBrowserConfigurator)
     Configurator.instance().configure(WindowsDarkModeConfigurator)
     Configurator.instance().configure(WindowsTaskbarConfigurator)
