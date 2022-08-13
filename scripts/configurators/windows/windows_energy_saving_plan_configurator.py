@@ -64,6 +64,9 @@ class WindowsEnergySavingPlanConfigurator(ConfiguratorBase):
         output = CommandExecutor().execute(command)
         lines = output.splitlines()
 
+        if len(lines) < 3:
+            return 0, 0
+
         ac_value, dc_value = -1, -1
 
         ac_value_line = lines[-3]
