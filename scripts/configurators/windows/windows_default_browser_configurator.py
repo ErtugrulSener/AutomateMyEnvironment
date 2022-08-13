@@ -9,7 +9,7 @@ from winerror import ERROR_FILE_NOT_FOUND
 from scripts.commands.command_executor import CommandExecutor
 from scripts.commands.command_generator import CommandGenerator
 from scripts.configurators.configurator_base import ConfiguratorBase
-from scripts.configurators.windows.windows_file_association_configurator import WindowsFileAssociationConfigurator
+from scripts.managers.file_association_manager import FileAssociationManager
 from scripts.managers.registry_manager import RegistryManager
 from scripts.managers.registry_manager import RegistryPath
 from scripts.managers.software_manager import SoftwareManager
@@ -54,7 +54,7 @@ class WindowsDefaultBrowserConfigurator(ConfiguratorBase):
 
     def is_configured_already(self):
         for file_extension in self.FILE_EXTENSIONS_TO_CHECK:
-            if WindowsFileAssociationConfigurator.instance().get(file_extension.value) != self.DEFAULT_BROWSER_HTM:
+            if FileAssociationManager.instance().get(file_extension.value) != self.DEFAULT_BROWSER_HTM:
                 return False
 
         return True
