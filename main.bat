@@ -1,4 +1,5 @@
 @echo off
+@setlocal enabledelayedexpansion
 @cls
 
 :: Variables
@@ -12,6 +13,33 @@ set refreshenv_path=%SCOOP_GLOBAL%\apps\refreshenv\current
 
 set PATH=%PATH%;%scoop_path%;%refreshenv_path%
 
+set first_parameter=%1
+set second_parameter=%2
+
+:: Check for proxy parameters
+if defined first_parameter (
+	if /i "%first_parameter:~0,2%"=="--" goto skipProxyParametersCheck
+	if /i "%first_parameter:~0,1%"=="-" goto skipProxyParametersCheck
+	
+	set http_proxy=%first_parameter%
+	if not defined https_proxy set https_proxy=!http_proxy!
+
+	goto setProxyParameters
+) else (
+	goto skipProxyParametersCheck
+)
+
+
+:setProxyParameters
+	echo Setting http_proxy environment variable to !http_proxy!
+	@setx http_proxy "!http_proxy!" /M >NUL 2>&1
+
+	echo Setting https_proxy environment variable to !https_proxy!
+	@setx https_proxy "!https_proxy!" /M >NUL 2>&1
+
+
+:skipProxyParametersCheck
+
 
 
 :: Check for scoop installation on system
@@ -24,9 +52,11 @@ if %ERRORLEVEL% NEQ 0 (
 )
 
 :installScoop
-	echo Setting global environments parameters
-	@setx SCOOP "%SCOOP%" /M
-	@setx SCOOP_GLOBAL "%SCOOP_GLOBAL%" /M
+	echo Setting SCOOP environment variable to %SCOOP%
+	@setx SCOOP "%SCOOP%" /M >NUL 2>&1
+
+	echo Setting SCOOP_GLOBAL environment variable to %SCOOP_GLOBAL%
+	@setx SCOOP_GLOBAL "%SCOOP_GLOBAL%" /M >NUL 2>&1
 
 	echo Installing scoop windows package manager
 	@powershell Set-ExecutionPolicy Unrestricted
@@ -165,4 +195,32 @@ if %ERRORLEVEL% NEQ 0 (
 
 REM @cls
 git pull --quiet >NUL 2>&1
+
+
+
+:: Check for proxy parameters
+if defined http_proxy (
+	goto startScriptWithProxyParameters
+) else (
+	goto startScriptWithoutProxyParameters
+)
+
+
+
+:startScriptWithProxyParameters
+if defined second_parameter (
+	for /f "tokens=2,* delims= " %%a in ("%*") do set EVERYTHING_EXCEPT_PROXY_PARAMETERS=%%b
+) else (
+	for /f "tokens=1,* delims= " %%a in ("%*") do set EVERYTHING_EXCEPT_PROXY_PARAMETERS=%%b
+)
+
+python install.py --http-proxy !http_proxy! --https-proxy !https_proxy! !EVERYTHING_EXCEPT_PROXY_PARAMETERS!
+
+goto end
+
+:startScriptWithoutProxyParameters
 python install.py %*
+
+
+:end
+
