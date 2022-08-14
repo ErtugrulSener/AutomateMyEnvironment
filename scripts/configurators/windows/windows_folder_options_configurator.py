@@ -21,5 +21,6 @@ class WindowsFolderOptionsConfigurator(ConfiguratorBase):
         return True
 
     def configure(self):
-        self.info("Setting folder option to see hidden files and directories and known file extensions")
-        RegistryManager.instance().set_all(self.EXPECTED_REGISTRY_ENTRIES)
+        if not RegistryManager.instance().check_all(self.EXPECTED_REGISTRY_ENTRIES):
+            self.info("Setting folder option to see hidden files and directories and known file extensions")
+            RegistryManager.instance().set_all(self.EXPECTED_REGISTRY_ENTRIES)

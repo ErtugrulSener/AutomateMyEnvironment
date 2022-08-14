@@ -54,13 +54,14 @@ class WindowsAutostartConfigurator(ConfiguratorBase):
         return len(self.autostart_list) == 0
 
     def configure(self):
-        self.info("Disabling all programs in autostart for user")
+        if len(self.autostart_list) != 0:
+            self.info("Disabling all programs in autostart for user")
 
-        for entry in self.autostart_list:
-            registry_path, registry_key = entry["registry_path"], entry["registry_key"]
+            for entry in self.autostart_list:
+                registry_path, registry_key = entry["registry_path"], entry["registry_key"]
 
-            entry = RegistryManager.instance().get_entry(registry_path, registry_key)
-            RegistryManager.instance().delete_entry(registry_path, registry_key)
-            RegistryManager.instance().set_entry(os.path.join(registry_path, "AutorunsDisabled"),
-                                                 registry_key,
-                                                 entry.value, entry.type)
+                entry = RegistryManager.instance().get_entry(registry_path, registry_key)
+                RegistryManager.instance().delete_entry(registry_path, registry_key)
+                RegistryManager.instance().set_entry(os.path.join(registry_path, "AutorunsDisabled"),
+                                                     registry_key,
+                                                     entry.value, entry.type)

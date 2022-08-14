@@ -25,5 +25,6 @@ class WindowsDesktopIconConfigurator(ConfiguratorBase):
         return True
 
     def configure(self):
-        self.info("Enabling needed desktop icons (to user home directory and this pc) in registry")
-        RegistryManager.instance().set_all(self.EXPECTED_REGISTRY_ENTRIES)
+        if not RegistryManager.instance().check_all(self.EXPECTED_REGISTRY_ENTRIES):
+            self.info("Enabling needed desktop icons (to user home directory and this pc) in registry")
+            RegistryManager.instance().set_all(self.EXPECTED_REGISTRY_ENTRIES)

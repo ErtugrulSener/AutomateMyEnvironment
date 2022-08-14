@@ -21,5 +21,6 @@ class WindowsDarkModeConfigurator(ConfiguratorBase):
         return True
 
     def configure(self):
-        self.info("Setting dark mode for apps and system")
-        RegistryManager.instance().set_all(self.EXPECTED_REGISTRY_ENTRIES)
+        if not RegistryManager.instance().check_all(self.EXPECTED_REGISTRY_ENTRIES):
+            self.info("Setting dark mode for apps and system")
+            RegistryManager.instance().set_all(self.EXPECTED_REGISTRY_ENTRIES)

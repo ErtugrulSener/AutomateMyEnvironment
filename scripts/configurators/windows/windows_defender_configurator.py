@@ -9,6 +9,7 @@ from scripts.constants.Enums import ExecutablePaths
 from scripts.managers.github_file_downloader import GithubFileDownloader
 from scripts.managers.registry_manager import RegistryManager
 from scripts.managers.registry_manager import RegistryPath
+from scripts.managers.string_manager import StringManager
 from scripts.singleton import Singleton
 
 
@@ -23,29 +24,67 @@ class WindowsDefenderConfigurator(ConfiguratorBase):
     def __init__(self):
         super().__init__(__file__)
 
-    def is_configured_already(self):
-        if WindowsServicesConfigurator.instance().get_status("WinDefend") == ServiceStatus.RUNNING:
-            return False
+        self.windows_defender_preferences = {}
+        self.load_windows_defender_preferences()
 
-        if not RegistryManager.instance().check_all(self.EXPECTED_REGISTRY_ENTRIES):
+    def load_windows_defender_preferences(self):
+        command = CommandGenerator() \
+            .parameters("Get-MpPreference")
+        output = CommandExecutor(is_powershell_command=True).execute(command)
+        lines = output.split("\n")
+        lines = list(filter(None, lines))
+
+        for line in lines:
+            preference_key, preference_value = line.split(r" :")
+            stripped_preference_key, stripped_preference_value = preference_key.strip(), preference_value.strip()
+
+            if StringManager.instance().is_boolean(stripped_preference_value):
+                self.windows_defender_preferences[stripped_preference_key] = StringManager.instance().str_to_bool(
+                    stripped_preference_value)
+            elif StringManager.instance().is_set(stripped_preference_value):
+                self.windows_defender_preferences[stripped_preference_key] = StringManager.instance().str_to_set(
+                    stripped_preference_value)
+            elif StringManager.instance().is_int(stripped_preference_value):
+                self.windows_defender_preferences[stripped_preference_key] = StringManager.instance().str_to_int(
+                    stripped_preference_value)
+            else:
+                self.windows_defender_preferences[stripped_preference_key] = stripped_preference_value
+
+    def defender_is_enabled(self):
+        return WindowsServicesConfigurator.instance().get_status("WinDefend") == ServiceStatus.RUNNING or \
+               not RegistryManager.instance().check_all(self.EXPECTED_REGISTRY_ENTRIES)
+
+    def is_configured_already(self):
+        if self.defender_is_enabled():
             return False
 
         return True
 
     def configure(self):
-        self.info("Adding myself as exception, to prevent defender from removing the defender-control tools")
+        path_to_be_excluded = os.getcwd()
 
-        command = CommandGenerator() \
-            .parameters("Add-MpPreference", "-ExclusionPath", f'"{os.getcwd()}"')
-        CommandExecutor(is_powershell_command=True).execute(command)
+        if path_to_be_excluded not in self.windows_defender_preferences.get("ExclusionPath", set()):
+            self.info("Adding myself as exception, to prevent defender from removing the defender-control tools")
 
-        GithubFileDownloader.instance().download(self.DEFENDER_CONTROL_API_URL,
-                                                 *os.path.split(ExecutablePaths.ENABLE_DEFENDER.value()))
-        GithubFileDownloader.instance().download(self.DEFENDER_CONTROL_API_URL,
-                                                 *os.path.split(ExecutablePaths.DISABLE_DEFENDER.value()))
+            command = CommandGenerator() \
+                .parameters("Add-MpPreference", "-ExclusionPath", f'"{path_to_be_excluded}"')
+            CommandExecutor(is_powershell_command=True).execute(command)
 
-        self.info(f"Disabling windows defender completely")
+        self.info(f"Downloading defender-control executables")
 
-        command = CommandGenerator() \
-            .parameters(ExecutablePaths.DISABLE_DEFENDER.value(), "-s")
-        CommandExecutor().execute(command)
+        enable_defender_local_path = ExecutablePaths.ENABLE_DEFENDER.value()
+        if not os.path.exists(enable_defender_local_path):
+            GithubFileDownloader.instance().download(self.DEFENDER_CONTROL_API_URL,
+                                                     *os.path.split(enable_defender_local_path))
+
+        disable_defender_local_path = ExecutablePaths.DISABLE_DEFENDER.value()
+        if not os.path.exists(disable_defender_local_path):
+            GithubFileDownloader.instance().download(self.DEFENDER_CONTROL_API_URL,
+                                                     *os.path.split(disable_defender_local_path))
+
+        if self.defender_is_enabled():
+            self.info(f"Disabling windows defender completely")
+
+            command = CommandGenerator() \
+                .parameters(ExecutablePaths.DISABLE_DEFENDER.value(), "-s")
+            CommandExecutor().execute(command)

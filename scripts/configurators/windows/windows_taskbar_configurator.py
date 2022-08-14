@@ -32,13 +32,14 @@ class WindowsTaskbarConfigurator(ConfiguratorBase):
         return True
 
     def configure(self):
-        self.info("Hiding unnecessary taskbar elements like the windows ink tray icon")
-        RegistryManager.instance().set_all(self.EXPECTED_REGISTRY_ENTRIES)
+        if not RegistryManager.instance().check_all(self.EXPECTED_REGISTRY_ENTRIES):
+            self.info("Hiding unnecessary taskbar elements like the windows ink tray icon")
+            RegistryManager.instance().set_all(self.EXPECTED_REGISTRY_ENTRIES)
 
-        self.info("Clearing taskbar icons that are there by default")
-        RegistryManager.instance().delete_tree(RegistryPath.WINDOWS_EXPLORER_TASKBAND)
+            self.info("Clearing taskbar icons that are there by default")
+            RegistryManager.instance().delete_tree(RegistryPath.WINDOWS_EXPLORER_TASKBAND)
 
-        for file in os.listdir(self.USER_PINNED_QUICK_LAUNCH_PATH):
-            os.remove(os.path.join(self.USER_PINNED_QUICK_LAUNCH_PATH, file))
+            for file in os.listdir(self.USER_PINNED_QUICK_LAUNCH_PATH):
+                os.remove(os.path.join(self.USER_PINNED_QUICK_LAUNCH_PATH, file))
 
-        ExplorerManager.instance().restart()
+            ExplorerManager.instance().restart()

@@ -22,7 +22,6 @@ class WindowsUACConfigurator(ConfiguratorBase):
         return True
 
     def configure(self):
-        self.info("Setting UAC level to lowest to suppress the prompts")
-
-        # Set UAC level to the lowest by setting the managers keys
-        RegistryManager.instance().set_all(self.EXPECTED_REGISTRY_ENTRIES)
+        if not RegistryManager.instance().check_all(self.EXPECTED_REGISTRY_ENTRIES):
+            self.info("Setting UAC level to lowest to suppress the prompts")
+            RegistryManager.instance().set_all(self.EXPECTED_REGISTRY_ENTRIES)
