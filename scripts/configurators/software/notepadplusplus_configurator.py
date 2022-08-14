@@ -35,11 +35,12 @@ class NotepadPlusPlusConfigurator(ConfiguratorBase):
 
     def configure(self):
         for plugin_name, plugin_asset_regex, plugin_api_url in chain(self.PLUGIN_LIST):
-            filename = GithubFileDownloader.instance().download(plugin_api_url,
-                                                                self.NOTEPADPLUSPLUS_LOCAL_PATH,
-                                                                plugin_asset_regex)
+            if not self.is_plugin_installed(plugin_name):
+                filename = GithubFileDownloader.instance().download(plugin_api_url,
+                                                                    self.NOTEPADPLUSPLUS_LOCAL_PATH,
+                                                                    plugin_asset_regex)
 
-            self.info(f"Extracting [{colored(filename, 'yellow')}] to [{colored(self.plugins_path, 'yellow')}]")
+                self.info(f"Extracting [{colored(filename, 'yellow')}] to [{colored(self.plugins_path, 'yellow')}]")
 
-            with zipfile.ZipFile(os.path.join(self.NOTEPADPLUSPLUS_LOCAL_PATH, filename), 'r') as zip_ref:
-                zip_ref.extractall(os.path.join(self.plugins_path, plugin_name))
+                with zipfile.ZipFile(os.path.join(self.NOTEPADPLUSPLUS_LOCAL_PATH, filename), 'r') as zip_ref:
+                    zip_ref.extractall(os.path.join(self.plugins_path, plugin_name))

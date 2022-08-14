@@ -16,6 +16,8 @@ class PyCharmConfigurator(ConfiguratorBase):
             RegistryPath.JETBRAINS_COMMUNITY_EULA_VERSION) == self.JETBRAINS_COMMUNITY_EULA_VERSION
 
     def configure(self):
-        self.info("Accept EULA for PyCharm by setting the registry key")
-        RegistryManager.instance().set(RegistryPath.JETBRAINS_COMMUNITY_EULA_VERSION,
-                                       self.JETBRAINS_COMMUNITY_EULA_VERSION)
+        if RegistryManager.instance().get(
+                RegistryPath.JETBRAINS_COMMUNITY_EULA_VERSION) != self.JETBRAINS_COMMUNITY_EULA_VERSION:
+            self.info("Accept EULA for PyCharm by setting the registry key")
+            RegistryManager.instance().set(RegistryPath.JETBRAINS_COMMUNITY_EULA_VERSION,
+                                           self.JETBRAINS_COMMUNITY_EULA_VERSION)

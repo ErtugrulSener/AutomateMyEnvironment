@@ -22,5 +22,6 @@ class PuttyConfigurator(ConfiguratorBase):
         return True
 
     def configure(self):
-        self.info("Setting default configurations for putty (profiles)")
-        RegistryManager.instance().set_all(self.EXPECTED_REGISTRY_ENTRIES)
+        if not RegistryManager.instance().check_all(self.EXPECTED_REGISTRY_ENTRIES):
+            self.info("Setting default configurations for putty (profiles)")
+            RegistryManager.instance().set_all(self.EXPECTED_REGISTRY_ENTRIES)
