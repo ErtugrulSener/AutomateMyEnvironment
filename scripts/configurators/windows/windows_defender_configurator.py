@@ -70,8 +70,6 @@ class WindowsDefenderConfigurator(ConfiguratorBase):
                 .parameters("Add-MpPreference", "-ExclusionPath", f'"{path_to_be_excluded}"')
             CommandExecutor(is_powershell_command=True).execute(command)
 
-        self.info(f"Downloading defender-control executables")
-
         enable_defender_local_path = ExecutablePaths.ENABLE_DEFENDER.value()
         if not os.path.exists(enable_defender_local_path):
             GithubFileDownloader.instance().download(self.DEFENDER_CONTROL_API_URL,

@@ -88,13 +88,19 @@ class WindowsServicesConfigurator(ConfiguratorBase):
     def is_configured_already(self):
         for service, arguments in ConfigParser.instance().items("WINDOWS-SERVICES"):
             args = parser.parse_args(arguments.split())
-            expected_status = self.get_expected_status_for_action(ServiceAction(args.action))
-            expected_start_mode = ServiceStartType(args.start_mode)
+            start_mode = ServiceStartType(args.start_mode)
+            action = ServiceAction(args.action)
 
-            if self.get_status(service) != expected_status:
+            actual_start_mode = self.get_start_mode(service)
+            expected_start_mode = ServiceStartType(start_mode)
+
+            if actual_start_mode != expected_start_mode:
                 return False
 
-            if self.get_start_mode(service) != expected_start_mode:
+            actual_status = self.get_status(service)
+            expected_status = self.get_expected_status_for_action(action)
+
+            if actual_status != expected_status:
                 return False
 
         return True
