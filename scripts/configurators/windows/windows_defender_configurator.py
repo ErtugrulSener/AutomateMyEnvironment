@@ -24,31 +24,11 @@ class WindowsDefenderConfigurator(ConfiguratorBase):
     def __init__(self):
         super().__init__(__file__)
 
-        self.windows_defender_preferences = {}
-        self.load_windows_defender_preferences()
-
-    def load_windows_defender_preferences(self):
+    def get_exclusion_paths(self):
         command = CommandGenerator() \
-            .parameters("Get-MpPreference")
+            .parameters("$Preferences = Get-MpPreference; $Preferences.ExclusionPath")
         output = CommandExecutor(is_powershell_command=True).execute(command)
-        lines = output.split("\n")
-        lines = list(filter(None, lines))
-
-        for line in lines:
-            preference_key, preference_value = line.split(r" :")
-            stripped_preference_key, stripped_preference_value = preference_key.strip(), preference_value.strip()
-
-            if StringManager.instance().is_boolean(stripped_preference_value):
-                self.windows_defender_preferences[stripped_preference_key] = StringManager.instance().str_to_bool(
-                    stripped_preference_value)
-            elif StringManager.instance().is_set(stripped_preference_value):
-                self.windows_defender_preferences[stripped_preference_key] = StringManager.instance().str_to_set(
-                    stripped_preference_value)
-            elif StringManager.instance().is_int(stripped_preference_value):
-                self.windows_defender_preferences[stripped_preference_key] = StringManager.instance().str_to_int(
-                    stripped_preference_value)
-            else:
-                self.windows_defender_preferences[stripped_preference_key] = stripped_preference_value
+        return set(output.splitlines())
 
     def defender_is_enabled(self):
         return WindowsServicesConfigurator.instance().get_status("WinDefend") == ServiceStatus.RUNNING or \
@@ -63,7 +43,7 @@ class WindowsDefenderConfigurator(ConfiguratorBase):
     def configure(self):
         path_to_be_excluded = os.getcwd()
 
-        if path_to_be_excluded not in self.windows_defender_preferences.get("ExclusionPath", set()):
+        if path_to_be_excluded not in self.get_exclusion_paths():
             self.info("Adding myself as exception, to prevent defender from removing the defender-control tools")
 
             command = CommandGenerator() \
