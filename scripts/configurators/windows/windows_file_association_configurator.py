@@ -28,4 +28,4 @@ class WindowsFileAssociationConfigurator(ConfiguratorBase):
 
                 command = CommandGenerator() \
                     .parameters(ExecutablePaths.SET_USER_TFA.value(), f"{extension}", f"{prog_id}")
-                CommandExecutor().execute(command)
+                CommandExecutor(run_as_admin=False).execute(command)

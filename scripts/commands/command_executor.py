@@ -15,7 +15,8 @@ class CommandExecutor:
                  is_powershell_command=False,
                  print_to_console=None,
                  expected_return_codes=None,
-                 encoding="cp850"):
+                 encoding="cp850",
+                 run_as_admin=True):
         if print_to_console is None:
             print_to_console = logger.is_trace()
         else:
@@ -31,6 +32,7 @@ class CommandExecutor:
         self.print_to_console = print_to_console
         self.expected_return_codes = expected_return_codes
         self.encoding = encoding
+        self.run_as_admin = run_as_admin
 
     def execute(self, command):
         output = ""
@@ -38,9 +40,21 @@ class CommandExecutor:
         if self.is_powershell_command:
             command = CommandGenerator().powershell() + command
 
-        with subprocess.Popen(command.get(), stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
-                              bufsize=1, universal_newlines=True,
-                              text=True, shell=self.execute_in_shell, encoding=self.encoding) as p:
+        arguments = {
+            "args": command.get(),
+            "stdout": subprocess.PIPE,
+            "stderr": subprocess.STDOUT,
+            "bufsize": 1,
+            "universal_newlines": True,
+            "text": True,
+            "shell": self.execute_in_shell,
+            "encoding": self.encoding
+        }
+
+        if not self.run_as_admin:
+            arguments["args"] = rf'cmd /min /C "set __COMPAT_LAYER=RUNASINVOKER && start "" {arguments["args"]}"'
+
+        with subprocess.Popen(**arguments) as p:
             for line in p.stdout:
                 output += line
 
