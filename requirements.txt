@@ -10,5 +10,5 @@ requests
 termcolor
 aenum
 pyaes
-stdiomask
 pushnotifier
+git+https://ertugrulsener.de/github/pwinput

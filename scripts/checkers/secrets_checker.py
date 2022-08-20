@@ -1,8 +1,7 @@
 import base64
-import http.client as httplib
 import os.path
 
-import stdiomask
+import pwinput
 
 from scripts.logging.logger import Logger
 from scripts.managers.aes_manager import AESManager
@@ -25,7 +24,7 @@ class SecretsChecker:
             SecretManager.instance().unlock()
             return
 
-        password = stdiomask.getpass("Password to decrypt the git-crypt symmetric key: ", mask="*")
+        password = pwinput.pwinput(prompt="Password to decrypt the git-crypt symmetric key: ", mask="*")
 
         with open(self.SECRET_ENCRYPTED_FILEPATH, "rb") as binary_file:
             binary_file_data = binary_file.read()
