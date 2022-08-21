@@ -2,6 +2,7 @@ import argparse
 import os
 import re
 from enum import Enum
+from itertools import dropwhile
 
 import win32com.client
 from termcolor import colored
@@ -46,11 +47,15 @@ class SoftwareManager:
 
     def __init__(self):
         self.installed_software = []
+        self.outdated_software = []
+
         self.refresh_installed_software_cache()
 
     def refresh_installed_software_cache(self):
         if self.installed_software:
             logger.info("Refreshing installed software cache!")
+
+        self.installed_software = []
 
         # Remove first and last line of output, to only get software names
         command = CommandGenerator() \
@@ -69,12 +74,40 @@ class SoftwareManager:
                 software_name = match.group(1)
                 self.installed_software.append(software_name)
 
+    def load_outdated_software(self):
+        command = CommandGenerator() \
+            .scoop() \
+            .status() \
+            .parameters("--global")
+        lines = CommandExecutor().execute(command).splitlines()
+        lines = filter(None, lines)
+
+        # Remove every line before the printed table of outdated software
+        lines = list(dropwhile(lambda l: any(character not in ["-", " "] for character in l), lines))[1:]
+
+        for line in lines:
+            matcher = re.findall(r"\b[a-zA-Z0-9.-]+\b", line)
+
+            if matcher:
+                software, version, newest_version = matcher[:3]
+                self.outdated_software.append((software, version, newest_version))
+
     def start(self):
+        software_list = ConfigParser.instance().items("SOFTWARE_LIST")
         logger.info("Starting installation process...")
 
-        for name, arguments in ConfigParser.instance().items("SOFTWARE_LIST"):
+        for name, arguments in software_list:
             args = parser.parse_args(arguments.split())
             self.install(name, args)
+
+        logger.info("Starting update process...")
+        self.load_outdated_software()
+
+        if not self.outdated_software:
+            logger.info("Nothing to update, skipping...")
+        else:
+            for name, version, newest_version in self.outdated_software:
+                self.update(name, version, newest_version)
 
     def is_installed(self, software):
         return software in self.installed_software
@@ -135,8 +168,24 @@ class SoftwareManager:
         if args.run_as_admin:
             self.add_run_as_admin_flag(software)
 
+    def update_software(self, software, version, newest_version):
+        logger.info(
+            f"Updating {software} from version [{colored(version, 'yellow')}] to "
+            f"[{colored(newest_version, 'yellow')}]...")
+
+        command = CommandGenerator() \
+            .scoop() \
+            .update() \
+            .parameters("--global", software)
+        CommandExecutor().execute(command)
+
+        logger.info(f"Successfully updated {software}!")
+
     def install(self, software, args):
         self.install_software(software, args)
+
+    def update(self, software, version, newest_version):
+        self.update_software(software, version, newest_version)
 
     def install_context(self, software, output):
         logger.info(f"Installing context for {software}...")
