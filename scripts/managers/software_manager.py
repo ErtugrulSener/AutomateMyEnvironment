@@ -93,7 +93,23 @@ class SoftwareManager:
                 software, version, newest_version = matcher[:3]
                 self.outdated_software.append((software, version, newest_version))
 
+    def pre_check(self):
+        # Check for newer scoop version
+        command = CommandGenerator() \
+            .scoop() \
+            .status() \
+            .parameters("--global")
+        output = CommandExecutor().execute(command)
+
+        if "Scoop out of date." in output:
+            command = CommandGenerator() \
+                .scoop() \
+                .update() \
+                .parameters("--global")
+            CommandExecutor().execute(command)
+
     def start(self):
+        # Check for not installed software
         software_list = ConfigParser.instance().items("SOFTWARE_LIST")
         logger.info("Starting installation process...")
 
@@ -101,6 +117,7 @@ class SoftwareManager:
             args = parser.parse_args(arguments.split())
             self.install(name, args)
 
+        # Check for software updates
         logger.info("Starting update process...")
         self.load_outdated_software()
 
