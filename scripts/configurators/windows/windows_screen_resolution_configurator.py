@@ -6,7 +6,7 @@ from termcolor import colored
 from scripts.commands.command_executor import CommandExecutor
 from scripts.commands.command_generator import CommandGenerator
 from scripts.configurators.configurator_base import ConfiguratorBase
-from scripts.constants.Enums import ExecutablePaths
+from scripts.constants.Enums import ExecutablePaths, Color
 from scripts.singleton import Singleton
 
 
@@ -71,6 +71,6 @@ class WindowsScreenResolutionConfigurator(ConfiguratorBase):
 
             if highest_possible_refresh_rate != current_refresh_rate:
                 self.info(
-                    f"Setting refresh rate of device [{colored(device_name, 'yellow')}] "
+                    f"Setting refresh rate of device [{colored(device_name, Color.YELLOW.value())}] "
                     f"to [{highest_possible_refresh_rate}]")
                 self.set_refresh_rate(device_name, highest_possible_refresh_rate)

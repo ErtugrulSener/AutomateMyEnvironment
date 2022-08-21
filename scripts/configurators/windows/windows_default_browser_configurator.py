@@ -8,7 +8,7 @@ from winerror import ERROR_FILE_NOT_FOUND
 from scripts.commands.command_executor import CommandExecutor
 from scripts.commands.command_generator import CommandGenerator
 from scripts.configurators.configurator_base import ConfiguratorBase
-from scripts.constants.Enums import ExecutablePaths
+from scripts.constants.Enums import ExecutablePaths, Color
 from scripts.managers.file_association_manager import FileAssociationManager
 from scripts.managers.registry_manager import RegistryManager
 from scripts.managers.registry_manager import RegistryPath
@@ -67,7 +67,7 @@ class WindowsDefaultBrowserConfigurator(ConfiguratorBase):
                 return real_identifier_type, real_identifier
 
     def register_default_browser(self, browser_name):
-        self.info(f"Registering {colored(f'{browser_name}', 'yellow')} as a browser")
+        self.info(f"Registering {colored(f'{browser_name}', Color.YELLOW.value())} as a browser")
 
         software_manager = SoftwareManager.instance()
         registry_manager = RegistryManager.instance()
@@ -136,7 +136,7 @@ class WindowsDefaultBrowserConfigurator(ConfiguratorBase):
         self.refresh_default_browser_cache()
 
     def set_default_browser(self, browser_name):
-        self.info(f"Setting {colored(f'{browser_name}', 'yellow')} as the default browser")
+        self.info(f"Setting {colored(f'{browser_name}', Color.YELLOW.value())} as the default browser")
         brave_type, brave_browser_identifier = self.find_default_type_browser_by_identifier(browser_name)
 
         command = CommandGenerator() \

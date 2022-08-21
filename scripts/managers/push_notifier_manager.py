@@ -3,6 +3,7 @@ import configparser
 from pushnotifier.PushNotifier import PushNotifier
 from termcolor import colored
 
+from scripts.constants.Enums import Color
 from scripts.logging.logger import Logger
 from scripts.singleton import Singleton
 
@@ -27,10 +28,10 @@ class PushNotifierManager(PushNotifier):
 
     def send_text(self, text, devices=None, silent=False):
         if not devices:
-            logger.info(f"Sending push notification [{colored(text, 'yellow')}] to all devices")
+            logger.info(f"Sending push notification [{colored(text, Color.YELLOW.value())}] to all devices")
         else:
             logger.info(
-                f"Sending push notification [{colored(text, 'yellow')}] to devices "
-                f"[{colored(', '.join(devices), 'yellow')}]")
+                f"Sending push notification [{colored(text, Color.YELLOW.value())}] to devices "
+                f"[{colored(', '.join(devices), Color.YELLOW.value())}]")
 
         PushNotifier.send_text(self, text, devices, silent)

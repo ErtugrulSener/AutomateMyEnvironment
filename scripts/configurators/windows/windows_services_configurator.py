@@ -7,6 +7,7 @@ from winerror import ERROR_SUCCESS
 from wmi import WMI
 
 from scripts.configurators.configurator_base import ConfiguratorBase
+from scripts.constants.Enums import Color
 from scripts.parsers.config_parser import ConfigParser
 from scripts.singleton import Singleton
 
@@ -119,12 +120,12 @@ class WindowsServicesConfigurator(ConfiguratorBase):
 
             if actual_start_mode != expected_start_mode:
                 self.debug(
-                    f"Service '{colored(service, 'yellow')}' -> Start type was"
-                    f"'{colored(actual_start_mode.name, 'yellow')}', "
-                    f"but should be '{colored(expected_start_mode.name, 'yellow')}'")
+                    f"Service '{colored(service, Color.YELLOW.value())}' -> Start type was"
+                    f"'{colored(actual_start_mode.name, Color.YELLOW.value())}', "
+                    f"but should be '{colored(expected_start_mode.name, Color.YELLOW.value())}'")
                 self.info(
-                    f"Setting start type to '{colored(expected_start_mode.name, 'yellow')}' for service "
-                    f"'{colored(service, 'yellow')}' now...")
+                    f"Setting start type to '{colored(expected_start_mode.name, Color.YELLOW.value())}' for service "
+                    f"'{colored(service, Color.YELLOW.value())}' now...")
                 self.configure_start_mode(service, start_mode)
 
             # Set status to the expected one for ex. start or stop service
@@ -133,9 +134,9 @@ class WindowsServicesConfigurator(ConfiguratorBase):
 
             if actual_status != expected_status:
                 self.debug(
-                    f"Service '{colored(service, 'yellow')}' -> Status was "
-                    f"'{colored(actual_status.name, 'yellow')}', but should be"
-                    f"'{colored(expected_status.name, 'yellow')}'")
+                    f"Service '{colored(service, Color.YELLOW.value())}' -> Status was "
+                    f"'{colored(actual_status.name, Color.YELLOW.value())}', but should be"
+                    f"'{colored(expected_status.name, Color.YELLOW.value())}'")
                 self.info(
-                    f"Performing action '{colored(action.name.lower(), 'yellow')}' for service '{colored(service, 'yellow')}' now...")
+                    f"Performing action '{colored(action.name.lower(), Color.YELLOW.value())}' for service '{colored(service, Color.YELLOW.value())}' now...")
                 self.configure_status(service, action)

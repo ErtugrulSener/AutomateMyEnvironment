@@ -4,6 +4,7 @@ from itertools import chain
 from termcolor import colored
 
 from scripts.configurators.configurator_base import ConfiguratorBase
+from scripts.constants.Enums import Color
 from scripts.managers.software_manager import SoftwareManager
 from scripts.singleton import Singleton
 
@@ -28,17 +29,19 @@ class WinscpConfigurator(ConfiguratorBase):
         self.winscp_configuration.read(self.winscp_configuration_filepath)
 
     def set_configuration_option(self, section, option, value):
-        self.info(f"Setting option [{colored(option, 'yellow')}] in section [{colored(section, 'yellow')}] "
-                  f"to [{colored(value, 'yellow')}]")
+        self.info(
+            f"Setting option [{colored(option, Color.YELLOW.value())}] in section [{colored(section, Color.YELLOW.value())}] "
+            f"to [{colored(value, Color.YELLOW.value())}]")
 
         if not self.winscp_configuration.has_section(section):
-            self.info(f"Creating section [{colored(section, 'yellow')}] since it was missing")
+            self.info(f"Creating section [{colored(section, Color.YELLOW.value())}] since it was missing")
             self.winscp_configuration.add_section(section)
 
         self.winscp_configuration.set(section, option, value)
 
     def save_configuration(self):
-        self.info(f"Saving configuration file [{colored(self.winscp_configuration_filepath, 'yellow')}] now...")
+        self.info(
+            f"Saving configuration file [{colored(self.winscp_configuration_filepath, Color.YELLOW.value())}] now...")
 
         with open(self.winscp_configuration_filepath, "w") as f:
             self.winscp_configuration.write(f, space_around_delimiters=False)

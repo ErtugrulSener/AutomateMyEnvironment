@@ -14,3 +14,11 @@ class ExecutablePaths(Enum):
         filepath = self._value_
         base_path = os.path.join(os.getcwd(), r"external\executables")
         return os.path.join(base_path, filepath)
+
+
+class Color(Enum):
+    YELLOW = 'yellow'
+    MAGENTA = 'magenta'
+
+    def value(self):
+        return self._value_

@@ -5,6 +5,7 @@ import winreg
 from termcolor import colored
 
 from scripts.configurators.configurator_base import ConfiguratorBase
+from scripts.constants.Enums import Color
 from scripts.managers.md5_manager import MD5Manager
 from scripts.managers.registry_manager import RegistryManager
 from scripts.managers.registry_manager import RegistryPath
@@ -87,7 +88,7 @@ class CmderConfigurator(ConfiguratorBase):
         if not self.has_right_settings():
             self.info(
                 f"Copying settings file "
-                f"from [{colored(self.local_settings_path, 'yellow')}] "
-                f"to [{colored(self.cmder_settings_path, 'yellow')}]")
+                f"from [{colored(self.local_settings_path, Color.YELLOW.value())}] "
+                f"to [{colored(self.cmder_settings_path, Color.YELLOW.value())}]")
 
             shutil.copyfile(self.local_settings_path, self.cmder_settings_path)

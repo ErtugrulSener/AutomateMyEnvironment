@@ -5,6 +5,7 @@ from itertools import chain
 from termcolor import colored
 
 from scripts.configurators.configurator_base import ConfiguratorBase
+from scripts.constants.Enums import Color
 from scripts.managers.github_file_downloader import GithubFileDownloader
 from scripts.managers.software_manager import SoftwareManager
 from scripts.singleton import Singleton
@@ -40,7 +41,8 @@ class NotepadPlusPlusConfigurator(ConfiguratorBase):
                                                                     self.NOTEPADPLUSPLUS_LOCAL_PATH,
                                                                     plugin_asset_regex)
 
-                self.info(f"Extracting [{colored(filename, 'yellow')}] to [{colored(self.plugins_path, 'yellow')}]")
+                self.info(
+                    f"Extracting [{colored(filename, Color.YELLOW.value())}] to [{colored(self.plugins_path, Color.YELLOW.value())}]")
 
                 with zipfile.ZipFile(os.path.join(self.NOTEPADPLUSPLUS_LOCAL_PATH, filename), 'r') as zip_ref:
                     zip_ref.extractall(os.path.join(self.plugins_path, plugin_name))

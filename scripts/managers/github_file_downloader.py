@@ -6,6 +6,7 @@ from termcolor import colored
 
 from scripts.commands.command_executor import CommandExecutor
 from scripts.commands.command_generator import CommandGenerator
+from scripts.constants.Enums import Color
 from scripts.logging.logger import Logger
 from scripts.singleton import Singleton
 
@@ -31,7 +32,7 @@ class GithubFileDownloader:
                 if not re.match(rf"{resource_name_regex}", name):
                     continue
 
-                logger.info(f"Downloading [{colored(name, 'yellow')} from [{url}]")
+                logger.info(f"Downloading [{colored(name, Color.YELLOW.value())} from [{url}]")
 
                 command = CommandGenerator() \
                     .wget() \

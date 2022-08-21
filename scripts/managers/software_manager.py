@@ -9,6 +9,7 @@ from termcolor import colored
 
 from scripts.commands.command_executor import CommandExecutor
 from scripts.commands.command_generator import CommandGenerator
+from scripts.constants.Enums import Color
 from scripts.logging.logger import Logger
 from scripts.managers.registry_manager import RegistryManager
 from scripts.managers.registry_manager import RegistryPath
@@ -170,8 +171,8 @@ class SoftwareManager:
 
     def update_software(self, software, version, newest_version):
         logger.info(
-            f"Updating {software} from version [{colored(version, 'yellow')}] to "
-            f"[{colored(newest_version, 'yellow')}]...")
+            f"Updating {software} from version [{colored(version, Color.YELLOW.value())}] to "
+            f"[{colored(newest_version, Color.YELLOW.value())}]...")
 
         command = CommandGenerator() \
             .scoop() \
@@ -203,7 +204,8 @@ class SoftwareManager:
             CommandExecutor().execute(command)
 
     def add_run_as_admin_flag(self, software):
-        logger.info(rf"Adding '{colored('Run as Admin', 'yellow')}' flag to {colored(software, 'yellow')}")
+        logger.info(
+            rf"Adding '{colored('Run as Admin', Color.YELLOW.value())}' flag to {colored(software, Color.YELLOW.value())}")
         shortcuts = self.get_info(software, SoftwareInfo.SHORTCUTS)
 
         for shortcut in shortcuts.split(" | "):

@@ -5,6 +5,7 @@ from enum import Enum
 from termcolor import colored
 from winregistry import WinRegistry
 
+from scripts.constants.Enums import Color
 from scripts.logging.logger import Logger
 from scripts.singleton import Singleton
 
@@ -337,8 +338,8 @@ class RegistryManager:
                 return
 
             logger.info(
-                f"Setting value for registry key [{colored(os.path.join(path, registry_key), 'yellow')}] to "
-                f"[{colored(value, 'yellow')}]")
+                f"Setting value for registry key [{colored(os.path.join(path, registry_key), Color.YELLOW.value())}] to "
+                f"[{colored(value, Color.YELLOW.value())}]")
 
             client.write_entry(path, registry_key, value, value_type)
 
@@ -348,7 +349,7 @@ class RegistryManager:
 
     def delete_entry(self, path, registry_key):
         with WinRegistry() as client:
-            logger.info(f"Removing entry [{colored(os.path.join(path, registry_key), 'yellow')}]")
+            logger.info(f"Removing entry [{colored(os.path.join(path, registry_key), Color.YELLOW.value())}]")
             client.delete_entry(path, registry_key)
 
     def delete_tree(self, key, *args):
@@ -357,7 +358,7 @@ class RegistryManager:
 
     def delete_tree_entry(self, path):
         with WinRegistry() as client:
-            logger.info(f"Removing tree [{colored(os.path.join(path), 'yellow')}]")
+            logger.info(f"Removing tree [{colored(os.path.join(path), Color.YELLOW.value())}]")
 
             try:
                 client.delete_key_tree(path)

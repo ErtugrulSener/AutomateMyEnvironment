@@ -3,7 +3,7 @@ from termcolor import colored
 from scripts.commands.command_executor import CommandExecutor
 from scripts.commands.command_generator import CommandGenerator
 from scripts.configurators.configurator_base import ConfiguratorBase
-from scripts.constants.Enums import ExecutablePaths
+from scripts.constants.Enums import ExecutablePaths, Color
 from scripts.managers.file_association_manager import FileAssociationManager
 from scripts.parsers.config_parser import ConfigParser
 from scripts.singleton import Singleton
@@ -24,7 +24,8 @@ class WindowsFileAssociationConfigurator(ConfiguratorBase):
     def configure(self):
         for extension, prog_id in ConfigParser.instance().items("WINDOWS-FILE-ASSOCIATIONS"):
             if FileAssociationManager.instance().get(extension) != prog_id:
-                self.info(f"Setting prog id for [{colored(extension, 'yellow')}] to [{colored(prog_id, 'yellow')}]")
+                self.info(
+                    f"Setting prog id for [{colored(extension, Color.YELLOW.value())}] to [{colored(prog_id, Color.YELLOW.value())}]")
 
                 command = CommandGenerator() \
                     .parameters(ExecutablePaths.SET_USER_TFA.value(), f"{extension}", f"{prog_id}")
