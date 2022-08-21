@@ -4,7 +4,7 @@ from shutil import which
 import requests
 
 from scripts.logging.logger import Logger
-from scripts.managers import admin_manager
+from scripts.managers.admin_manager import AdminManager
 from scripts.managers.registry_manager import RegistryManager
 from scripts.managers.registry_manager import RegistryPath
 from scripts.singleton import Singleton
@@ -22,7 +22,7 @@ class SystemChecker:
     def check_for_admin_rights(self):
         logger.info('Checking if script was called as admin (Required)')
 
-        if not admin_manager.is_user_admin():
+        if not AdminManager.instance().is_user_admin():
             logger.error('You need administrator privileges to run this script!')
             exit(1)
 
