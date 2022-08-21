@@ -94,6 +94,8 @@ class SoftwareManager:
                 self.outdated_software.append((software, version, newest_version))
 
     def pre_check(self):
+        logger.info("Checking for newer scoop updates...")
+
         # Check for newer scoop version
         command = CommandGenerator() \
             .scoop() \
@@ -102,11 +104,15 @@ class SoftwareManager:
         output = CommandExecutor().execute(command)
 
         if "Scoop out of date." in output:
+            logger.info("Updating scoop since it's out of date...")
+
             command = CommandGenerator() \
                 .scoop() \
                 .update() \
                 .parameters("--global")
             CommandExecutor().execute(command)
+
+            logger.info("Successfully updated scoop")
 
     def start(self):
         # Check for not installed software
