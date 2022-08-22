@@ -55,7 +55,7 @@ class FileHandler(logging.FileHandler):
             f.writelines([f'Started logging at {now.strftime("%d/%m/%Y %H:%M:%S")}', '\n' * 2])
             f.writelines([f'{"User":<34} {os.getlogin()}', '\n'])
             f.writelines([f'{"PATH":<34} {os.environ["PATH"]}', '\n'])
-            f.writelines([f'{"VIRTUAL_ENV":<34} {os.environ["VIRTUAL_ENV"]}', '\n'])
+            f.writelines([f'{"VIRTUAL_ENV":<34} {os.environ.get("VIRTUAL_ENV", "Not in a virtual env")}', '\n'])
             f.writelines([f'{"http_proxy":<34} {os.environ.get("http_proxy", "Not set")}', '\n'])
             f.writelines([f'{"https_proxy":<34} {os.environ.get("https_proxy", "Not set")}', '\n'])
             f.writelines(['=' * 80, '\n'])
