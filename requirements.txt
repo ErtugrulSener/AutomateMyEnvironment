@@ -11,4 +11,4 @@ termcolor
 aenum
 pyaes
 pushnotifier
-git+https://ertugrulsener.de/github/pwinput
+pwinput @ git+https://ertugrulsener.de/github/pwinput
