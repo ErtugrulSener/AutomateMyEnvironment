@@ -87,7 +87,7 @@ class SoftwareManager:
         lines = list(dropwhile(lambda l: any(character not in ["-", " "] for character in l), lines))[1:]
 
         for line in lines:
-            matcher = re.findall(r"\b[a-zA-Z0-9.-_]+\b", line)
+            matcher = re.findall(r"\b[a-zA-Z0-9._-]+\b", line)
 
             if matcher:
                 software, version, newest_version = matcher[:3]
