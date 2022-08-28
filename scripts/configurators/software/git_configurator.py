@@ -3,6 +3,7 @@ import re
 from itertools import chain
 from pathlib import Path
 
+from termcolor import colored
 from winerror import ERROR_WAIT_NO_CHILDREN
 
 from scripts.commands.command_executor import CommandExecutor
@@ -56,7 +57,7 @@ class GitConfigurator(ConfiguratorBase):
 
         for key, value in ConfigParser.instance().items("GIT"):
             if not self.is_config_set(key):
-                self.info(f"Setting key '{key}' to value '{value}'")
+                self.info(f"Setting key [{colored(key, 'yellow')}] to value [{colored(value, 'yellow')}]")
 
                 command = CommandGenerator() \
                     .git() \
