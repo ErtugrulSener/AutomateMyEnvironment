@@ -279,6 +279,11 @@ class RegistryPath(Enum):
         "Attributes"
     ]
 
+    WINDOWS_ROOT_APPLICATIONS_COMMAND = [
+        r"HKEY_CLASSES_ROOT\{}\shell\open\command",
+        ""
+    ]
+
     def get_path(self, *args):
         path = self.value[0]
 
