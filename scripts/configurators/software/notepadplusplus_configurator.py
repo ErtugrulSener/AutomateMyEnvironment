@@ -42,7 +42,8 @@ class NotepadPlusPlusConfigurator(ConfiguratorBase):
                                                                     plugin_asset_regex)
 
                 self.info(
-                    f"Extracting [{colored(filename, Color.YELLOW.value())}] to [{colored(self.plugins_path, Color.YELLOW.value())}]")
+                    f"Extracting [{colored(filename, Color.YELLOW.value())}] to "
+                    f"[{colored(self.plugins_path, Color.YELLOW.value())}]")
 
                 with zipfile.ZipFile(os.path.join(self.NOTEPADPLUSPLUS_LOCAL_PATH, filename), 'r') as zip_ref:
                     zip_ref.extractall(os.path.join(self.plugins_path, plugin_name))

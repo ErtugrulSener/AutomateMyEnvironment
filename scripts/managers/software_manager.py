@@ -231,7 +231,8 @@ class SoftwareManager:
 
     def add_run_as_admin_flag(self, software):
         logger.info(
-            rf"Adding '{colored('Run as Admin', Color.YELLOW.value())}' flag to {colored(software, Color.YELLOW.value())}")
+            rf"Adding '{colored('Run as Admin', Color.YELLOW.value())}' flag to "
+            rf"{colored(software, Color.YELLOW.value())}")
         shortcuts = self.get_info(software, SoftwareInfo.SHORTCUTS)
 
         for shortcut in shortcuts.split(" | "):

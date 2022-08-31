@@ -9,7 +9,6 @@ from scripts.constants.Enums import ExecutablePaths
 from scripts.managers.github_file_downloader import GithubFileDownloader
 from scripts.managers.registry_manager import RegistryManager
 from scripts.managers.registry_manager import RegistryPath
-from scripts.managers.string_manager import StringManager
 from scripts.singleton import Singleton
 
 
