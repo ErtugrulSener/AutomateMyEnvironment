@@ -16,7 +16,8 @@ class CommandExecutor:
                  print_to_console=None,
                  expected_return_codes=None,
                  encoding="cp850",
-                 run_as_admin=True):
+                 run_as_admin=True,
+                 fetch_exit_code=False):
         if print_to_console is None:
             print_to_console = logger.is_trace()
         else:
@@ -33,6 +34,7 @@ class CommandExecutor:
         self.expected_return_codes = expected_return_codes
         self.encoding = encoding
         self.run_as_admin = run_as_admin
+        self.fetch_exit_code = fetch_exit_code
 
     def execute(self, command):
         output = ""
@@ -44,6 +46,7 @@ class CommandExecutor:
             "args": command.get(),
             "stdout": subprocess.PIPE,
             "stderr": subprocess.STDOUT,
+            "stdin": subprocess.PIPE,
             "bufsize": 1,
             "universal_newlines": True,
             "text": True,
@@ -66,4 +69,7 @@ class CommandExecutor:
             if p.returncode not in self.expected_return_codes:
                 raise subprocess.CalledProcessError(p.returncode, p.args)
 
-        return output
+        if self.fetch_exit_code:
+            return output, p.returncode
+        else:
+            return output

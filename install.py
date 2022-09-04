@@ -24,14 +24,17 @@ from scripts.configurators.windows.windows_services_configurator import WindowsS
 from scripts.configurators.windows.windows_ssh_credentials_configurator import WindowsSSHCredentialsConfigurator
 from scripts.configurators.windows.windows_taskbar_configurator import WindowsTaskbarConfigurator
 from scripts.configurators.windows.windows_uac_configurator import WindowsUACConfigurator
-from scripts.logging.logger import Logger
+from scripts.logging.logger import Logger, write_log_header, DEFAULT_INSTALL_LOG_PATH
 from scripts.managers.push_notifier_manager import PushNotifierManager
 from scripts.managers.software_manager import SoftwareManager
+from scripts.managers.software_update_manager import SoftwareUpdateManager
 from scripts.parsers.argument_parser import ArgumentParser
 from scripts.parsers.config_parser import ConfigParser
 from scripts.parsers.parser import Parser
 
 logger = Logger.instance()
+logger.add_file_handler(DEFAULT_INSTALL_LOG_PATH)
+logger.install()
 
 """
 Exit codes:
@@ -49,6 +52,8 @@ TODO:
 """
 
 if __name__ == "__main__":
+    write_log_header()
+
     Parser.instance().parse(ArgumentParser)
     Parser.instance().parse(ConfigParser)
 
@@ -60,6 +65,8 @@ if __name__ == "__main__":
 
     SoftwareManager.instance().pre_check()
     SoftwareManager.instance().start()
+
+    SoftwareUpdateManager.instance().start()
 
     PushNotifierManager.instance().send_text(
         "2/4 - [AUTOMATION] Configuring windows now...")
