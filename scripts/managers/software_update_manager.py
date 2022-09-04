@@ -177,4 +177,4 @@ if __name__ == "__main__":
 
     while True:
         manager.check_for_updates()
-        time.sleep(10)
+        time.sleep(60 * 60)
