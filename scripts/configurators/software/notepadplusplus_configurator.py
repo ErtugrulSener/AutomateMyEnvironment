@@ -14,13 +14,12 @@ from scripts.singleton import Singleton
 @Singleton
 class NotepadPlusPlusConfigurator(ConfiguratorBase):
     PLUGIN_LIST = [
-        ["ComparePlugin", "ComparePlugin_.*_X64.zip",
-         "https://api.github.com/repos/pnedev/compare-plugin/releases/latest"],
+        ["ComparePlus", "ComparePlus_.*_x64.zip",
+         "https://api.github.com/repos/pnedev/comparePlus/releases/latest"],
     ]
 
     SOFTWARE = "notepadplusplus"
     NOTEPADPLUSPLUS_LOCAL_PATH = r"external\plugins\notepadplusplus"
-    NOTEPADPLUSPLUS_API_URL = "https://api.github.com/repos/pnedev/compare-plugin/releases/latest"
 
     def __init__(self):
         super().__init__(__file__)
