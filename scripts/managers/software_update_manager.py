@@ -139,7 +139,6 @@ class SoftwareUpdateManager:
 
     def start(self):
         self.check_for_services()
-        self.check_for_updates()
 
     def check_for_updates(self):
         # Check for software updates
