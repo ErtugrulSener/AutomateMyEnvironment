@@ -32,14 +32,18 @@ The **secret** (git-crypt symmetric key) file is itself encrypted with AES and d
 * If specified, add the '**Run as administrator**' flag to the software
 * If specified and available, add software to context (For ex. for Notepad++ to being able to right click on file and click '**Open with Notepad++**')
 
-## 2) Configure installed software
+## 2) Keeping the installed software updated
+* A windows service is registered named 'SoftwareUpdater', it will autostart and check for software updates every hour after start
+* The service runs under the SYSTEM user with no special rights
+
+## 3) Configure installed software
 * Add '**Compare**' plugin to Notepad++
 * Allow seeing invisible files and folders in WinSCP
 * Skip EULA checks for JetBrains products
 * Set default git configurations like setting '**credential.helper**' to '**store**'
 * Replace local Cmder settings with the ones in the repository
 
-## 3) Configure windows
+## 4) Configure windows
 * Disable all unnecessary programs to be autostarted
 * Enable windows dark mode
 * Register and set my default browser to **Brave**
