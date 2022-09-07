@@ -140,6 +140,27 @@ class SoftwareUpdateManager:
     def start(self):
         self.check_for_services()
 
+    def check_for_scoop_updates(self):
+        logger.info("Checking for newer scoop updates...")
+
+        # Check for newer scoop version
+        command = CommandGenerator() \
+            .scoop() \
+            .status() \
+            .parameters("--global")
+        output = CommandExecutor().execute(command)
+
+        if "Scoop out of date." in output:
+            logger.info("Updating scoop since it's out of date...")
+
+            command = CommandGenerator() \
+                .scoop() \
+                .update() \
+                .parameters("--global")
+            CommandExecutor().execute(command)
+
+            logger.info("Successfully updated scoop")
+
     def check_for_updates(self):
         # Check for software updates
         logger.info("Starting update process...")
@@ -175,5 +196,6 @@ if __name__ == "__main__":
     manager = SoftwareUpdateManager.instance()
 
     while True:
+        manager.check_for_scoop_updates()
         manager.check_for_updates()
         time.sleep(60 * 60)

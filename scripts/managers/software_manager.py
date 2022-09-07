@@ -73,27 +73,6 @@ class SoftwareManager:
                 software_name = match.group(1)
                 self.installed_software.append(software_name)
 
-    def pre_check(self):
-        logger.info("Checking for newer scoop updates...")
-
-        # Check for newer scoop version
-        command = CommandGenerator() \
-            .scoop() \
-            .status() \
-            .parameters("--global")
-        output = CommandExecutor().execute(command)
-
-        if "Scoop out of date." in output:
-            logger.info("Updating scoop since it's out of date...")
-
-            command = CommandGenerator() \
-                .scoop() \
-                .update() \
-                .parameters("--global")
-            CommandExecutor().execute(command)
-
-            logger.info("Successfully updated scoop")
-
     def start(self):
         # Check for not installed software
         software_list = ConfigParser.instance().items("SOFTWARE_LIST")

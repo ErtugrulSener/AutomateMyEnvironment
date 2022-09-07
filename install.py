@@ -63,9 +63,7 @@ if __name__ == "__main__":
     PushNotifierManager.instance().send_text(
         "1/4 - [AUTOMATION] Installing software now...")
 
-    SoftwareManager.instance().pre_check()
     SoftwareManager.instance().start()
-
     SoftwareUpdateManager.instance().start()
 
     PushNotifierManager.instance().send_text(
