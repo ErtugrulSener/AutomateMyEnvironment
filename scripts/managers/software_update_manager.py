@@ -145,7 +145,7 @@ class SoftwareUpdateManager:
 
         # Check for newer scoop version
         command = CommandGenerator() \
-            .scoop() \
+            .parameters(os.path.join(os.environ.get("SCOOP"), r"shims\scoop.cmd")) \
             .status() \
             .parameters("--global")
         output = CommandExecutor().execute(command)
@@ -154,7 +154,7 @@ class SoftwareUpdateManager:
             logger.info("Updating scoop since it's out of date...")
 
             command = CommandGenerator() \
-                .scoop() \
+                .parameters(os.path.join(os.environ.get("SCOOP"), r"shims\scoop.cmd")) \
                 .update() \
                 .parameters("--global")
             CommandExecutor().execute(command)
