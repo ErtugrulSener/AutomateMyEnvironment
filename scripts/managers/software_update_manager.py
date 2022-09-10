@@ -161,8 +161,7 @@ class SoftwareUpdateManager:
 
             command = CommandGenerator() \
                 .parameters(os.path.join(os.environ.get("SCOOP"), r"shims\scoop.cmd")) \
-                .update() \
-                .parameters("--global")
+                .update()
             CommandExecutor().execute(command)
 
             logger.info("Successfully updated scoop")
@@ -188,9 +187,12 @@ class SoftwareUpdateManager:
             .parameters(os.path.join(os.environ.get("SCOOP"), r"shims\scoop.cmd")) \
             .update() \
             .parameters("--global", software)
-        CommandExecutor().execute(command)
+        output = CommandExecutor().execute(command)
 
-        logger.info(f"Successfully updated {software}!")
+        if "is still running" in output:
+            logger.info(f"{software} is still running. Close any instances to update, skipping for now...")
+        else:
+            logger.info(f"Successfully updated {software}!")
 
     def update(self, software, version, newest_version):
         self.update_software(software, version, newest_version)
