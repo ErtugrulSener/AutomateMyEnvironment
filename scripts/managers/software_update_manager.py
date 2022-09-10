@@ -50,6 +50,12 @@ class SoftwareUpdateManager:
     def __init__(self):
         self.outdated_software = []
 
+    def refresh_scoop_buckets(self):
+        command = CommandGenerator() \
+            .parameters(os.path.join(os.environ.get("SCOOP"), r"shims\scoop.cmd")) \
+            .update()
+        CommandExecutor().execute(command)
+
     def refresh_outdated_software(self):
         self.outdated_software = []
 
@@ -164,6 +170,7 @@ class SoftwareUpdateManager:
     def check_for_updates(self):
         # Check for software updates
         logger.info("Starting update process...")
+        self.refresh_scoop_buckets()
         self.refresh_outdated_software()
 
         if not self.outdated_software:
