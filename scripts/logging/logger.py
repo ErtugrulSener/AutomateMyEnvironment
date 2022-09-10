@@ -14,8 +14,8 @@ DEFAULT_INSTALL_LOG_PATH = "install.log"
 
 # Format options for logger
 FORMAT_STYLE_VERBOSE = "%(asctime)s  | %(threadName)s(%(thread)d) | %(funcName)s | %(levelname)s | %(message)s"
+FORMAT_STYLE_FILE_HANDLER = "%(asctime)-26s | %(funcName)-33s | %(levelname)-7s | %(message)s"
 FORMAT_STYLE = "%(funcName)-33s | %(levelname)-7s | %(message)s"
-RAW_FORMAT_STYLE = "%(message)s"
 
 FORMAT_FIELD_STYLES = coloredlogs.DEFAULT_FIELD_STYLES
 FORMAT_FIELD_STYLES.update({
@@ -49,7 +49,7 @@ class FileHandler(logging.FileHandler):
     def __init__(self, filename, mode='a', encoding=None, delay=False, errors=None):
         super().__init__(filename, mode, encoding, delay, errors)
 
-        self.setFormatter(logging.Formatter(FORMAT_STYLE))
+        self.setFormatter(logging.Formatter(FORMAT_STYLE_FILE_HANDLER))
         self.setLevel(DEFAULT_LOG_LEVEL)
 
     def strip_ansi_color_codes(self, record):
