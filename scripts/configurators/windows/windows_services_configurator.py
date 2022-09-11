@@ -89,15 +89,14 @@ class WindowsServicesConfigurator(ConfiguratorBase):
     def is_configured_already(self):
         for service, arguments in ConfigParser.instance().items("WINDOWS-SERVICES"):
             args = parser.parse_args(arguments.split())
-            start_mode = ServiceStartType(args.start_mode)
-            action = ServiceAction(args.action)
 
             actual_start_mode = self.get_start_mode(service)
-            expected_start_mode = ServiceStartType(start_mode)
+            expected_start_mode = ServiceStartType(args.start_mode)
 
             if actual_start_mode != expected_start_mode:
                 return False
 
+            action = ServiceAction(args.action)
             actual_status = self.get_status(service)
             expected_status = self.get_expected_status_for_action(action)
 
@@ -111,12 +110,10 @@ class WindowsServicesConfigurator(ConfiguratorBase):
 
         for service, arguments in ConfigParser.instance().items("WINDOWS-SERVICES"):
             args = parser.parse_args(arguments.split())
-            start_mode = ServiceStartType(args.start_mode)
-            action = ServiceAction(args.action)
 
             # Set start type to the expected one for ex. set to auto or disable
             actual_start_mode = self.get_start_mode(service)
-            expected_start_mode = ServiceStartType(start_mode)
+            expected_start_mode = ServiceStartType(args.start_mode)
 
             if actual_start_mode != expected_start_mode:
                 self.debug(
@@ -126,9 +123,10 @@ class WindowsServicesConfigurator(ConfiguratorBase):
                 self.info(
                     f"Setting start type to '{colored(expected_start_mode.name, Color.YELLOW.value())}' for service "
                     f"'{colored(service, Color.YELLOW.value())}' now...")
-                self.configure_start_mode(service, start_mode)
+                self.configure_start_mode(service, expected_start_mode)
 
             # Set status to the expected one for ex. start or stop service
+            action = ServiceAction(args.action)
             actual_status = self.get_status(service)
             expected_status = self.get_expected_status_for_action(action)
 
