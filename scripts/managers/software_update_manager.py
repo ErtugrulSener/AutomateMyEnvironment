@@ -118,8 +118,8 @@ class SoftwareUpdateManager:
         if not os.path.exists(os.path.dirname(log_filepath)):
             os.makedirs(os.path.dirname(log_filepath))
 
-        self.set_service_parameters("AppStdout", log_filepath)
-        self.set_service_parameters("AppStderr", log_filepath)
+        # self.set_service_parameters("AppStdout", log_filepath)
+        # self.set_service_parameters("AppStderr", log_filepath)
 
     def set_service_parameters(self, parameter_name, parameter_value):
         command = CommandGenerator() \
