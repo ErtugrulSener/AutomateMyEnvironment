@@ -28,6 +28,8 @@ class ServiceAction(Enum):
 class ServiceStatus(Enum):
     RUNNING = "Running"
     STOPPED = "Stopped"
+    START_PENDING = "Start Pending"
+    STOP_PENDING = "Stop Pending"
 
 
 parser = argparse.ArgumentParser()
