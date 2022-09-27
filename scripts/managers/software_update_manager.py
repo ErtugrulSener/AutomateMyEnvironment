@@ -1,7 +1,5 @@
 import os
 
-from scripts.managers.windows_notification_manager import WindowsNotificationManager
-
 SERVICE_NAME = "SoftwareUpdater"
 
 if __name__ == "__main__":
@@ -26,6 +24,7 @@ from itertools import dropwhile
 
 from termcolor import colored
 
+from scripts.managers.windows_notification_manager import WindowsNotificationManager
 from scripts.commands.command_executor import CommandExecutor
 from scripts.commands.command_generator import CommandGenerator
 from scripts.constants.Enums import Color, ExecutablePaths
