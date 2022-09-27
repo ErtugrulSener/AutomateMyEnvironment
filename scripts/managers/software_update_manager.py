@@ -1,5 +1,7 @@
 import os
 
+from scripts.managers.windows_notification_manager import WindowsNotificationManager
+
 SERVICE_NAME = "SoftwareUpdater"
 
 if __name__ == "__main__":
@@ -190,9 +192,12 @@ class SoftwareUpdateManager:
         output = CommandExecutor().execute(command)
 
         if "is still running" in output:
-            logger.info(f"{software} is still running. Close any instances to update, skipping for now...")
+            message = f"{software} is still running. Close any instances to update, skipping for now..."
         else:
-            logger.info(f"Successfully updated {software}!")
+            message = f"Successfully updated {software}!"
+
+        logger.info(message)
+        WindowsNotificationManager.instance().send(SERVICE_NAME, message, threaded=True)
 
     def update(self, software, version, newest_version):
         self.update_software(software, version, newest_version)
