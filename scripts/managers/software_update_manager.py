@@ -19,17 +19,18 @@ if __name__ == "__main__":
 
 import re
 import time
+
 from enum import Enum
 from itertools import dropwhile
 
 from termcolor import colored
 
-from scripts.managers.windows_notification_manager import WindowsNotificationManager
 from scripts.commands.command_executor import CommandExecutor
 from scripts.commands.command_generator import CommandGenerator
 from scripts.constants.Enums import Color, ExecutablePaths
 from scripts.logging.logger import Logger
 from scripts.managers.software_manager import SoftwareManager
+from scripts.managers.push_notifier_manager import PushNotifierManager
 from scripts.singleton import Singleton
 
 LOG_FILEPATH = r"logs\software_updater_service.log"
@@ -111,7 +112,8 @@ class SoftwareUpdateManager:
         logger.info("Registered updater service started successfully!")
 
         logger.info(f"Setting app environment home to: [{colored(base_path, 'yellow')}]")
-        self.set_service_parameters("AppEnvironmentExtra", f'HOME="{base_path}"')
+        self.set_service_parameters("AppEnvironmentExtra",
+                                    f'HOME="{base_path}" USER="{os.getlogin()}" ALIAS="{os.environ["ALIAS"]}"')
 
         log_filepath = os.path.join(base_path, LOG_FILEPATH)
         logger.info(f"Setting log directory for stdout / stderr to: [{colored(log_filepath, 'yellow')}]")
@@ -194,9 +196,14 @@ class SoftwareUpdateManager:
             message = f"{software} is still running. Close any instances to update, skipping for now..."
         else:
             message = f"Successfully updated {software}!"
+            self.send_push_message(software, version, newest_version)
 
         logger.info(message)
-        WindowsNotificationManager.instance().send(SERVICE_NAME, message, threaded=True)
+
+    def send_push_message(self, software, version, newest_version):
+        alias = os.environ["ALIAS"]
+        push_message = f"[{alias}] - Successfully updated {software} from version [{version}] to [{newest_version}]!"
+        PushNotifierManager.instance().send_text(push_message)
 
     def update(self, software, version, newest_version):
         self.update_software(software, version, newest_version)

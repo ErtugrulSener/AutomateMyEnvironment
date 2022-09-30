@@ -1,3 +1,4 @@
+from scripts.checkers.alias_checker import AliasChecker
 from scripts.checkers.checker import Checker
 from scripts.checkers.secrets_checker import SecretsChecker
 from scripts.checkers.system_checker import SystemChecker
@@ -59,6 +60,7 @@ if __name__ == "__main__":
 
     Checker.instance().check(SystemChecker)
     Checker.instance().check(SecretsChecker)
+    Checker.instance().check(AliasChecker)
 
     PushNotifierManager.instance().send_text(
         "1/4 - [AUTOMATION] Installing software now...")
