@@ -98,3 +98,6 @@ external/executables/defender-control/*.exe
 
 # Ignore decrypted secret to not expose anything to the public ;)
 secret_decrypted
+
+# Ignore local sqlite database
+data.db

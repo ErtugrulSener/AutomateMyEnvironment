@@ -1,9 +1,11 @@
+import os
 import re
 from enum import Enum
 
 from scripts.commands.command_executor import CommandExecutor
 from scripts.commands.command_generator import CommandGenerator
 from scripts.configurators.configurator_base import ConfiguratorBase
+from scripts.managers.database_manager import DatabaseManager, Constant
 from scripts.managers.registry_manager import RegistryManager, RegistryPath
 from scripts.singleton import Singleton
 
@@ -16,11 +18,14 @@ class PowerConfiguration(Enum):
 
 @Singleton
 class WindowsEnergySavingPlanConfigurator(ConfiguratorBase):
+    TARGET_GUID = PowerConfiguration.TOP_PERFORMANCE.value
+    TOP_PERFORMANCE_PROFILE = r"external\configurations\windows-energy-saving-plan\high-performance.pow"
+
     POWERCONFIG_SETTINGS = [
-        ("SCHEME_MIN", "SUB_VIDEO", "VIDEOIDLE", 0),
-        ("SCHEME_MIN", "SUB_SLEEP", "STANDBYIDLE", 0),
-        ("SCHEME_MIN", "SUB_SLEEP", "UNATTENDSLEEP", 60 * 99999),
-        ("SCHEME_MIN", "SUB_SLEEP", "HIBERNATEIDLE", 0),
+        ("SUB_VIDEO", "VIDEOIDLE", 0),
+        ("SUB_SLEEP", "STANDBYIDLE", 0),
+        ("SUB_SLEEP", "UNATTENDSLEEP", 60 * 99999),
+        ("SUB_SLEEP", "HIBERNATEIDLE", 0),
     ]
 
     def __init__(self):
@@ -30,9 +35,11 @@ class WindowsEnergySavingPlanConfigurator(ConfiguratorBase):
         self.power_settings = {}
 
         self.load_power_configurations()
+        self.determine_target_guid()
         self.load_power_settings()
 
     def load_power_configurations(self):
+        # Load existing power configurations into map
         command = CommandGenerator() \
             .powercfg() \
             .parameters("/l")
@@ -45,7 +52,29 @@ class WindowsEnergySavingPlanConfigurator(ConfiguratorBase):
 
             if match:
                 configuration_id = match.group(2)
-                self.power_configurations[PowerConfiguration(configuration_id)] = is_active
+                self.power_configurations[configuration_id] = is_active
+
+    def determine_target_guid(self):
+        if self.TARGET_GUID not in self.power_configurations:
+            self.TARGET_GUID = DatabaseManager.instance().get(Constant.POWER_SAVINGS_PLAN_GUID)
+
+            if self.TARGET_GUID in self.power_configurations:
+                return
+
+        # Import high performance profile
+        self.info("Importing energy saving plan: Top performance")
+
+        command = CommandGenerator() \
+            .powercfg() \
+            .parameters("/import", f"{os.path.abspath(self.TOP_PERFORMANCE_PROFILE)}")
+        output = CommandExecutor().execute(command)
+
+        match = re.search(r"GUID: ([a-z0-9-]+)", output)
+
+        if match:
+            self.TARGET_GUID = match.group(1)
+            DatabaseManager.instance().set(Constant.POWER_SAVINGS_PLAN_GUID, self.TARGET_GUID)
+            self.power_configurations[self.TARGET_GUID] = False
 
     def load_power_settings(self):
         for setting in self.POWERCONFIG_SETTINGS:
@@ -60,7 +89,7 @@ class WindowsEnergySavingPlanConfigurator(ConfiguratorBase):
 
         command = CommandGenerator() \
             .powercfg() \
-            .parameters("/q", *key)
+            .parameters("/q", self.TARGET_GUID, *key)
         output = CommandExecutor().execute(command)
         lines = output.splitlines()
 
@@ -84,7 +113,7 @@ class WindowsEnergySavingPlanConfigurator(ConfiguratorBase):
         return ac_value, dc_value
 
     def is_configured_already(self):
-        if not self.power_configurations[PowerConfiguration.TOP_PERFORMANCE]:
+        if not self.power_configurations[self.TARGET_GUID]:
             return False
 
         if not RegistryManager.instance().get(RegistryPath.WINDOWS_UNATTENDED_SLEEP_TIMEOUT):
@@ -100,12 +129,12 @@ class WindowsEnergySavingPlanConfigurator(ConfiguratorBase):
         return True
 
     def configure(self):
-        if not self.power_configurations[PowerConfiguration.TOP_PERFORMANCE]:
+        if not self.power_configurations[self.TARGET_GUID]:
             self.info("Setting energy saving plan to: Top performance")
 
             command = CommandGenerator() \
                 .powercfg() \
-                .parameters("/s", PowerConfiguration.TOP_PERFORMANCE.value)
+                .parameters("/s", self.TARGET_GUID)
             CommandExecutor().execute(command)
 
         if not RegistryManager.instance().get(RegistryPath.WINDOWS_UNATTENDED_SLEEP_TIMEOUT):
