@@ -33,6 +33,10 @@ class DatabaseManager:
         result = cursor.execute(f"SELECT value FROM {self.CONSTANTS_TABLE_NAME} WHERE key = '{constant.value}'")
         result = result.fetchone()
         cursor.close()
+        
+        if not result:
+            return None
+        
         return result[0]
 
     def set(self, constant, constant_value):
