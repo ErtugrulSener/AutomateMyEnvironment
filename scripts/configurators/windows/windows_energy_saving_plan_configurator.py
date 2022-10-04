@@ -151,10 +151,10 @@ class WindowsEnergySavingPlanConfigurator(ConfiguratorBase):
 
                 command = CommandGenerator() \
                     .powercfg() \
-                    .parameters("/SETACVALUEINDEX", *key, value)
+                    .parameters("/SETACVALUEINDEX", self.TARGET_GUID, *key, value)
                 CommandExecutor().execute(command)
 
                 command = CommandGenerator() \
                     .powercfg() \
-                    .parameters("/SETDCVALUEINDEX", *key, value)
+                    .parameters("/SETDCVALUEINDEX", self.TARGET_GUID, *key, value)
                 CommandExecutor().execute(command)
