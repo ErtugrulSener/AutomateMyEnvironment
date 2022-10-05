@@ -101,3 +101,6 @@ secret_decrypted
 
 # Ignore local sqlite database
 data.db
+
+# Ignore alias file
+alias
