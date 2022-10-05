@@ -22,7 +22,6 @@ class AliasChecker:
                 f"Do you wish to set an alias for phone notifications? "
                 f"(default is: {colored(default_alias, 'yellow')}@{os.getlogin()}): ") or default_alias
 
-            alias = f"{alias}@{os.getlogin()}"
             with open(self.ALIAS_FILEPATH, "w") as fw:
                 fw.write(alias)
 

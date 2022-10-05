@@ -202,7 +202,8 @@ class SoftwareUpdateManager:
 
     def send_push_message(self, software, version, newest_version):
         alias = os.environ["ALIAS"]
-        push_message = f"[{alias}] - Successfully updated {software} from version [{version}] to [{newest_version}]!"
+        username = os.environ["USER"]
+        push_message = f"[{alias}@{username}] - Successfully updated {software} from version [{version}] to [{newest_version}]!"
         PushNotifierManager.instance().send_text(push_message)
 
     def update(self, software, version, newest_version):
