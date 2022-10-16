@@ -6,9 +6,9 @@ from termcolor import colored
 
 from scripts.configurators.configurator_base import ConfiguratorBase
 from scripts.constants.Enums import Color
-from scripts.managers.md5_manager import MD5Manager
 from scripts.managers.registry_manager import RegistryManager
 from scripts.managers.registry_manager import RegistryPath
+from scripts.managers.sha_manager import SHA256Manager
 from scripts.managers.software_manager import SoftwareManager
 from scripts.singleton import Singleton
 
@@ -57,7 +57,7 @@ class CmderConfigurator(ConfiguratorBase):
             return False
 
         cmder_settings = ''.join(open(self.cmder_settings_path, "r", encoding="utf-8").readlines()[4:])
-        return MD5Manager.instance().hash(local_settings) == MD5Manager.instance().hash(cmder_settings)
+        return SHA256Manager.instance().hash(local_settings) == SHA256Manager.instance().hash(cmder_settings)
 
     def is_configured_already(self):
         registry_key_list = self.LEFT_PANEL_KEYS + self.RIGHT_PANEL_KEYS
