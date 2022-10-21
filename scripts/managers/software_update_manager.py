@@ -192,7 +192,7 @@ class SoftwareUpdateManager:
             .parameters("--global", software)
         output = CommandExecutor().execute(command)
 
-        if "is still running" in output:
+        if "still running" in output:
             message = f"{software} is still running. Close any instances to update, skipping for now..."
         else:
             message = f"Successfully updated {software}!"
