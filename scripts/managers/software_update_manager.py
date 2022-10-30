@@ -232,8 +232,7 @@ class SoftwareUpdateManager:
 
 
 if __name__ == "__main__":
-    logger.add_file_handler(LOG_FILEPATH)
-    logger.install()
+    logger.install(LOG_FILEPATH)
 
     manager = SoftwareUpdateManager.instance()
     argument_parser = ArgumentParser.instance()
