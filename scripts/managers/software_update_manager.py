@@ -31,9 +31,11 @@ from scripts.constants.Enums import Color, ExecutablePaths
 from scripts.logging.logger import Logger
 from scripts.managers.software_manager import SoftwareManager
 from scripts.managers.push_notifier_manager import PushNotifierManager
+from scripts.parsers.argument_parser import ArgumentParser
 from scripts.singleton import Singleton
 
 LOG_FILEPATH = r"logs\software_updater_service.log"
+STDOUT_FILEPATH = r"logs\software_updater_service_stdout.log"
 logger = Logger.instance()
 
 NSSM_SERVICE_FOUND_EXIT_CODE = 0
@@ -107,6 +109,16 @@ class SoftwareUpdateManager:
         command = CommandGenerator() \
             .parameters(ExecutablePaths.NON_SUCKING_SERVICE_MANAGER.value(), "install", SERVICE_NAME) \
             .parameters(f'"{python_executable_path}"', f'"{script_path}"')
+
+        http_proxy = os.environ['http_proxy']
+        https_proxy = os.environ['https_proxy']
+
+        if http_proxy:
+            command = command.parameters(f"--http-proxy {http_proxy}")
+
+        if https_proxy:
+            command = command.parameters(f"--https-proxy {https_proxy}")
+
         CommandExecutor().execute(command)
 
         logger.info("Registered updater service started successfully!")
@@ -115,14 +127,14 @@ class SoftwareUpdateManager:
         self.set_service_parameters("AppEnvironmentExtra",
                                     f'HOME="{base_path}" USER="{os.getlogin()}" ALIAS="{os.environ["ALIAS"]}"')
 
-        log_filepath = os.path.join(base_path, LOG_FILEPATH)
-        logger.info(f"Setting log directory for stdout / stderr to: [{colored(log_filepath, 'yellow')}]")
+        """stdout_filepath = os.path.join(base_path, STDOUT_FILEPATH)
+        logger.info(f"Setting log directory for stdout / stderr to: [{colored(stdout_filepath, 'yellow')}]")
 
-        if not os.path.exists(os.path.dirname(log_filepath)):
-            os.makedirs(os.path.dirname(log_filepath))
+        if not os.path.exists(os.path.dirname(stdout_filepath)):
+            os.makedirs(os.path.dirname(stdout_filepath))
 
-        # self.set_service_parameters("AppStdout", log_filepath)
-        # self.set_service_parameters("AppStderr", log_filepath)
+        self.set_service_parameters("AppStdout", stdout_filepath)
+        self.set_service_parameters("AppStderr", stdout_filepath)"""
 
     def set_service_parameters(self, parameter_name, parameter_value):
         command = CommandGenerator() \
@@ -224,6 +236,7 @@ if __name__ == "__main__":
     logger.install()
 
     manager = SoftwareUpdateManager.instance()
+    argument_parser = ArgumentParser.instance()
 
     while True:
         manager.check_for_scoop_updates()
