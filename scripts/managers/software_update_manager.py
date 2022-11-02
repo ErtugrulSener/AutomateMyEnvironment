@@ -32,6 +32,7 @@ from scripts.logging.logger import Logger
 from scripts.managers.software_manager import SoftwareManager
 from scripts.managers.push_notifier_manager import PushNotifierManager
 from scripts.parsers.argument_parser import ArgumentParser
+from scripts.managers.network_manager import NetworkManager
 from scripts.singleton import Singleton
 
 LOG_FILEPATH = r"logs\software_updater_service.log"
@@ -47,6 +48,10 @@ class UpdaterServiceStatus(Enum):
     RUNNING = "SERVICE_RUNNING"
     STOPPED = "SERVICE_STOPPED"
     PAUSED = "SERVICE_PAUSED"
+
+
+RETRY_CONNECTION_INTERVAL_SECONDS = 10
+RETRY_INTERVAL_SECONDS = 60 * 60
 
 
 @Singleton
@@ -230,6 +235,10 @@ class SoftwareUpdateManager:
     def update(self, software, version, newest_version):
         self.update_software(software, version, newest_version)
 
+    def check_for_connectivity(self):
+        has_internet_connection = NetworkManager.instance().has_internet_connection()
+        return has_internet_connection
+
 
 if __name__ == "__main__":
     logger.install(LOG_FILEPATH)
@@ -238,6 +247,15 @@ if __name__ == "__main__":
     argument_parser = ArgumentParser.instance()
 
     while True:
+        if not manager.check_for_connectivity():
+            logger.info(
+                f"The user has no persistent internet connection right now, waiting for connection...")
+
+            while not manager.check_for_connectivity():
+                time.sleep(RETRY_CONNECTION_INTERVAL_SECONDS)
+
+            logger.info(f"Established connection now! Proceeding with software update manager cycle...")
+
         manager.check_for_scoop_updates()
         manager.check_for_updates()
-        time.sleep(60 * 60)
+        time.sleep(RETRY_INTERVAL_SECONDS)

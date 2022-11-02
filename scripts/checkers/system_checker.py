@@ -1,10 +1,9 @@
 import platform
 from shutil import which
 
-import requests
-
 from scripts.logging.logger import Logger
 from scripts.managers.admin_manager import AdminManager
+from scripts.managers.network_manager import NetworkManager
 from scripts.managers.registry_manager import RegistryManager
 from scripts.managers.registry_manager import RegistryPath
 from scripts.singleton import Singleton
@@ -62,10 +61,7 @@ class SystemChecker:
     def check_for_internet_connection(self):
         logger.info('Checking if user has a persistent internet connection')
 
-        try:
-            _ = requests.head("https://8.8.8.8", timeout=5)
-            return True
-        except requests.ConnectionError:
+        if not NetworkManager.instance().has_internet_connection():
             logger.error("You need a persistent internet connection to run this script!")
             exit(6)
 
