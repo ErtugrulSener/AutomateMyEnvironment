@@ -209,14 +209,18 @@ class SoftwareUpdateManager:
             .parameters("--global", software)
         output = CommandExecutor().execute(command)
 
-        if "still running" in output:
-            message = f"{software} is still running. Close any instances to update, skipping for now..."
-        else:
+        success = "still running" not in output
+
+        if success:
             message = f"Successfully updated {software}!"
-            self.send_push_message(software, version, newest_version)
-            self.cleanup(software)
+        else:
+            message = f"{software} is still running. Close any instances to update, skipping for now..."
 
         logger.info(message)
+
+        if success:
+            self.send_push_message(software, version, newest_version)
+            self.cleanup(software)
 
     def cleanup(self, software):
         logger.info(f"Removing old versions of: {software}")
