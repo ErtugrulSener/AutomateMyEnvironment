@@ -36,7 +36,8 @@ from scripts.managers.network_manager import NetworkManager
 from scripts.singleton import Singleton
 
 LOG_FILEPATH = r"logs\software_updater_service.log"
-STDOUT_FILEPATH = r"logs\software_updater_service_stdout.log"
+STDERR_FILEPATH = LOG_FILEPATH
+
 logger = Logger.instance()
 
 NSSM_SERVICE_FOUND_EXIT_CODE = 0
@@ -132,14 +133,14 @@ class SoftwareUpdateManager:
         self.set_service_parameters("AppEnvironmentExtra",
                                     f'HOME="{base_path}" USER="{os.getlogin()}" ALIAS="{os.environ["ALIAS"]}"')
 
-        """stdout_filepath = os.path.join(base_path, STDOUT_FILEPATH)
-        logger.info(f"Setting log directory for stdout / stderr to: [{colored(stdout_filepath, 'yellow')}]")
+        stderr_filepath = os.path.join(base_path, STDERR_FILEPATH)
+        logger.info(f"Setting log directory for stdout / stderr to: [{colored(stderr_filepath, 'yellow')}]")
 
-        if not os.path.exists(os.path.dirname(stdout_filepath)):
-            os.makedirs(os.path.dirname(stdout_filepath))
+        if not os.path.exists(os.path.dirname(stderr_filepath)):
+            os.makedirs(os.path.dirname(stderr_filepath))
 
-        self.set_service_parameters("AppStdout", stdout_filepath)
-        self.set_service_parameters("AppStderr", stdout_filepath)"""
+        # self.set_service_parameters("AppStdout", stdout_filepath)
+        self.set_service_parameters("AppStderr", stderr_filepath)
 
     def set_service_parameters(self, parameter_name, parameter_value):
         command = CommandGenerator() \
