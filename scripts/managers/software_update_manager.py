@@ -116,8 +116,8 @@ class SoftwareUpdateManager:
             .parameters(ExecutablePaths.NON_SUCKING_SERVICE_MANAGER.value(), "install", SERVICE_NAME) \
             .parameters(f'"{python_executable_path}"', f'"{script_path}"')
 
-        http_proxy = os.environ['http_proxy']
-        https_proxy = os.environ['https_proxy']
+        http_proxy = os.environ.get('http_proxy')
+        https_proxy = os.environ.get('https_proxy')
 
         if http_proxy:
             command = command.parameters(f"--http-proxy {http_proxy}")
