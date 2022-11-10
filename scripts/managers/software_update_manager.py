@@ -35,8 +35,8 @@ from scripts.parsers.argument_parser import ArgumentParser
 from scripts.managers.network_manager import NetworkManager
 from scripts.singleton import Singleton
 
-LOG_FILEPATH = r"logs\software_updater_service_error.log"
-STDERR_FILEPATH = LOG_FILEPATH
+LOG_FILEPATH = r"logs\software_updater_service.log"
+STDERR_FILEPATH = r"logs\software_updater_service_error.log"
 
 logger = Logger.instance()
 
