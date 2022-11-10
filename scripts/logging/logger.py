@@ -8,6 +8,10 @@ import coloredlogs
 
 from scripts.singleton import Singleton
 
+
+logging.TRACE = 5
+
+
 # Let python log to stdout and file
 DEFAULT_LOG_LEVEL = logging.INFO
 DEFAULT_INSTALL_LOG_PATH = "install.log"
@@ -43,8 +47,6 @@ class FileHandler(logging.FileHandler):
 
 @Singleton
 class Logger(logging.Logger):
-    logging.TRACE = 5
-
     def __init__(self):
         logging.Logger.__init__(self, __name__, DEFAULT_LOG_LEVEL)
         logging.addLevelName(logging.TRACE, "TRACE")
