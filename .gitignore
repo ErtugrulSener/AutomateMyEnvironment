@@ -92,7 +92,7 @@ isos
 # Ignore log files
 install.log
 logs/software_updater_service.log
-logs/software_updater_service_stdout.log
+logs/software_updater_service_error.log
 
 # Ignore defender-control executables
 external/executables/defender-control/*.exe
