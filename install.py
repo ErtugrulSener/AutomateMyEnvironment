@@ -34,7 +34,6 @@ from scripts.parsers.config_parser import ConfigParser
 from scripts.parsers.parser import Parser
 
 logger = Logger.instance()
-logger.install()
 
 """
 Exit codes:
@@ -53,6 +52,8 @@ TODO:
 
 if __name__ == "__main__":
     Parser.instance().parse(ArgumentParser)
+    logger.install()
+
     Parser.instance().parse(ConfigParser)
 
     Checker.instance().check(SystemChecker)

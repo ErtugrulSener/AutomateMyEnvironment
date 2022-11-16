@@ -1,5 +1,7 @@
 import os
 
+from scripts.parsers.parser import Parser
+
 SERVICE_NAME = "SoftwareUpdater"
 
 if __name__ == "__main__":
@@ -246,10 +248,11 @@ class SoftwareUpdateManager:
 
 
 if __name__ == "__main__":
+
+    Parser.instance().parse(ArgumentParser)
     logger.install(LOG_FILEPATH)
 
     manager = SoftwareUpdateManager.instance()
-    argument_parser = ArgumentParser.instance()
 
     while True:
         if not manager.check_for_connectivity():
