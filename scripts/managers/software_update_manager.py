@@ -1,7 +1,5 @@
 import os
 
-from scripts.parsers.parser import Parser
-
 SERVICE_NAME = "SoftwareUpdater"
 
 if __name__ == "__main__":
@@ -35,6 +33,7 @@ from scripts.managers.software_manager import SoftwareManager
 from scripts.managers.push_notifier_manager import PushNotifierManager
 from scripts.parsers.argument_parser import ArgumentParser
 from scripts.managers.network_manager import NetworkManager
+from scripts.parsers.parser import Parser
 from scripts.singleton import Singleton
 
 LOG_FILEPATH = r"logs\software_updater_service.log"
