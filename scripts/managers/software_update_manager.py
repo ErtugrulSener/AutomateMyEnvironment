@@ -248,21 +248,25 @@ class SoftwareUpdateManager:
 
 if __name__ == "__main__":
 
-    Parser.instance().parse(ArgumentParser)
-    logger.install(LOG_FILEPATH)
+    try:
+        Parser.instance().parse(ArgumentParser)
+        logger.install(LOG_FILEPATH)
 
-    manager = SoftwareUpdateManager.instance()
+        manager = SoftwareUpdateManager.instance()
 
-    while True:
-        if not manager.check_for_connectivity():
-            logger.info(
-                f"The user has no persistent internet connection right now, waiting for connection...")
+        while True:
+            if not manager.check_for_connectivity():
+                logger.info(
+                    f"The user has no persistent internet connection right now, waiting for connection...")
 
-            while not manager.check_for_connectivity():
-                time.sleep(RETRY_CONNECTION_INTERVAL_SECONDS)
+                while not manager.check_for_connectivity():
+                    time.sleep(RETRY_CONNECTION_INTERVAL_SECONDS)
 
-            logger.info(f"Established connection now! Proceeding with software update manager cycle...")
+                logger.info(f"Established connection now! Proceeding with software update manager cycle...")
 
-        manager.check_for_scoop_updates()
-        manager.check_for_updates()
-        time.sleep(RETRY_INTERVAL_SECONDS)
+            manager.check_for_scoop_updates()
+            manager.check_for_updates()
+            time.sleep(RETRY_INTERVAL_SECONDS)
+
+    except KeyboardInterrupt:
+        exit(0)
