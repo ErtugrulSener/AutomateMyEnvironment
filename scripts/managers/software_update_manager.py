@@ -81,7 +81,7 @@ class SoftwareUpdateManager:
         lines = list(dropwhile(lambda l: any(character not in ["-", " "] for character in l), lines))[1:]
 
         for line in lines:
-            if "Install failed" in line:
+            if "Install failed" in line or "Manifest removed" in line:
                 continue
 
             matcher = re.findall(r"\b[a-zA-Z0-9._-]+\b", line)
