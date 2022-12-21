@@ -21,11 +21,12 @@ from win32com.shell.shell import ShellExecuteEx
 from scripts.logging.logger import Logger
 from scripts.singleton import Singleton
 
-logger = Logger.instance()
-
 
 @Singleton
 class AdminManager:
+    def __init__(self):
+        self.logger = Logger.instance()
+
     def is_user_admin(self):
         if os.name == 'nt':
             # WARNING: requires Windows XP SP2 or higher!
@@ -33,7 +34,7 @@ class AdminManager:
                 return ctypes.windll.shell32.IsUserAnAdmin()
             except:
                 traceback.print_exc()
-                logger.error("Admin check failed, assuming not an admin.")
+                self.logger.error("Admin check failed, assuming not an admin.")
                 return False
         elif os.name == 'posix':
             # Check for root on Posix

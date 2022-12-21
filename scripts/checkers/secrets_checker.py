@@ -8,16 +8,17 @@ from scripts.managers.aes_manager import AESManager
 from scripts.managers.secret_manager import SecretManager
 from scripts.singleton import Singleton
 
-logger = Logger.instance()
-
 
 @Singleton
 class SecretsChecker:
+    def __init__(self):
+        self.logger = Logger.instance()
+
     SECRET_ENCRYPTED_FILEPATH = r"secret"
     SECRET_DECRYPTED_FILEPATH = r"secret_decrypted"
 
     def check_git_crypt_symmetric_key(self):
-        logger.info('Checking if git-crypt symmetric key can be decrypted with given password')
+        self.logger.info('Checking if git-crypt symmetric key can be decrypted with given password')
 
         if os.path.exists(self.SECRET_DECRYPTED_FILEPATH) and \
                 SecretManager.instance().is_git_cryptkey(self.SECRET_DECRYPTED_FILEPATH):
@@ -31,7 +32,7 @@ class SecretsChecker:
             try:
                 decrypted = AESManager.instance().decrypt(binary_file_data, password).decode('utf-8')
             except Exception:
-                logger.error("The password given to decrypt the git-crypt symmetric key was invalid!")
+                self.logger.error("The password given to decrypt the git-crypt symmetric key was invalid!")
                 exit(8)
 
             base64_decoded_data = base64.b64decode(decrypted)

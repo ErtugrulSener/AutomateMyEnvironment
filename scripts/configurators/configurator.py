@@ -3,12 +3,13 @@ from termcolor import colored
 from scripts.logging.logger import Logger
 from scripts.singleton import Singleton
 
-logger = Logger.instance()
-
 
 @Singleton
 class Configurator:
     configurators = []
+
+    def __init__(self):
+        self.logger = Logger.instance()
 
     def configure(self, configurator):
         instance = configurator.instance()
@@ -16,7 +17,7 @@ class Configurator:
         if instance not in self.configurators:
             self.configurators.append(instance)
 
-        logger.info(f"Configuring {colored(instance.get_name().upper(), 'magenta')} now")
+        self.logger.info(f"Configuring {colored(instance.get_name().upper(), 'magenta')} now")
 
         if instance.is_configured_already():
             instance.skip()

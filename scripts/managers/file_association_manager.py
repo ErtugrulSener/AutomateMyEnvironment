@@ -1,10 +1,7 @@
 from scripts.commands.command_executor import CommandExecutor
 from scripts.commands.command_generator import CommandGenerator
 from scripts.constants.Enums import ExecutablePaths
-from scripts.logging.logger import Logger
 from scripts.singleton import Singleton
-
-logger = Logger.instance()
 
 
 @Singleton

@@ -4,21 +4,21 @@ import os
 from scripts.logging.logger import Logger
 from scripts.singleton import Singleton
 
-logger = Logger.instance()
-
 
 @Singleton
 class ArgumentParser(argparse.ArgumentParser):
     def __init__(self):
         argparse.ArgumentParser.__init__(self)
+
+        self.logger = Logger.instance()
         self.args = None
 
     def parse(self):
-        logger.info(f"Parsing command line arguments")
+        self.logger.info(f"Parsing command line arguments...")
 
         self.add_argument("-l", "--log-level", required=False,
                           help='Specify the log level, possible values are: {}'.format(
-                              ', '.join(logger.get_level_name_list())))
+                              ', '.join(self.logger.get_level_name_list())))
         self.add_argument("--reinstall", required=False,
                           help='If specified, will uninstall installed software for re-installation.',
                           action='store_true')
@@ -32,7 +32,7 @@ class ArgumentParser(argparse.ArgumentParser):
         args = self.parse_args()
 
         if args.log_level:
-            logger.set_log_level(args.log_level)
+            self.logger.set_log_level(args.log_level)
 
         if args.http_proxy:
             http_proxy = args.http_proxy

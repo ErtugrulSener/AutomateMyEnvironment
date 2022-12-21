@@ -17,8 +17,6 @@ from scripts.parsers.argument_parser import ArgumentParser
 from scripts.parsers.config_parser import ConfigParser
 from scripts.singleton import Singleton
 
-logger = Logger.instance()
-
 parser = argparse.ArgumentParser()
 parser.add_argument('--install-context', action='store_true')
 parser.add_argument('--run-as-admin', action='store_true')
@@ -47,13 +45,14 @@ class SoftwareManager:
                                             r"Microsoft\Windows\Start Menu\Programs\Scoop Apps")
 
     def __init__(self):
+        self.logger = Logger.instance()
         self.installed_software = []
 
         self.refresh_installed_software_cache()
 
     def refresh_installed_software_cache(self):
         if self.installed_software:
-            logger.info("Refreshing installed software cache!")
+            self.logger.info("Refreshing installed software cache!")
 
         self.installed_software = []
 
@@ -77,7 +76,7 @@ class SoftwareManager:
     def start(self):
         # Check for not installed software
         software_list = ConfigParser.instance().items("SOFTWARE_LIST")
-        logger.info("Starting installation process...")
+        self.logger.info("Starting installation process...")
 
         for name, arguments in software_list:
             args = parser.parse_args(arguments.split())
@@ -126,10 +125,10 @@ class SoftwareManager:
             if ArgumentParser.instance().get_argument_value("reinstall"):
                 self.uninstall(software)
             else:
-                logger.info(f"Skipping {software} since it is installed already.")
+                self.logger.info(f"Skipping {software} since it is installed already.")
                 return
 
-        logger.info(f"Installing {software}...")
+        self.logger.info(f"Installing {software}...")
 
         command = CommandGenerator() \
             .scoop() \
@@ -141,7 +140,7 @@ class SoftwareManager:
 
         output = CommandExecutor().execute(command)
 
-        logger.info(f"Successfully installed {software}!")
+        self.logger.info(f"Successfully installed {software}!")
         self.refresh_installed_software_cache()
 
         if args.install_context:
@@ -154,7 +153,7 @@ class SoftwareManager:
         self.install_software(software, args)
 
     def install_context(self, software, output):
-        logger.info(f"Installing context for {software}...")
+        self.logger.info(f"Installing context for {software}...")
 
         matcher = re.findall(r'^Add.*as a context menu option by running:.*(\r\n|\r|\n)?(".*.reg")$', output,
                              re.MULTILINE)
@@ -169,7 +168,7 @@ class SoftwareManager:
             CommandExecutor().execute(command)
 
     def add_run_as_admin_flag(self, software):
-        logger.info(
+        self.logger.info(
             rf"Adding '{colored('Run as Admin', Color.YELLOW.value())}' flag to "
             rf"{colored(software, Color.YELLOW.value())}")
         shortcuts = self.get_info(software, SoftwareInfo.SHORTCUTS)
@@ -178,8 +177,8 @@ class SoftwareManager:
             shortcut_filepath = self.get_shortcut_path(shortcut)
 
             if os.path.exists(shortcut_filepath):
-                logger.debug(f"Found shortcut at path [{shortcut_filepath}], adding 'Run as Admin' "
-                             f"flag for it now...")
+                self.logger.debug(f"Found shortcut at path [{shortcut_filepath}], adding 'Run as Admin' "
+                                  f"flag for it now...")
 
                 target_of_shortcut_filepath = self.get_shortcut_target_path(shortcut_filepath)
                 RegistryManager.instance().set_entry(RegistryPath.WINDOWS_APP_COMPAT_FLAGS_LAYERS.value[0],
@@ -197,9 +196,8 @@ class SoftwareManager:
             if line.startswith(software_info.value):
                 return line.split(": ")[1]
 
-    @staticmethod
-    def uninstall(software):
-        logger.info(f"Uninstalling {software} for re-installation...")
+    def uninstall(self, software):
+        self.logger.info(f"Uninstalling {software} for re-installation...")
 
         command = CommandGenerator() \
             .scoop() \
@@ -207,4 +205,4 @@ class SoftwareManager:
             .parameters("--global", software)
         CommandExecutor().execute(command)
 
-        logger.info(f"Uninstalled {software} successfully.")
+        self.logger.info(f"Uninstalled {software} successfully.")

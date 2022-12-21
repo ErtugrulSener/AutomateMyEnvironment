@@ -9,8 +9,6 @@ from scripts.constants.Enums import Color
 from scripts.logging.logger import Logger
 from scripts.singleton import Singleton
 
-logger = Logger.instance()
-
 
 class RegistryPath(Enum):
     UAC_CONSENT_PROMPT_BEHAVIOR_ADMIN = [
@@ -303,6 +301,9 @@ class RegistryPath(Enum):
 
 @Singleton
 class RegistryManager:
+    def __init__(self):
+        self.logger = Logger.instance()
+
     def get_table(self, key, *args):
         path, registry_key = key.value if isinstance(key, RegistryPath) else RegistryPath(key).value
 
@@ -334,7 +335,7 @@ class RegistryManager:
             try:
                 client.read_key(path)
             except FileNotFoundError:
-                logger.debug(f"Creating new path [{path}] since it didn't exist")
+                self.logger.debug(f"Creating new path [{path}] since it didn't exist")
                 client.create_key(path)
 
             entry = self.get_entry(path, registry_key)
@@ -342,7 +343,7 @@ class RegistryManager:
             if entry and entry.value == value:
                 return
 
-            logger.info(
+            self.logger.info(
                 f"Setting value for registry key [{colored(os.path.join(path, registry_key), Color.YELLOW.value())}] to "
                 f"[{colored(value, Color.YELLOW.value())}]")
 
@@ -354,7 +355,7 @@ class RegistryManager:
 
     def delete_entry(self, path, registry_key):
         with WinRegistry() as client:
-            logger.info(f"Removing entry [{colored(os.path.join(path, registry_key), Color.YELLOW.value())}]")
+            self.logger.info(f"Removing entry [{colored(os.path.join(path, registry_key), Color.YELLOW.value())}]")
             client.delete_entry(path, registry_key)
 
     def delete_tree(self, key, *args):
@@ -363,7 +364,7 @@ class RegistryManager:
 
     def delete_tree_entry(self, path):
         with WinRegistry() as client:
-            logger.info(f"Removing tree [{colored(os.path.join(path), Color.YELLOW.value())}]")
+            self.logger.info(f"Removing tree [{colored(os.path.join(path), Color.YELLOW.value())}]")
 
             try:
                 client.delete_key_tree(path)

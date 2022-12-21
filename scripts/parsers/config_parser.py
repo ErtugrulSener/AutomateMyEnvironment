@@ -3,8 +3,6 @@ import configparser
 from scripts.logging.logger import Logger
 from scripts.singleton import Singleton
 
-logger = Logger.instance()
-
 DEFAULT_CONFIG = "config.ini"
 
 
@@ -15,9 +13,11 @@ class ConfigParser(configparser.ConfigParser):
                                            interpolation=configparser.ExtendedInterpolation(),
                                            inline_comment_prefixes=";"
                                            )
+
+        self.logger = Logger.instance()
         self.optionxform = str
 
     def parse(self):
-        logger.info(f"Parsing default configuration: {DEFAULT_CONFIG}")
+        self.logger.info(f"Parsing default configuration: {DEFAULT_CONFIG}")
         self.read(DEFAULT_CONFIG)
-        logger.info(f"Parsing default configuration was successful")
+        self.logger.info(f"Parsing default configuration was successful")

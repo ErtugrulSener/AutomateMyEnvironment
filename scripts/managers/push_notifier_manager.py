@@ -7,8 +7,6 @@ from scripts.constants.Enums import Color
 from scripts.logging.logger import Logger
 from scripts.singleton import Singleton
 
-logger = Logger.instance()
-
 
 @Singleton
 class PushNotifierManager(PushNotifier):
@@ -16,6 +14,8 @@ class PushNotifierManager(PushNotifier):
     CONFIG_FILEPATH = "secrets/credentials/push_notifier.ini"
 
     def __init__(self):
+        self.logger = Logger.instance()
+
         self.pushnotifier_configuration = configparser.ConfigParser()
         self.pushnotifier_configuration.read(self.CONFIG_FILEPATH)
 
@@ -28,9 +28,9 @@ class PushNotifierManager(PushNotifier):
 
     def send_text(self, text, devices=None, silent=False):
         if not devices:
-            logger.info(f"Sending push notification [{colored(text, Color.YELLOW.value())}] to all devices")
+            self.logger.info(f"Sending push notification [{colored(text, Color.YELLOW.value())}] to all devices")
         else:
-            logger.info(
+            self.logger.info(
                 f"Sending push notification [{colored(text, Color.YELLOW.value())}] to devices "
                 f"[{colored(', '.join(devices), Color.YELLOW.value())}]")
 

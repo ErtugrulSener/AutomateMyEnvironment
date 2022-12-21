@@ -1,12 +1,12 @@
 from scripts.logging.logger import Logger
 
-logger = Logger.instance()
-
 
 # noinspection PyAttributeOutsideInit
 class CommandGenerator:
+
     def __init__(self):
         self.reset()
+        self.logger = Logger.instance()
 
     def __getattr__(self, item):
         self.__setattr__(item, self)
@@ -49,11 +49,11 @@ class CommandGenerator:
         return self
 
     def get(self, log_command=True):
-        logger.debug(self.command)
+        self.logger.debug(self.command)
         command = ' '.join(self.command)
 
         if log_command:
-            logger.debug(f"Executing: {self.command}")
+            self.logger.debug(f"Executing: {self.command}")
 
         self.reset()
         return command

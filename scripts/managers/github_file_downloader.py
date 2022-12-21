@@ -10,16 +10,17 @@ from scripts.constants.Enums import Color
 from scripts.logging.logger import Logger
 from scripts.singleton import Singleton
 
-logger = Logger.instance()
-
 
 @Singleton
 class GithubFileDownloader:
+    def __init__(self):
+        self.logger = Logger.instance()
+
     def download(self, api_url, target_folder_path, resource_name_regex):
-        logger.info("Checking if the needed tools need to be downloaded...")
+        self.logger.info("Checking if the needed tools need to be downloaded...")
 
         if not os.path.exists(target_folder_path):
-            logger.debug(f"Created {target_folder_path} folder")
+            self.logger.debug(f"Created {target_folder_path} folder")
             os.makedirs(target_folder_path)
 
         if not os.path.exists(os.path.join(target_folder_path, resource_name_regex)):
@@ -32,7 +33,7 @@ class GithubFileDownloader:
                 if not re.match(rf"{resource_name_regex}", name):
                     continue
 
-                logger.info(f"Downloading [{colored(name, Color.YELLOW.value())} from [{url}]")
+                self.logger.info(f"Downloading [{colored(name, Color.YELLOW.value())} from [{url}]")
 
                 command = CommandGenerator() \
                     .wget() \

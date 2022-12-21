@@ -3,13 +3,14 @@ from scripts.commands.command_generator import CommandGenerator
 from scripts.logging.logger import Logger
 from scripts.singleton import Singleton
 
-logger = Logger.instance()
-
 
 @Singleton
 class ExplorerManager:
+    def __init__(self):
+        self.logger = Logger.instance()
+
     def restart(self):
-        logger.info("Restarting windows explorer now...")
+        self.logger.info("Restarting windows explorer now...")
 
         command = CommandGenerator() \
             .parameters('-command "gps explorer | spps"')

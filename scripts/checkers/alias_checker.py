@@ -6,15 +6,16 @@ from termcolor import colored
 from scripts.logging.logger import Logger
 from scripts.singleton import Singleton
 
-logger = Logger.instance()
-
 
 @Singleton
 class AliasChecker:
     ALIAS_FILEPATH = r"alias"
 
+    def __init__(self):
+        self.logger = Logger.instance()
+
     def check_if_alias_is_set(self):
-        logger.info('Checking if alias for phone notifications is set')
+        self.logger.info('Checking if alias for phone notifications is set')
 
         if not os.path.exists(self.ALIAS_FILEPATH):
             default_alias = f"{platform.node()}"

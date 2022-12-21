@@ -60,14 +60,15 @@ class Logger(logging.Logger):
 
         # Add file handler
         self.file_handler = FileHandler(self.log_filepath)
+        self.file_handler.setLevel(DEFAULT_LOG_LEVEL)
+
         self.addHandler(self.file_handler)
 
         # Use coloredlogs to get some pretty log messages
-        coloredlogs.install(logger=self, level=logging.getLevelName(self.log_level), fmt=FORMAT_STYLE,
+        coloredlogs.install(logger=self, level=logging.getLevelName(DEFAULT_LOG_LEVEL), fmt=FORMAT_STYLE,
                             field_styles=FORMAT_FIELD_STYLES, stream=sys.stdout)
 
         self.write_log_header()
-        self.set_log_level(self.log_level)
 
     def write_log_header(self):
         now = datetime.now()
@@ -100,7 +101,7 @@ class Logger(logging.Logger):
             handler.setLevel(level)
 
         self.setLevel(level)
-        self.info(f"Log level set to: {self.get_level_name(level)}")
+        self.debug(f"Log level set to: {self.get_level_name(level)}")
 
     def get_level(self):
         return self.getEffectiveLevel()

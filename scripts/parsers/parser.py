@@ -1,7 +1,4 @@
-from scripts.logging.logger import Logger
 from scripts.singleton import Singleton
-
-logger = Logger.instance()
 
 
 @Singleton

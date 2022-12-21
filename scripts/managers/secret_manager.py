@@ -5,8 +5,6 @@ from scripts.commands.command_generator import CommandGenerator
 from scripts.logging.logger import Logger
 from scripts.singleton import Singleton
 
-logger = Logger.instance()
-
 
 class Secret(Enum):
     PRIVATE_KEY_OPENSSH = r"secrets/keys/private_openssh"
@@ -14,6 +12,9 @@ class Secret(Enum):
 
 @Singleton
 class SecretManager:
+    def __init__(self):
+        self.logger = Logger.instance()
+
     def get_filepath(self, secret):
         return secret.value
 
@@ -39,7 +40,7 @@ class SecretManager:
         if self.is_encrypted(Secret.PRIVATE_KEY_OPENSSH):
             return
 
-        logger.info("Locking all secrets now...")
+        self.logger.info("Locking all secrets now...")
 
         command = CommandGenerator() \
             .parameters("git-crypt", "lock")
@@ -49,7 +50,7 @@ class SecretManager:
         if not self.is_encrypted(Secret.PRIVATE_KEY_OPENSSH):
             return
 
-        logger.info("Unlocking all secrets now...")
+        self.logger.info("Unlocking all secrets now...")
 
         command = CommandGenerator() \
             .parameters("git-crypt", "unlock", "secret_decrypted")

@@ -5,10 +5,11 @@ from termcolor import colored
 
 from scripts.logging.logger import Logger
 
-logger = Logger.instance()
-
 
 class ConfiguratorBase:
+    def __init__(self):
+        self.logger = Logger.instance()
+
     def __init__(self, name):
         self.name = None
 
@@ -27,10 +28,10 @@ class ConfiguratorBase:
         return self.name
 
     def info(self, text):
-        logger.info(f"<{self.name}>: {text}")
+        self.logger.info(f"<{self.name}>: {text}")
 
     def debug(self, text):
-        logger.debug(f"<{self.name}>: {text}")
+        self.logger.debug(f"<{self.name}>: {text}")
 
     def skip(self):
-        logger.info(f"{colored(self.name.upper(), 'magenta')} is configured properly, skipping...")
+        self.logger.info(f"{colored(self.name.upper(), 'magenta')} is configured properly, skipping...")

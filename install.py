@@ -33,8 +33,6 @@ from scripts.parsers.argument_parser import ArgumentParser
 from scripts.parsers.config_parser import ConfigParser
 from scripts.parsers.parser import Parser
 
-logger = Logger.instance()
-
 """
 Exit codes:
     1 -> Missing admin rights, you need to run this script as an admin.
@@ -51,9 +49,10 @@ TODO:
 """
 
 if __name__ == "__main__":
-    Parser.instance().parse(ArgumentParser)
-    logger.install()
+    logger_reference = Logger.instance()
+    logger_reference.install()
 
+    Parser.instance().parse(ArgumentParser)
     Parser.instance().parse(ConfigParser)
 
     Checker.instance().check(SystemChecker)

@@ -6,8 +6,6 @@ from winerror import ERROR_SUCCESS
 from scripts.commands.command_generator import CommandGenerator
 from scripts.logging.logger import Logger
 
-logger = Logger.instance()
-
 
 class CommandExecutor:
     def __init__(self,
@@ -18,10 +16,12 @@ class CommandExecutor:
                  encoding="cp850",
                  run_as_admin=True,
                  fetch_exit_code=False):
+        self.logger = Logger.instance()
+
         if print_to_console is None:
-            print_to_console = logger.is_trace()
+            print_to_console = self.logger.is_trace()
         else:
-            print_to_console = print_to_console and logger.is_trace()
+            print_to_console = print_to_console and self.logger.is_trace()
 
         if expected_return_codes is None:
             expected_return_codes = [ERROR_SUCCESS]

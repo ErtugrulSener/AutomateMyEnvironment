@@ -1,9 +1,6 @@
 from win10toast import ToastNotifier
 
-from scripts.logging.logger import Logger
 from scripts.singleton import Singleton
-
-logger = Logger.instance()
 
 
 @Singleton
