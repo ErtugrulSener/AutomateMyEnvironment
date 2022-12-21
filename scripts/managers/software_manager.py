@@ -1,4 +1,5 @@
 import argparse
+import json
 import os
 import re
 from enum import Enum
@@ -87,6 +88,14 @@ class SoftwareManager:
 
     def get_path(self, software, executable_name):
         return os.path.join(self.get_base_path(software), executable_name)
+
+    def get_bucket_name(self, software):
+        base_path = self.get_base_path(software)
+        install_json = os.path.join(base_path, "install.json")
+
+        with open(install_json) as f:
+            data = json.load(f)
+            return data["bucket"]
 
     def get_shortcut_name(self, software):
         shortcuts = self.get_info(software, SoftwareInfo.SHORTCUTS)

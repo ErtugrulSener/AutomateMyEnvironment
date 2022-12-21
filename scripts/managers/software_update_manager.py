@@ -62,10 +62,61 @@ class SoftwareUpdateManager:
         self.outdated_software = []
 
     def refresh_scoop_buckets(self):
+        self.reinstall_missing_buckets()
+        self.update_buckets()
+
+    def reinstall_missing_buckets(self):
+        missing_bucket_names = {}
+
+        command = CommandGenerator() \
+            .parameters(os.path.join(os.environ.get("SCOOP"), r"shims\scoop.cmd")) \
+            .status() \
+            .parameters("--global")
+        lines = CommandExecutor().execute(command).splitlines()
+        lines = filter(None, lines)
+
+        # Remove every line before the printed table of outdated software
+        lines = list(dropwhile(lambda l: any(character not in ["-", " "] for character in l), lines))[1:]
+
+        for line in lines:
+            matcher = re.findall(r"\b[a-zA-Z0-9._-]+\b", line)
+
+            if matcher:
+                software, version, newest_version = matcher[:3]
+
+                if "Manifest removed" in line:
+                    bucket_name = SoftwareManager.instance().get_bucket_name(software)
+
+                    if bucket_name not in missing_bucket_names:
+                        missing_bucket_names[bucket_name] = []
+
+                    missing_bucket_names[bucket_name].append(software)
+
+        for bucket_name, software_list in missing_bucket_names.items():
+            logger.info(f"Bucket [{colored(bucket_name, 'yellow')}] not found, will re-install it now...")
+
+            if logger.is_debug():
+                logger.debug("The following software was found in the bucket:")
+
+                for software in software_list:
+                    logger.debug(f"- [{colored(software, 'yellow')}]")
+
+            self.install_bucket(bucket_name)
+            logger.info(f"Successfully installed bucket [{colored(bucket_name, 'yellow')}]!")
+
+    def update_buckets(self):
         command = CommandGenerator() \
             .parameters(os.path.join(os.environ.get("SCOOP"), r"shims\scoop.cmd")) \
             .update()
         CommandExecutor().execute(command)
+
+    def install_bucket(self, bucket_name):
+        command = CommandGenerator() \
+            .parameters(os.path.join(os.environ.get("SCOOP"), r"shims\scoop.cmd")) \
+            .bucket() \
+            .add() \
+            .parameters(bucket_name)
+        CommandExecutor().execute(command).splitlines()
 
     def refresh_outdated_software(self):
         self.outdated_software = []
@@ -81,7 +132,7 @@ class SoftwareUpdateManager:
         lines = list(dropwhile(lambda l: any(character not in ["-", " "] for character in l), lines))[1:]
 
         for line in lines:
-            if "Install failed" in line or "Manifest removed" in line:
+            if "Install failed" in line:
                 continue
 
             matcher = re.findall(r"\b[a-zA-Z0-9._-]+\b", line)

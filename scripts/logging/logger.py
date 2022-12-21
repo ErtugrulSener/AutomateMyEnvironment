@@ -8,7 +8,6 @@ import coloredlogs
 
 from scripts.singleton import Singleton
 
-
 logging.TRACE = 5
 
 
@@ -52,6 +51,7 @@ class Logger(logging.Logger):
         logging.addLevelName(logging.TRACE, "TRACE")
 
         self.log_filepath = DEFAULT_INSTALL_LOG_PATH
+        self.log_level = DEFAULT_LOG_LEVEL
         self.file_handler = None
 
     def install(self, log_filepath=None):
@@ -63,10 +63,11 @@ class Logger(logging.Logger):
         self.addHandler(self.file_handler)
 
         # Use coloredlogs to get some pretty log messages
-        coloredlogs.install(logger=self, level=logging.getLevelName(DEFAULT_LOG_LEVEL), fmt=FORMAT_STYLE,
+        coloredlogs.install(logger=self, level=logging.getLevelName(self.log_level), fmt=FORMAT_STYLE,
                             field_styles=FORMAT_FIELD_STYLES, stream=sys.stdout)
 
         self.write_log_header()
+        self.set_log_level(self.log_level)
 
     def write_log_header(self):
         now = datetime.now()
@@ -87,10 +88,13 @@ class Logger(logging.Logger):
             f.writelines(['=' * 80, '\n'])
 
     def set_log_level(self, level):
-        level = logging._checkLevel(level.upper())
+        if type(level) is str:
+            level = logging._checkLevel(level.upper())
 
         if level == self.get_level():
             return
+
+        self.log_level = level
 
         for handler in self.handlers:
             handler.setLevel(level)
