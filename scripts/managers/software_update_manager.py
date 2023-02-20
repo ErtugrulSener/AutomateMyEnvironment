@@ -277,10 +277,12 @@ class SoftwareUpdateManager:
     def cleanup(self, software):
         self.logger.info(f"Removing old versions of: {software}")
 
-        CommandGenerator() \
+        command = CommandGenerator() \
             .parameters(os.path.join(os.environ.get("SCOOP"), r"shims\scoop.cmd")) \
             .cleanup() \
             .parameters("--global", software)
+
+        CommandExecutor().execute(command)
 
     def send_push_message(self, software, version, newest_version):
         alias = os.environ["ALIAS"]
