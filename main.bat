@@ -13,6 +13,9 @@ set REFRESHENV_PATH=%SCOOP_GLOBAL%\apps\refreshenv\current
 
 set PATH=%PATH%;%SHIMS_PATH%;%REFRESHENV_PATH%
 
+set http_proxy=
+set https_proxy=
+
 set first_parameter=%1
 set second_parameter=%2
 
@@ -101,6 +104,7 @@ if %ERRORLEVEL% NEQ 0 (
 	@call refreshenv >NUL 2>&1
 
 :skipGitInstallation
+
 
 
 
