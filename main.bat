@@ -5,13 +5,13 @@
 :: Variables
 set GIT_REMOTE_URL=https://github.com/ErtugrulSener/AutomateMyEnvironment.git
 
-set SCOOP=C:\Software\scoop
 set SCOOP_GLOBAL=C:\Software
+set SCOOP=%SCOOP_GLOBAL%\scoop
 
-set scoop_path=%SCOOP_GLOBAL%\scoop\shims
-set refreshenv_path=%SCOOP_GLOBAL%\apps\refreshenv\current
+set SHIMS_PATH=%SCOOP%\shims
+set REFRESHENV_PATH=%SCOOP_GLOBAL%\apps\refreshenv\current
 
-set PATH=%PATH%;%scoop_path%;%refreshenv_path%
+set PATH=%PATH%;%SHIMS_PATH%;%REFRESHENV_PATH%
 
 set first_parameter=%1
 set second_parameter=%2
