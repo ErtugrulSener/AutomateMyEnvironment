@@ -20,6 +20,7 @@ from scripts.singleton import Singleton
 parser = argparse.ArgumentParser()
 parser.add_argument('--install-context', action='store_true')
 parser.add_argument('--run-as-admin', action='store_true')
+parser.add_argument('--keep-all-old-versions', action='store_true')
 parser.add_argument('--additional_arguments')
 
 
@@ -81,6 +82,13 @@ class SoftwareManager:
         for name, arguments in software_list:
             args = parser.parse_args(arguments.split())
             self.install(name, args)
+
+    def get_install_arguments(self, software):
+        software_list = ConfigParser.instance().items("SOFTWARE_LIST")
+
+        for name, arguments in software_list:
+            if name == software:
+                return parser.parse_args(arguments.split())
 
     def is_installed(self, software):
         return software in self.installed_software

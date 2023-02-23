@@ -31,6 +31,7 @@ from scripts.constants.Enums import Color, ExecutablePaths
 from scripts.logging.logger import Logger
 from scripts.managers.software_manager import SoftwareManager
 from scripts.managers.push_notifier_manager import PushNotifierManager
+from scripts.parsers.config_parser import ConfigParser
 from scripts.parsers.argument_parser import ArgumentParser
 from scripts.managers.network_manager import NetworkManager
 from scripts.parsers.parser import Parser
@@ -272,7 +273,17 @@ class SoftwareUpdateManager:
 
         if success:
             self.send_push_message(software, version, newest_version)
-            self.cleanup(software)
+
+            if not self.keep_old_version_of(software):
+                self.cleanup(software)
+
+    def keep_old_version_of(self, software):
+        install_arguments = SoftwareManager.instance().get_install_arguments(software)
+
+        if install_arguments.keep_all_old_versions:
+            return True
+
+        return False
 
     def cleanup(self, software):
         self.logger.info(f"Removing old versions of: {software}")
@@ -304,6 +315,7 @@ if __name__ == "__main__":
         logger_reference.install(LOG_FILEPATH)
 
         Parser.instance().parse(ArgumentParser)
+        Parser.instance().parse(ConfigParser)
 
         manager = SoftwareUpdateManager.instance()
 
