@@ -107,6 +107,20 @@ if %ERRORLEVEL% NEQ 0 (
 
 
 
+:: Check if proxy is configured and if so, then configure it for git
+if defined http_proxy (
+	goto setupProxyForGit
+) else (
+	goto skipSetupProxyForGit
+)
+
+:setupProxyForGit
+	echo Setting up proxy !http_proxy! for git
+	@call git config --global http.proxy !http_proxy!
+
+:skipSetupProxyForGit
+
+
 
 :: Check for git-crypt installation on system
 @call git-crypt --version >NUL 2>&1
