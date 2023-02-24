@@ -5,38 +5,67 @@ I felt so sick of doing the same procedures again and downloading the same softw
 It was at that time I realized I needed to automate this!
 
 # How to install?
+
 Go on a freshly installed windows instance, open cmd as an administrator and type:
+
 ```Batch
 cd %USERPROFILE%/Desktop && powershell -command irm ertugrulsener.de/automate > main.bat && main.bat
 ```
 
 # Prerequisites
-* The script will only work when ran as an administrator (Invoked by a shell, that ran as administrator beforehand)
-* The script only works under windows systems
-* The script needs a persistent internet connection
-* The **Tamper protection** of the windows defender needs to be disabled manually (It's possible to let the script do it - But it's forbidden by law to do so and
-even worse to share the "hack" on github. Atleast in germany.)
 
-All these things will also be checked before the script starts running, so you will notice if any "pre-test" failed.
+* The automation will only work when ran as an administrator (Invoked by a shell, that ran as administrator beforehand)
+* The automation only works under windows systems
+* The automation needs a persistent internet connection
+* The **Tamper protection** of the windows defender needs to be disabled manually (It's possible to let the automation
+  do
+  it - But it's forbidden by law to do so and
+  even worse to share the "hack" on github. Atleast in germany.)
+
+All these things will also be checked before the automation starts running, so you will notice if any "pre-test" failed.
 
 # Wait, you have your private key uploaded in the repositoy.. Isn't that hella unsafe?
-Glad that you asked. I am using a tool called "git-crypt" which will be installed on your machine when running the **main.bat** for the first time.
+
+Glad that you asked. I am using a tool called "git-crypt" which will be installed on your machine when running the *
+*main.bat** for the first time.
 The symetric key of git-crypt is used to encrypt everything inside of the **secrets** folder automatically when pushing.
 
-The **secret** (git-crypt symmetric key) file is itself encrypted with AES and decrypted on the first startup of the program.
+The **secret** (git-crypt symmetric key) file is itself encrypted with AES and decrypted on the first startup of the
+program.
 
-# What does the script do for you?
+# Configuring the proxy
+
+The ```main.bat``` file accepts two parameters:
+
+```main.bat [, <http_proxy>, <https_proxy>]```
+
+* If only one parameter is provided, then both proxy types (http, https) will be set to the same value.
+
+## Set both http and https proxy with one parameter
+
+```main.bat http://my-proxy.de:8080```
+
+## Set http and https proxy individually
+
+```main.bat http://my-http-proxy.de:8080 https://my-https-proxy.de:8081```
+
+# What does the automation do for you?
 
 ## 1) Installing software
+
 * Install software by using the windows package manager '**scoop**' into a predefined directory '**C:\Software\apps**'.
 * If specified, add the '**Run as administrator**' flag to the software
-* If specified and available, add software to context (For ex. for Notepad++ to being able to right click on file and click '**Open with Notepad++**')
+* If specified and available, add software to context (For ex. for Notepad++ to being able to right click on file and
+  click '**Open with Notepad++**')
 
 ## 2) Keeping the installed software updated
-* A windows service is registered named 'SoftwareUpdater', it will autostart and check for software updates every hour after start
+
+* A windows service is registered named 'SoftwareUpdater', it will autostart and check for software updates every hour
+  after start
 * The service runs under the SYSTEM user with no special rights
 
 ## 3) Configure installed software
+
 * Add '**Compare**' plugin to Notepad++
 * Allow seeing invisible files and folders in WinSCP
 * Skip EULA checks for JetBrains products
