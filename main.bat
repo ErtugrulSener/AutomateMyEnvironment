@@ -33,6 +33,19 @@ if defined first_parameter (
 )
 
 
+
+:: Check for internet connection
+@Ping www.google.de -n 1 -w 1000 >NUL 2>&1
+
+if %ERRORLEVEL% NEQ 0 (
+	echo ============================================================
+	echo You need an active internet connection to run this script.
+	echo Please check your proxy configuration and network settings.
+	echo ============================================================
+	goto end
+)
+
+
 :setProxyParameters
 	echo Setting http_proxy environment variable to !http_proxy!
 	@setx http_proxy "!http_proxy!" /M >NUL 2>&1
