@@ -34,27 +34,41 @@ if defined first_parameter (
 
 
 
-:: Check for internet connection
+:setProxyParameters
+echo Setting http_proxy environment variable to !http_proxy!
+@setx http_proxy "!http_proxy!" /M >NUL 2>&1
+
+echo Setting https_proxy environment variable to !https_proxy!
+@setx https_proxy "!https_proxy!" /M >NUL 2>&1
+
+:skipProxyParametersCheck
+
+
+
+:: Check for internet connection with Ping and PortQry
 @Ping www.google.de -n 1 -w 1000 >NUL 2>&1
 
 if %ERRORLEVEL% NEQ 0 (
-	echo ============================================================
-	echo You need an active internet connection to run this script.
-	echo Please check your proxy configuration and network settings.
-	echo ============================================================
-	goto end
+	echo The ping to www.google.de failed, will check with PortQry again if the port is listening.
+	echo This could take some time...
+	@"external/portqry/PortQry.exe" -n google.de -p TCP -e 80 -q
+
+	if %ERRORLEVEL% NEQ 0 (
+		echo.
+		echo ============================================================
+		echo You need an active internet connection to run this script.
+		echo Please check your proxy configuration and network settings.
+		echo ============================================================
+		echo.
+		goto end
+	) else (
+		echo.
+		echo ============================================================
+		echo The connection check was successful, maybe your proxy is blocking ping requests.
+		echo ============================================================
+		echo.
+	)
 )
-
-
-:setProxyParameters
-	echo Setting http_proxy environment variable to !http_proxy!
-	@setx http_proxy "!http_proxy!" /M >NUL 2>&1
-
-	echo Setting https_proxy environment variable to !https_proxy!
-	@setx https_proxy "!https_proxy!" /M >NUL 2>&1
-
-
-:skipProxyParametersCheck
 
 
 
@@ -77,8 +91,6 @@ if %ERRORLEVEL% NEQ 0 (
 	echo Installing scoop windows package manager
 	@powershell Set-ExecutionPolicy Unrestricted
 	@powershell iex """& {$(irm get.scoop.sh)} -RunAsAdmin"""
-
-	
 
 :skipScoopInstallation
 
