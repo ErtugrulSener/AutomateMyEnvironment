@@ -1,3 +1,4 @@
+import re
 import subprocess
 
 from py_console import console
@@ -36,6 +37,12 @@ class CommandExecutor:
         self.run_as_admin = run_as_admin
         self.fetch_exit_code = fetch_exit_code
 
+    def strip_ansi_codes(self, input_string):
+        if not input_string:
+            return
+
+        return re.sub(r'\x1b\[([0-9,A-Z]{1,2}(;[0-9]{1,2})?(;[0-9]{3})?)?[m|K]?', '', input_string)
+
     def execute(self, command):
         output = ""
 
@@ -68,6 +75,8 @@ class CommandExecutor:
 
             if p.returncode not in self.expected_return_codes:
                 raise subprocess.CalledProcessError(p.returncode, p.args)
+
+        output = self.strip_ansi_codes(output)
 
         if self.fetch_exit_code:
             return output, p.returncode
