@@ -126,18 +126,19 @@ class SoftwareUpdateManager:
             .status() \
             .parameters("--global")
         lines = CommandExecutor().execute(command).splitlines()
+        lines = filter(None, lines)
 
-        # Filter empty lines
-        lines = list(filter(None, lines))
+        # Remove every line before the printed table of outdated software
+        lines = list(dropwhile(lambda l: any(character not in ["-", " "] for character in l), lines))[1:]
 
         for line in lines:
             if "Install failed" in line:
                 continue
 
-            matcher = re.match(r"^([a-z0-9]+)\s+([0-9a-zA-Z.-_]+)\s+([0-9a-zA-Z.-_]+).*$", line)
+            matcher = re.findall(r"\b[a-zA-Z0-9._-]+\b", line)
 
             if matcher:
-                software, version, newest_version = matcher.groups()
+                software, version, newest_version = matcher[:3]
                 self.outdated_software.append((software, version, newest_version))
 
     def get_service_status(self):
