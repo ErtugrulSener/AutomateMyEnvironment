@@ -62,5 +62,5 @@ class GitConfigurator(ConfiguratorBase):
                 command = CommandGenerator() \
                     .git() \
                     .config("--global") \
-                    .parameters(key, value)
+                    .parameters(key, f'"{value}"')
                 CommandExecutor().execute(command)
