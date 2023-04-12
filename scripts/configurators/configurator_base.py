@@ -7,13 +7,11 @@ from scripts.logging.logger import Logger
 
 
 class ConfiguratorBase:
-    def __init__(self):
-        self.logger = Logger.instance()
-
     def __init__(self, name):
         self.name = None
-
         self.set_name(name)
+        
+        self.logger = Logger.instance()
 
     """ The self set naming convention for new configurator files to append is: <software>_configurator.py
         This function will extract the software name from the file. """
