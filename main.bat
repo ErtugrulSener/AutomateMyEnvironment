@@ -51,7 +51,7 @@ echo Setting https_proxy environment variable to !https_proxy!
 if %ERRORLEVEL% NEQ 0 (
 	echo The ping to www.google.de failed, will check with PortQry again if the port is listening.
 	echo This could take some time...
-	@"external/portqry/PortQry.exe" -n google.de -p TCP -e 80 -q
+	@"external/executables/portqry/PortQry.exe" -n google.de -p TCP -e 80 -q
 
 	if %ERRORLEVEL% NEQ 0 (
 		echo.
