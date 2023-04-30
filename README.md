@@ -48,7 +48,7 @@ The ```main.bat``` file accepts two parameters:
 
 ```main.bat http://my-http-proxy.de:8080 https://my-https-proxy.de:8081```
 
-# What does the automation do for you?
+# What does the automation tool do for you?
 
 ## 1) Installing software
 
