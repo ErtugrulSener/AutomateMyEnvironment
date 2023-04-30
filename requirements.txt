@@ -13,3 +13,4 @@ pyaes
 pushnotifier
 pwinput @ git+https://ertugrulsener.de/github/pwinput
 win10toast
+subprocess_maximize

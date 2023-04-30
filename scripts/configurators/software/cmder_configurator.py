@@ -6,6 +6,8 @@ from termcolor import colored
 
 from scripts.configurators.configurator_base import ConfiguratorBase
 from scripts.constants.Enums import Color
+from scripts.managers.md5_manager import MD5Manager
+from scripts.managers.process_manager import ProcessManager
 from scripts.managers.registry_manager import RegistryManager
 from scripts.managers.registry_manager import RegistryPath
 from scripts.managers.sha_manager import SHA256Manager
@@ -86,6 +88,9 @@ class CmderConfigurator(ConfiguratorBase):
             self.create_panel_entries(*self.RIGHT_PANEL_KEYS)
 
         if not self.has_right_settings():
+            ProcessManager(executable_path=self.executable_path,
+                           timeout=5).start_hidden()
+
             self.info(
                 f"Copying settings file "
                 f"from [{colored(self.local_settings_path, Color.YELLOW.value())}] "
