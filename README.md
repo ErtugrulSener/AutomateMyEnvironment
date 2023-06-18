@@ -24,10 +24,9 @@ cd %USERPROFILE%/Desktop && powershell -command irm ertugrulsener.de/automate > 
 
 All these things will also be checked before the automation starts running, so you will notice if any "pre-test" failed.
 
-# Wait, you have your private key uploaded in the repositoy.. Isn't that hella unsafe?
+# Wait, you have your private key uploaded in the repository.. Isn't that hella unsafe?
 
-Glad that you asked. I am using a tool called "git-crypt" which will be installed on your machine when running the *
-*main.bat** for the first time.
+Glad that you asked. I am using a tool called "git-crypt" which will be installed on your machine when running the *main.bat* for the first time.
 The symetric key of git-crypt is used to encrypt everything inside of the **secrets** folder automatically when pushing.
 
 The **secret** (git-crypt symmetric key) file is itself encrypted with AES and decrypted on the first startup of the
@@ -49,7 +48,7 @@ The ```main.bat``` file accepts two parameters:
 
 ```main.bat http://my-http-proxy.de:8080 https://my-https-proxy.de:8081```
 
-# What does the automation do for you?
+# What does the automation tool do for you?
 
 ## 1) Installing software
 
