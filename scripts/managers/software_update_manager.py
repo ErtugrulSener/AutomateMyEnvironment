@@ -162,7 +162,7 @@ class SoftwareUpdateManager:
 
         base_path = os.getcwd()
         script_path = os.path.join(base_path, r"scripts\managers\software_update_manager.py")
-        python_executable_path = SoftwareManager.instance().get_path("python", "python.exe")
+        python_executable_path = SoftwareManager.instance().get_path("python311", "python.exe")
 
         command = CommandGenerator() \
             .parameters(ExecutablePaths.NON_SUCKING_SERVICE_MANAGER.value(), "install", SERVICE_NAME) \
