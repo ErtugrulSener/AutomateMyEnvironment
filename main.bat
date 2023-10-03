@@ -181,7 +181,7 @@ if %ERRORLEVEL% NEQ 0 (
 
 :installPythonViaScoop:
 	echo Installing python
-	@call scoop install -g python >NUL 2>&1
+	@call scoop install -g python311 >NUL 2>&1
 	@call refreshenv >NUL 2>&1
 
 	echo Updating pip to the newest version
