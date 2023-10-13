@@ -90,6 +90,15 @@ class SoftwareManager:
             if name == software:
                 return parser.parse_args(arguments.split())
 
+    def exists_in_softwarelist(self, software):
+        software_list = ConfigParser.instance().items("SOFTWARE_LIST")
+
+        for name, arguments in software_list:
+            if name == software:
+                return True
+
+        return False
+
     def is_installed(self, software):
         return software in self.installed_software
 

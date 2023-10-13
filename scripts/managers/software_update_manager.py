@@ -278,12 +278,11 @@ class SoftwareUpdateManager:
                 self.cleanup(software)
 
     def keep_old_version_of(self, software):
+        if not SoftwareManager.instance().exists_in_softwarelist(software):
+            return False
+
         install_arguments = SoftwareManager.instance().get_install_arguments(software)
-
-        if install_arguments.keep_all_old_versions:
-            return True
-
-        return False
+        return install_arguments.keep_all_old_versions
 
     def cleanup(self, software):
         self.logger.info(f"Removing old versions of: {software}")
