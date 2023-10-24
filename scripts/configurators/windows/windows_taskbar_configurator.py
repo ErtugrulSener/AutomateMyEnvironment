@@ -40,6 +40,9 @@ class WindowsTaskbarConfigurator(ConfiguratorBase):
             RegistryManager.instance().delete_tree(RegistryPath.WINDOWS_EXPLORER_TASKBAND)
 
             for file in os.listdir(self.USER_PINNED_QUICK_LAUNCH_PATH):
-                os.remove(os.path.join(self.USER_PINNED_QUICK_LAUNCH_PATH, file))
+                filepath = os.path.join(self.USER_PINNED_QUICK_LAUNCH_PATH, file)
+
+                if os.path.exists(filepath):
+                    os.remove(filepath)
 
             ExplorerManager.instance().restart()
