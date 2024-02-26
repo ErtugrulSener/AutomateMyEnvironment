@@ -27,7 +27,7 @@ from termcolor import colored
 
 from scripts.commands.command_executor import CommandExecutor
 from scripts.commands.command_generator import CommandGenerator
-from scripts.constants.Enums import Color, ExecutablePaths
+from scripts.constants.Enums import Color
 from scripts.logging.logger import Logger
 from scripts.managers.software_manager import SoftwareManager
 from scripts.managers.push_notifier_manager import PushNotifierManager
@@ -143,7 +143,9 @@ class SoftwareUpdateManager:
 
     def get_service_status(self):
         command = CommandGenerator() \
-            .parameters(ExecutablePaths.NON_SUCKING_SERVICE_MANAGER.value(), "status", SERVICE_NAME)
+            .nssm() \
+            .status() \
+            .parameters(SERVICE_NAME)
         output, exit_code = CommandExecutor(expected_return_codes=[3], fetch_exit_code=True).execute(command)
         output = output.replace("\0", '').rstrip('\n')
         return output, exit_code
@@ -165,7 +167,9 @@ class SoftwareUpdateManager:
         python_executable_path = SoftwareManager.instance().get_path("python311", "python.exe")
 
         command = CommandGenerator() \
-            .parameters(ExecutablePaths.NON_SUCKING_SERVICE_MANAGER.value(), "install", SERVICE_NAME) \
+            .nssm() \
+            .install() \
+            .parameters(SERVICE_NAME) \
             .parameters(f'"{python_executable_path}"', f'"{script_path}"')
 
         http_proxy = os.environ.get('http_proxy')
@@ -196,7 +200,9 @@ class SoftwareUpdateManager:
 
     def set_service_parameters(self, parameter_name, parameter_value):
         command = CommandGenerator() \
-            .parameters(ExecutablePaths.NON_SUCKING_SERVICE_MANAGER.value(), "set", SERVICE_NAME) \
+            .nssm() \
+            .set() \
+            .parameters(SERVICE_NAME) \
             .parameters(parameter_name, parameter_value)
         CommandExecutor().execute(command)
 
@@ -204,7 +210,9 @@ class SoftwareUpdateManager:
         self.logger.info("Starting software updater service now...")
 
         command = CommandGenerator() \
-            .parameters(ExecutablePaths.NON_SUCKING_SERVICE_MANAGER.value(), "start", SERVICE_NAME)
+            .nssm() \
+            .start() \
+            .parameters(SERVICE_NAME)
         CommandExecutor().execute(command)
 
         self.logger.info("Started software updater service successfully!")

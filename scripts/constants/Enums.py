@@ -9,7 +9,6 @@ class ExecutablePaths(Enum):
     DISABLE_DEFENDER = r"defender-control\disable-defender.exe"
     AUTORUNS = r"autoruns\autorunsc64.exe"
     CHANGE_SCREEN_RESOLUTION = r"change-screen-resolution\ChangeScreenResolution.exe"
-    NON_SUCKING_SERVICE_MANAGER = r"nssm\nssm.exe"
 
     def value(self):
         filepath = self._value_
