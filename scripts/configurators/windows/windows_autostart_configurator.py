@@ -23,7 +23,7 @@ class WindowsAutostartConfigurator(ConfiguratorBase):
                                        value_type=winreg.REG_DWORD)
 
         command = CommandGenerator() \
-            .parameters(ExecutablePaths.AUTORUNS.value(), "-nobanner", "-m", "-a", "l", "-ct")
+            .parameters(ExecutablePaths.AUTORUNS.to_command(), "-nobanner", "-m", "-a", "l", "-ct")
 
         output = CommandExecutor().execute(command)
         output = output.replace("\x00", "")

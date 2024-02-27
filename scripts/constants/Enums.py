@@ -15,6 +15,9 @@ class ExecutablePaths(Enum):
         base_path = os.path.join(os.getcwd(), r"external\executables")
         return os.path.join(base_path, filepath)
 
+    def to_command(self):
+        return f'"{self.value()}"'
+
 
 class Color(Enum):
     YELLOW = 'yellow'

@@ -31,7 +31,7 @@ class WindowsScreenResolutionConfigurator(ConfiguratorBase):
     def load_device_modes(self):
         for device_name in self.get_device_names():
             command = CommandGenerator() \
-                .parameters(ExecutablePaths.CHANGE_SCREEN_RESOLUTION.value(), "/m", f"/d={device_name}")
+                .parameters(ExecutablePaths.CHANGE_SCREEN_RESOLUTION.to_command(), "/m", f"/d={device_name}")
             output = CommandExecutor().execute(command)
 
             for line in output.splitlines()[1:]:
@@ -49,7 +49,7 @@ class WindowsScreenResolutionConfigurator(ConfiguratorBase):
 
     def set_refresh_rate(self, device_name, refresh_rate):
         command = CommandGenerator() \
-            .parameters(ExecutablePaths.CHANGE_SCREEN_RESOLUTION.value(), f"/d={device_name}", f"/f={refresh_rate}")
+            .parameters(ExecutablePaths.CHANGE_SCREEN_RESOLUTION.to_command(), f"/d={device_name}", f"/f={refresh_rate}")
         CommandExecutor().execute(command)
 
     def get_highest_possible_refresh_rate(self, device_name):

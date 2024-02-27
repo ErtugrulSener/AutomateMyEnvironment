@@ -49,12 +49,12 @@ class WindowsDefenderConfigurator(ConfiguratorBase):
                 .parameters("Add-MpPreference", "-ExclusionPath", f'"{path_to_be_excluded}"')
             CommandExecutor(is_powershell_command=True).execute(command)
 
-        enable_defender_local_path = ExecutablePaths.ENABLE_DEFENDER.value()
+        enable_defender_local_path = ExecutablePaths.ENABLE_DEFENDER.to_command()
         if not os.path.exists(enable_defender_local_path):
             GithubFileDownloader.instance().download(self.DEFENDER_CONTROL_API_URL,
                                                      *os.path.split(enable_defender_local_path))
 
-        disable_defender_local_path = ExecutablePaths.DISABLE_DEFENDER.value()
+        disable_defender_local_path = ExecutablePaths.DISABLE_DEFENDER.to_command()
         if not os.path.exists(disable_defender_local_path):
             GithubFileDownloader.instance().download(self.DEFENDER_CONTROL_API_URL,
                                                      *os.path.split(disable_defender_local_path))
@@ -63,5 +63,5 @@ class WindowsDefenderConfigurator(ConfiguratorBase):
             self.info(f"Disabling windows defender completely")
 
             command = CommandGenerator() \
-                .parameters(ExecutablePaths.DISABLE_DEFENDER.value(), "-s")
+                .parameters(ExecutablePaths.DISABLE_DEFENDER.to_command(), "-s")
             CommandExecutor().execute(command)

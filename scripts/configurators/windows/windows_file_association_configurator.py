@@ -61,5 +61,5 @@ class WindowsFileAssociationConfigurator(ConfiguratorBase):
                     f"[{colored(args.prog_id, Color.YELLOW.value())}]")
 
                 command = CommandGenerator() \
-                    .parameters(ExecutablePaths.SET_USER_TFA.value(), f"{extension}", f"{args.prog_id}")
+                    .parameters(ExecutablePaths.SET_USER_TFA.to_command(), f"{extension}", f"{args.prog_id}")
                 CommandExecutor(run_as_admin=False).execute(command)

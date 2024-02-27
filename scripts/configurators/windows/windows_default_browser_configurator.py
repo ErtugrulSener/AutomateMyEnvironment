@@ -41,7 +41,7 @@ class WindowsDefaultBrowserConfigurator(ConfiguratorBase):
 
     def refresh_default_browser_cache(self):
         command = CommandGenerator() \
-            .parameters(ExecutablePaths.SET_DEFAULT_BROWSER.value())
+            .parameters(ExecutablePaths.SET_DEFAULT_BROWSER.to_command())
         output = CommandExecutor(expected_return_codes=[ERROR_FILE_NOT_FOUND]).execute(command)
 
         matcher = re.findall(r"^(HKLM|HKCU)\s(.*)\n\s{2}name: .*\n\s{2}path: .*$", output, re.MULTILINE)
@@ -140,7 +140,7 @@ class WindowsDefaultBrowserConfigurator(ConfiguratorBase):
         brave_type, brave_browser_identifier = self.find_default_type_browser_by_identifier(browser_name)
 
         command = CommandGenerator() \
-            .parameters(ExecutablePaths.SET_DEFAULT_BROWSER.value(), brave_type, brave_browser_identifier)
+            .parameters(ExecutablePaths.SET_DEFAULT_BROWSER.to_command(), brave_type, brave_browser_identifier)
         CommandExecutor().execute(command)
 
     def configure(self):

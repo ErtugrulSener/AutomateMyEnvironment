@@ -12,7 +12,7 @@ class FileAssociationManager:
 
     def load_associated_file_extensions(self):
         command = CommandGenerator() \
-            .parameters(ExecutablePaths.SET_USER_TFA.value(), "get")
+            .parameters(ExecutablePaths.SET_USER_TFA.to_command(), "get")
 
         output = CommandExecutor().execute(command)
 
