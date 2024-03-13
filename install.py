@@ -26,6 +26,7 @@ from scripts.configurators.windows.windows_ssh_credentials_configurator import W
 from scripts.configurators.windows.windows_taskbar_configurator import WindowsTaskbarConfigurator
 from scripts.configurators.windows.windows_uac_configurator import WindowsUACConfigurator
 from scripts.logging.logger import Logger
+from scripts.managers.configuration_update_manager import ConfigurationUpdateManager
 from scripts.managers.push_notifier_manager import PushNotifierManager
 from scripts.managers.software_manager import SoftwareManager
 from scripts.managers.software_update_manager import SoftwareUpdateManager
@@ -64,6 +65,7 @@ if __name__ == "__main__":
 
     SoftwareManager.instance().start()
     SoftwareUpdateManager.instance().start()
+    ConfigurationUpdateManager.instance().start()
 
     PushNotifierManager.instance().send_text(
         "2/4 - [AUTOMATION] Configuring windows now...")
