@@ -131,6 +131,7 @@ class ConfigurationUpdateManager:
 
     def start(self):
         self.check_for_services()
+        self.check_for_configuration_changes()
 
     def check_for_configuration_changes(self):
         # Check for software updates
@@ -149,7 +150,7 @@ if __name__ == "__main__":
         manager = ConfigurationUpdateManager.instance()
 
         while True:
-            manager.check_for_configuration_changes()
+            manager.start()
             time.sleep(RETRY_INTERVAL_SECONDS)
 
     except KeyboardInterrupt:
