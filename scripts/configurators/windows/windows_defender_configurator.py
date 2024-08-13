@@ -53,12 +53,12 @@ class WindowsDefenderConfigurator(ConfiguratorBase):
                 .parameters("Add-MpPreference", "-ExclusionPath", f'"{path_to_be_excluded}"')
             CommandExecutor(is_powershell_command=True).execute(command)
 
-        enable_defender_local_path = ExecutablePaths.ENABLE_DEFENDER.to_command()
+        enable_defender_local_path = ExecutablePaths.ENABLE_DEFENDER.value()
         if not os.path.exists(enable_defender_local_path):
             GithubFileDownloader.instance().download(self.DEFENDER_CONTROL_API_URL,
                                                      *os.path.split(enable_defender_local_path))
 
-        disable_defender_local_path = ExecutablePaths.DISABLE_DEFENDER.to_command()
+        disable_defender_local_path = ExecutablePaths.DISABLE_DEFENDER.value()
         if not os.path.exists(disable_defender_local_path):
             GithubFileDownloader.instance().download(self.DEFENDER_CONTROL_API_URL,
                                                      *os.path.split(disable_defender_local_path))
