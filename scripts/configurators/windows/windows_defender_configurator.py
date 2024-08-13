@@ -27,6 +27,10 @@ class WindowsDefenderConfigurator(ConfiguratorBase):
         command = CommandGenerator() \
             .parameters("$Preferences = Get-MpPreference; $Preferences.ExclusionPath")
         output = CommandExecutor(is_powershell_command=True).execute(command)
+
+        if not output:
+            return set()
+
         return set(output.splitlines())
 
     def defender_is_enabled(self):
