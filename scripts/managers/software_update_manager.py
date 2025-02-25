@@ -46,6 +46,7 @@ NSSM_SERVICE_NOT_FOUND_EXIT_CODE = 3
 
 class UpdaterServiceStatus(Enum):
     STARTED = "SERVICE_STARTED"
+    START_PENDING = "SERVICE_START_PENDING"
     RUNNING = "SERVICE_RUNNING"
     STOPPED = "SERVICE_STOPPED"
     PAUSED = "SERVICE_PAUSED"
@@ -157,7 +158,7 @@ class SoftwareUpdateManager:
     def service_is_running(self):
         output, _ = self.get_service_status()
         service_status = UpdaterServiceStatus(output)
-        return service_status in [UpdaterServiceStatus.STARTED, UpdaterServiceStatus.RUNNING]
+        return service_status in [UpdaterServiceStatus.STARTED, UpdaterServiceStatus.RUNNING, UpdaterServiceStatus.START_PENDING]
 
     def register_service(self):
         self.logger.info("Registering software updater service now...")

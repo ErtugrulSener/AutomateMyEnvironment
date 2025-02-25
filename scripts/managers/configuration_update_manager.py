@@ -62,7 +62,7 @@ class ConfigurationUpdateManager:
     def service_is_running(self):
         output, _ = self.get_service_status()
         service_status = UpdaterServiceStatus(output)
-        return service_status in [UpdaterServiceStatus.STARTED, UpdaterServiceStatus.RUNNING]
+        return service_status in [UpdaterServiceStatus.STARTED, UpdaterServiceStatus.RUNNING, UpdaterServiceStatus.START_PENDING]
 
     def register_service(self):
         self.logger.info("Registering configuration updater service now...")
