@@ -91,6 +91,8 @@ isos
 
 # Ignore log files
 install.log
+logs/configuration_updater_service.log
+logs/configuration_updater_service_error.log
 logs/software_updater_service.log
 logs/software_updater_service_error.log
 
