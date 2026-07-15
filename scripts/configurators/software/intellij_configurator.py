@@ -15,9 +15,9 @@ from scripts.singleton import Singleton
 
 @Singleton
 class IntelliJConfigurator(ConfiguratorBase):
-    SOFTWARE = "idea-ultimate"
+    SOFTWARE = "idea"
 
-    INTELLIJ_LICENSE_FILEPATH = "secrets/licenses/idea-ultimate"
+    INTELLIJ_LICENSE_FILEPATH = "secrets/licenses/idea"
     INTELLIJ_LICENSE_FILES = ["plugin_PCWMP.license", "idea.key"]
 
     JETBRAINS_CONSENT_OPTIONS_FILEPATH = os.path.join(os.environ["APPDATA"], r"JetBrains\consentOptions/accepted")
