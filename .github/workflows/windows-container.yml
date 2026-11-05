@@ -64,16 +64,21 @@ jobs:
           'Installer reached the Defender preflight. The desktop configuration has not run.' >> $env:GITHUB_STEP_SUMMARY
           exit 0
 
-      - name: Run bootstrap and import modules with production dependencies
+      - name: Run bootstrap, module imports and integration with test data
         if: ${{ !cancelled() && steps.image.outcome == 'success' }}
         run: |
-          docker run --rm --isolation=process automation-windows:ci powershell -NoLogo -NoProfile -File C:\ci\bootstrap.ps1 2>&1 | Tee-Object container-results/bootstrap.log
-          exit $LASTEXITCODE
+          docker run --name automation-bootstrap --isolation=process automation-windows:ci powershell -NoLogo -NoProfile -File C:\ci\bootstrap.ps1 2>&1 | Tee-Object container-results/bootstrap.log
+          $bootstrapExitCode = $LASTEXITCODE
+          docker cp automation-bootstrap:C:/Automation/container-integration.json container-results/integration.json
+          docker rm automation-bootstrap
+          exit $bootstrapExitCode
 
       - name: Upload container logs
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: windows-container-logs
-          path: container-results/*.log
+          path: |
+            container-results/*.log
+            container-results/integration.json
           if-no-files-found: warn

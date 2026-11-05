@@ -100,3 +100,7 @@ The `Windows container` GitHub Actions workflow builds a Server Core 2025 image,
 and checks `install.py` and `main.bat`. Exit code 5 at the Defender preflight is expected on Server Core.
 The desktop configuration is not exercised. A separate import check uses the Python environment
 created by `main.bat` with production dependencies. Logs are uploaded as `windows-container-logs`.
+The subsequent integration run executes `install.py` with synthetic secrets, application files,
+a local download endpoint, and locally recorded notifications. It installs sample Scoop packages,
+starts real services with a fixture worker, and verifies supported file and registry configuration.
+The `integration.json` artifact lists passed steps, fixture boundaries, and unsupported desktop steps.

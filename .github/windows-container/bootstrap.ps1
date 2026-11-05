@@ -28,4 +28,8 @@ if (!(Select-String -LiteralPath install.log -SimpleMatch 'The tamper protection
 Write-Host 'Bootstrap reached the Defender preflight. The desktop configuration has not run.'
 
 & C:\Software\apps\python314\current\python.exe -B C:\ci\check_imports.py
+if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+$env:AUTOMATION_CONTAINER_INTEGRATION = '1'
+& C:\Software\apps\python314\current\python.exe -B C:\ci\integration.py
 exit $LASTEXITCODE
