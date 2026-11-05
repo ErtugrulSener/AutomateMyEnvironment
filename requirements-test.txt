@@ -1,0 +1,4 @@
+-r requirements.txt
+pytest
+# win10toast imports pkg_resources, which setuptools removed in v82.
+setuptools<82

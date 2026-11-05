@@ -83,3 +83,15 @@ The ```main.bat``` file accepts two parameters:
 * Set the refresh rate of the screen to the highest one possible
 * Load my private key into the ssh-agent
 * ....
+
+## Running the tests
+
+With Python 3.14 active on Windows, run the following from the repository root.
+
+```powershell
+python -m pip install -r requirements-test.txt
+python -m pytest -ra
+```
+
+The suite uses temporary files and mocks for Windows configuration, external commands, and network calls.
+An `XFAIL` marks a reproduced defect in the current implementation.
