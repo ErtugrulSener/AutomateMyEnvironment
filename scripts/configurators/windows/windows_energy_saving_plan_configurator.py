@@ -55,11 +55,12 @@ class WindowsEnergySavingPlanConfigurator(ConfiguratorBase):
                 self.power_configurations[configuration_id] = is_active
 
     def determine_target_guid(self):
-        if self.TARGET_GUID not in self.power_configurations:
-            self.TARGET_GUID = DatabaseManager.instance().get(Constant.POWER_SAVINGS_PLAN_GUID)
+        if self.TARGET_GUID in self.power_configurations:
+            return
 
-            if self.TARGET_GUID in self.power_configurations:
-                return
+        self.TARGET_GUID = DatabaseManager.instance().get(Constant.POWER_SAVINGS_PLAN_GUID)
+        if self.TARGET_GUID in self.power_configurations:
+            return
 
         # Import high performance profile
         self.info("Importing energy saving plan: Top performance")

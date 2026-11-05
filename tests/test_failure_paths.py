@@ -28,7 +28,6 @@ SCOOP_LIST_OUTPUT = (
 )
 
 
-@pytest.mark.xfail(strict=True, raises=KeyError, reason="HTTPS proxy handling requires an HTTP proxy")
 def test_https_only_proxy_is_applied_without_changing_http_proxy(monkeypatch, fresh):
     proxy = "http://https-proxy.example.test:8080"
     existing_http_proxy = "http://existing-proxy.example.test:8080"
@@ -42,12 +41,7 @@ def test_https_only_proxy_is_applied_without_changing_http_proxy(monkeypatch, fr
     assert os.environ["HTTP_PROXY"] == existing_http_proxy
 
 
-@pytest.mark.parametrize("error", [
-    requests.ConnectTimeout,
-    pytest.param(requests.ReadTimeout, marks=pytest.mark.xfail(
-        strict=True, raises=requests.ReadTimeout, reason="Connectivity check does not handle read timeouts"
-    )),
-])
+@pytest.mark.parametrize("error", [requests.ConnectTimeout, requests.ReadTimeout])
 def test_network_check_reports_unavailable_after_timeout(monkeypatch, fresh, error):
     head = Mock(side_effect=error)
     monkeypatch.setattr(network_manager.requests, "head", head)
@@ -56,7 +50,6 @@ def test_network_check_reports_unavailable_after_timeout(monkeypatch, fresh, err
     head.assert_called_once_with("https://8.8.8.8", timeout=5)
 
 
-@pytest.mark.xfail(strict=True, raises=AssertionError, reason="Executor appends to the caller's list")
 def test_command_executor_does_not_mutate_callers_accepted_codes():
     accepted_codes = [3]
     executor = CommandExecutor(expected_return_codes=accepted_codes)
@@ -65,7 +58,6 @@ def test_command_executor_does_not_mutate_callers_accepted_codes():
     assert accepted_codes == [3]
 
 
-@pytest.mark.xfail(strict=True, raises=AttributeError, reason="Executor returns None for empty stdout")
 def test_file_association_manager_accepts_successful_command_with_empty_stdout(monkeypatch, fresh):
     popen = MagicMock()
     process = popen.return_value.__enter__.return_value
@@ -80,9 +72,7 @@ def test_file_association_manager_accepts_successful_command_with_empty_stdout(m
 
 
 @pytest.mark.parametrize("output", [
-    pytest.param("core.autocrlf\ncore.ignorecase=true\n", id="implicit", marks=pytest.mark.xfail(
-        strict=True, raises=ValueError, reason="Git prints implicit booleans without an equals sign"
-    )),
+    pytest.param("core.autocrlf\ncore.ignorecase=true\n", id="implicit"),
     pytest.param("core.autocrlf=true\ncore.ignorecase=true\n", id="explicit"),
 ])
 def test_git_config_reads_explicit_and_implicit_values(fresh, commands, output):
@@ -92,15 +82,13 @@ def test_git_config_reads_explicit_and_implicit_values(fresh, commands, output):
 
     assert config.is_config_set("core.autocrlf")
     assert config.is_config_set("core.ignorecase")
-
-
-ssh_comment_bug = pytest.mark.xfail(strict=True, raises=ValueError, reason="SSH parser requires exactly three words")
+    assert config.global_config == [("core.autocrlf", "true"), ("core.ignorecase", "true")]
 
 
 @pytest.mark.parametrize("comment", [
     pytest.param("single-word", id="single-word"),
-    pytest.param("comment with spaces", id="multiple-words", marks=ssh_comment_bug),
-    pytest.param("", id="empty-comment", marks=ssh_comment_bug),
+    pytest.param("comment with spaces", id="multiple-words"),
+    pytest.param("", id="empty-comment"),
 ])
 def test_ssh_agent_reads_keys_with_optional_free_text_comments(fresh, commands, comment):
     key = "fixture-key"
@@ -112,7 +100,6 @@ def test_ssh_agent_reads_keys_with_optional_free_text_comments(fresh, commands, 
     commands.assert_called_once_with("ssh-add -L")
 
 
-@pytest.mark.xfail(strict=True, raises=FileNotFoundError, reason="Taskbar assumes the pinned-shortcuts directory exists")
 def test_taskbar_can_configure_a_profile_without_a_pinned_shortcuts_directory(tmp_path, monkeypatch, fresh):
     missing_directory = tmp_path / "TaskBar"
     registry = Mock()
@@ -131,7 +118,6 @@ def test_taskbar_can_configure_a_profile_without_a_pinned_shortcuts_directory(tm
     assert not missing_directory.exists()
 
 
-@pytest.mark.xfail(strict=True, raises=AssertionError, reason="Power plan import runs even when the built-in plan exists")
 def test_power_plan_keeps_existing_builtin_plan_without_importing_another(monkeypatch, fresh, commands):
     plan_type = WindowsEnergySavingPlanConfigurator._decorated
     guid = plan_type.TARGET_GUID
@@ -212,9 +198,6 @@ def test_updater_reinstalls_each_missing_bucket_once(monkeypatch, fresh, command
     ]
 
 
-@pytest.mark.xfail(
-    strict=True, raises=subprocess.CalledProcessError, reason="One failed Scoop package aborts the whole update cycle"
-)
 def test_updater_continues_with_other_packages_after_one_update_fails(monkeypatch, fresh, commands):
     monkeypatch.setenv("SCOOP", r"C:\Scoop")
     manager = fresh(SoftwareUpdateManager)
@@ -240,7 +223,6 @@ def test_updater_continues_with_other_packages_after_one_update_fails(monkeypatc
     notify.assert_called_once_with("healthy", "3", "4")
 
 
-@pytest.mark.xfail(strict=True, raises=AssertionError, reason="Scoop inventory skips the last installed app")
 def test_scoop_inventory_reads_the_last_installed_app(fresh, commands):
     commands.return_value = SCOOP_LIST_OUTPUT
 

@@ -24,22 +24,17 @@ class CommandExecutor:
         else:
             print_to_console = print_to_console and self.logger.is_trace()
 
-        if expected_return_codes is None:
-            expected_return_codes = [ERROR_SUCCESS]
-        else:
-            expected_return_codes += [ERROR_SUCCESS]
-
         self.execute_in_shell = execute_in_shell
         self.is_powershell_command = is_powershell_command
         self.print_to_console = print_to_console
-        self.expected_return_codes = expected_return_codes
+        self.expected_return_codes = list(expected_return_codes or ()) + [ERROR_SUCCESS]
         self.encoding = encoding
         self.run_as_admin = run_as_admin
         self.fetch_exit_code = fetch_exit_code
 
     def strip_ansi_codes(self, input_string):
         if not input_string:
-            return
+            return ""
 
         return re.sub(r'\x1b\[([0-9,A-Z]{1,2}(;[0-9]{1,2})?(;[0-9]{3})?)?[m|K]?', '', input_string)
 

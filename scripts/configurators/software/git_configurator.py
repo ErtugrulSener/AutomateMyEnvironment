@@ -34,8 +34,8 @@ class GitConfigurator(ConfiguratorBase):
             return
 
         for line in output.splitlines():
-            key, value = line.split("=", 1)
-            self.global_config.append((key, value))
+            key, separator, value = line.partition("=")
+            self.global_config.append((key, value if separator else "true"))
 
     def is_config_set(self, searched_key):
         for config_key, _ in chain(self.global_config):

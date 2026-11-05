@@ -9,5 +9,5 @@ class NetworkManager:
         try:
             _ = requests.head("https://8.8.8.8", timeout=5)
             return True
-        except requests.ConnectionError:
+        except (requests.ConnectionError, requests.Timeout):
             return False

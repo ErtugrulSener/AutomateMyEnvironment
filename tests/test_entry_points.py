@@ -148,7 +148,6 @@ def test_configuration_service_runs_then_exits_cleanly_on_interrupt(monkeypatch,
     components.sleep.assert_called_once_with(30)
 
 
-@pytest.mark.xfail(strict=True, raises=AssertionError, reason="Fallback resolves the checkout from the Scoop cwd")
 @pytest.mark.parametrize("script", ["software_update_manager.py", "configuration_update_manager.py"])
 def test_service_without_home_locates_repository_from_its_script(tmp_path, monkeypatch, components, script):
     source = tmp_path / "checkout" / "scripts" / "managers" / script

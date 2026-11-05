@@ -35,11 +35,11 @@ class ArgumentParser(argparse.ArgumentParser):
             self.logger.set_log_level(args.log_level)
 
         if args.http_proxy:
-            http_proxy = args.http_proxy
-            https_proxy = args.http_proxy if not args.https_proxy else args.https_proxy
+            os.environ['http_proxy'] = args.http_proxy
+            os.environ['HTTP_PROXY'] = args.http_proxy
 
-            os.environ['http_proxy'] = http_proxy
-            os.environ['HTTP_PROXY'] = http_proxy
+        https_proxy = args.https_proxy or args.http_proxy
+        if https_proxy:
             os.environ['https_proxy'] = https_proxy
             os.environ['HTTPS_PROXY'] = https_proxy
 

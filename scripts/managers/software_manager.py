@@ -57,14 +57,13 @@ class SoftwareManager:
 
         self.installed_software = []
 
-        # Remove first and last line of output, to only get software names
         command = CommandGenerator() \
             .scoop() \
             .list()
 
         output = CommandExecutor().execute(
             command).splitlines()
-        output = output[4:-2]
+        output = output[4:]
 
         # Fetch name out of the acquired string, looking like for example: 'python 3.9.0'
         for line in output:

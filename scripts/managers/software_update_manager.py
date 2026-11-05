@@ -9,7 +9,7 @@ if __name__ == "__main__":
     parent_path = os.environ.get("HOME")
 
     if not parent_path:
-        parent_path = Path(os.getcwd()).parent.parent.absolute()
+        parent_path = str(Path(__file__).resolve().parents[2])
 
     if parent_path not in sys.path:
         sys.path.append(parent_path)
@@ -18,6 +18,7 @@ if __name__ == "__main__":
     sys.path.append(os.getcwd())
 
 import re
+import subprocess
 import time
 
 from enum import Enum
@@ -269,7 +270,11 @@ class SoftwareUpdateManager:
             .parameters(os.path.join(os.environ.get("SCOOP"), r"shims\scoop.cmd")) \
             .update() \
             .parameters("--global", software)
-        output = CommandExecutor().execute(command)
+        try:
+            output = CommandExecutor().execute(command)
+        except subprocess.CalledProcessError as error:
+            self.logger.error(f"Failed to update {software}: {error}")
+            return
 
         success = "still running" not in output
 

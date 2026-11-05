@@ -7,7 +7,7 @@ if __name__ == "__main__":
     parent_path = os.environ.get("HOME")
 
     if not parent_path:
-        parent_path = Path(os.getcwd()).parent.parent.absolute()
+        parent_path = str(Path(__file__).resolve().parents[2])
 
     if parent_path not in sys.path:
         sys.path.append(parent_path)

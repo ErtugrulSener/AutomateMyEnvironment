@@ -39,7 +39,12 @@ class WindowsTaskbarConfigurator(ConfiguratorBase):
             self.info("Clearing taskbar icons that are there by default")
             RegistryManager.instance().delete_tree(RegistryPath.WINDOWS_EXPLORER_TASKBAND)
 
-            for file in os.listdir(self.USER_PINNED_QUICK_LAUNCH_PATH):
+            try:
+                pinned_files = os.listdir(self.USER_PINNED_QUICK_LAUNCH_PATH)
+            except FileNotFoundError:
+                pinned_files = []
+
+            for file in pinned_files:
                 filepath = os.path.join(self.USER_PINNED_QUICK_LAUNCH_PATH, file)
 
                 if os.path.exists(filepath):

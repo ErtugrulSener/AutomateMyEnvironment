@@ -39,7 +39,7 @@ class WindowsSSHCredentialsConfigurator(ConfiguratorBase):
             return
 
         for line in output.splitlines():
-            key_type, key, comment = line.split()
+            _, key = line.split(maxsplit=2)[:2]
             self.ssh_keys.append(key)
 
     def is_configured_already(self):
