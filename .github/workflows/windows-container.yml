@@ -1,0 +1,79 @@
+name: Windows container
+
+on:
+  push:
+    branches: ["master"]
+  pull_request:
+    branches: ["master"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  container:
+    runs-on: windows-2025
+    timeout-minutes: 45
+    defaults:
+      run:
+        shell: pwsh
+    env:
+      DOCKER_BUILDKIT: "0"
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Prepare container context
+        run: |
+          $context = Join-Path $env:RUNNER_TEMP 'automation-container'
+          New-Item -ItemType Directory -Path $context, container-results | Out-Null
+          git archive --format=zip --output="$context/source.zip" HEAD -- config.ini external install.py main.bat requirements.txt requirements-test.txt scripts tests
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          Expand-Archive -LiteralPath "$context/source.zip" -DestinationPath "$context/source"
+          Copy-Item -LiteralPath .github/windows-container -Destination "$context/ci" -Recurse
+          "CONTAINER_CONTEXT=$context" >> $env:GITHUB_ENV
+
+      - name: Build Windows image
+        id: image
+        run: |
+          Start-Service docker
+          docker info
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          docker build --isolation=process --file "$env:CONTAINER_CONTEXT/ci/Dockerfile" --tag automation-windows:ci $env:CONTAINER_CONTEXT 2>&1 | Tee-Object container-results/build.log
+          exit $LASTEXITCODE
+
+      - name: Run pytest in Windows container
+        if: ${{ !cancelled() && steps.image.outcome == 'success' }}
+        run: |
+          docker run --rm --isolation=process automation-windows:ci python -B -m pytest -q -ra -p no:cacheprovider 2>&1 | Tee-Object container-results/pytest.log
+          exit $LASTEXITCODE
+
+      - name: Verify installer reaches Server Core preflight
+        if: ${{ !cancelled() && steps.image.outcome == 'success' }}
+        run: |
+          docker run --rm --isolation=process automation-windows:ci 2>&1 | Tee-Object container-results/installer.log
+          $installerExitCode = $LASTEXITCODE
+          if ($installerExitCode -ne 5) {
+            throw "Expected Server Core's Defender preflight to exit 5, got $installerExitCode"
+          }
+          if (!(Select-String -LiteralPath container-results/installer.log -SimpleMatch 'The tamper protection feature of Windows Defender needs to be disabled!' -Quiet)) {
+            throw 'The installer did not reach the expected Defender preflight'
+          }
+          'Installer reached the Defender preflight. The desktop configuration has not run.' >> $env:GITHUB_STEP_SUMMARY
+          exit 0
+
+      - name: Run bootstrap and import modules with production dependencies
+        if: ${{ !cancelled() && steps.image.outcome == 'success' }}
+        run: |
+          docker run --rm --isolation=process automation-windows:ci powershell -NoLogo -NoProfile -File C:\ci\bootstrap.ps1 2>&1 | Tee-Object container-results/bootstrap.log
+          exit $LASTEXITCODE
+
+      - name: Upload container logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-container-logs
+          path: container-results/*.log
+          if-no-files-found: warn

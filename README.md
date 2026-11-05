@@ -95,3 +95,8 @@ python -m pytest -ra
 
 The suite uses temporary files and mocks for Windows configuration, external commands, and network calls.
 An `XFAIL` marks a reproduced defect in the current implementation.
+
+The `Windows container` GitHub Actions workflow builds a Server Core 2025 image, runs pytest,
+and checks `install.py` and `main.bat`. Exit code 5 at the Defender preflight is expected on Server Core.
+The desktop configuration is not exercised. A separate import check uses the Python environment
+created by `main.bat` with production dependencies. Logs are uploaded as `windows-container-logs`.
