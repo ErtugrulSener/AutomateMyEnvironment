@@ -10,6 +10,7 @@ set SCOOP=%SCOOP_GLOBAL%\scoop
 
 set SHIMS_PATH=%SCOOP%\shims
 set REFRESHENV_PATH=%SCOOP_GLOBAL%\apps\refreshenv\current
+set "PYTHON_EXECUTABLE=%SCOOP_GLOBAL%\apps\python314\current\python.exe"
 
 set PATH=%PATH%;%SHIMS_PATH%;%REFRESHENV_PATH%
 
@@ -170,23 +171,16 @@ if %ERRORLEVEL% NEQ 0 (
 
 
 
-:: Check for python 3 installation on system
-@call python --version 3 >NUL 2>&1
+:: Check for the global Scoop Python 3.14 installation
+if exist "%PYTHON_EXECUTABLE%" goto skipPythonInstallation
 
-if %ERRORLEVEL% NEQ 0 (
-	goto installPythonViaScoop
-) else (
-	goto skipPythonInstallation
-)
+echo Installing Python 3.14
+@call scoop install -g python314 >NUL 2>&1
+if errorlevel 1 exit /b 1
+@call refreshenv >NUL 2>&1
 
-:installPythonViaScoop:
-	echo Installing python
-	@call scoop install -g python311 >NUL 2>&1
-	@call refreshenv >NUL 2>&1
-
-	echo Updating pip to the newest version
-	@call python -m pip install --upgrade pip >NUL 2>&1
-
+echo Updating pip to the newest version
+@"%PYTHON_EXECUTABLE%" -m pip install --upgrade pip >NUL 2>&1
 :skipPythonInstallation
 
 
@@ -220,20 +214,9 @@ if "%remote_url_in_folder%"=="%GIT_REMOTE_URL%" (
 
 
 
-:: Check if requirements for python script are installed
-@call python -c "import pkg_resources; pkg_resources.require(open('requirements.txt',mode='r'))" >NUL 2>&1
-
-if %ERRORLEVEL% NEQ 0 (
-	goto installPythonDependencies
-) else (
-	goto skipInstallingPythonDependencies
-)
-
-:installPythonDependencies:
-	echo Installing python dependencies
-	@pip install --ignore-installed -r requirements.txt
-
-:skipInstallingPythonDependencies
+echo Installing Python dependencies
+@"%PYTHON_EXECUTABLE%" -m pip install -r requirements.txt
+if errorlevel 1 exit /b 1
 
 
 REM @cls
@@ -257,12 +240,12 @@ if defined second_parameter (
 	for /f "tokens=1,* delims= " %%a in ("%*") do set EVERYTHING_EXCEPT_PROXY_PARAMETERS=%%b
 )
 
-python install.py --http-proxy !http_proxy! --https-proxy !https_proxy! !EVERYTHING_EXCEPT_PROXY_PARAMETERS!
+"%PYTHON_EXECUTABLE%" install.py --http-proxy !http_proxy! --https-proxy !https_proxy! !EVERYTHING_EXCEPT_PROXY_PARAMETERS!
 
 goto end
 
 :startScriptWithoutProxyParameters
-python install.py %*
+"%PYTHON_EXECUTABLE%" install.py %*
 
 
 :end
