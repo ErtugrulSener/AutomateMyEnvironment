@@ -10,7 +10,6 @@ import ctypes
 import os
 import sys
 import traceback
-import types
 
 import win32con
 import win32event
@@ -50,7 +49,7 @@ class AdminManager:
 
         if cmd_line is None:
             cmd_line = [python_exe] + sys.argv
-        elif type(cmd_line) not in (types.TupleType, types.ListType):
+        elif not isinstance(cmd_line, (tuple, list)):
             raise ValueError("cmdLine is not a sequence.")
 
         cmd = '"%s"' % (cmd_line[0],)

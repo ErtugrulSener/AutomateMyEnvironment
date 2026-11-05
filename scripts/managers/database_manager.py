@@ -30,7 +30,7 @@ class DatabaseManager:
 
     def get(self, constant):
         cursor = self.connection.cursor()
-        result = cursor.execute(f"SELECT value FROM {self.CONSTANTS_TABLE_NAME} WHERE key = '{constant.value}'")
+        result = cursor.execute(f"SELECT value FROM {self.CONSTANTS_TABLE_NAME} WHERE key = ?", (constant.value,))
         result = result.fetchone()
         cursor.close()
         
@@ -42,6 +42,6 @@ class DatabaseManager:
     def set(self, constant, constant_value):
         cursor = self.connection.cursor()
         cursor.execute(
-            f"REPLACE INTO {self.CONSTANTS_TABLE_NAME} VALUES('{constant.value}', '{constant_value}')")
+            f"REPLACE INTO {self.CONSTANTS_TABLE_NAME} VALUES (?, ?)", (constant.value, str(constant_value)))
         self.connection.commit()
         cursor.close()

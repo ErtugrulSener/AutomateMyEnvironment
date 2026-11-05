@@ -54,11 +54,12 @@ class WinscpConfigurator(ConfiguratorBase):
         return True
 
     def configure(self):
-        old_configuration = self.winscp_configuration
+        configuration_changed = False
 
         for section, key, value in chain(self.CONFIGURATION_PARAMETERS):
             if self.winscp_configuration.get(section, key, fallback=None) != value:
                 self.set_configuration_option(section, key, value)
+                configuration_changed = True
 
-        if old_configuration != self.winscp_configuration:
+        if configuration_changed:
             self.save_configuration()

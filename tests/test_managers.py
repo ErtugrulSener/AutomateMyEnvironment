@@ -1,5 +1,4 @@
 import ctypes
-import sqlite3
 import winreg
 from types import SimpleNamespace
 from unittest.mock import MagicMock, Mock, call
@@ -30,11 +29,12 @@ def test_admin_manager_reports_windows_token(monkeypatch, fresh, is_admin):
     check.assert_called_once_with()
 
 
-@pytest.mark.xfail(strict=True, raises=AttributeError, reason="Uses types.TupleType and types.ListType removed in Python 3")
-def test_admin_manager_accepts_explicit_command_line(monkeypatch, fresh):
+@pytest.mark.parametrize("sequence_type", [list, tuple])
+def test_admin_manager_accepts_explicit_command_line(monkeypatch, fresh, sequence_type):
     launch = Mock(return_value={})
     monkeypatch.setattr(admin_manager, "ShellExecuteEx", launch)
-    assert fresh(admin_manager.AdminManager).run_as_admin(["example.exe", "two words"], wait=False) is None
+    command_line = sequence_type(("example.exe", "two words"))
+    assert fresh(admin_manager.AdminManager).run_as_admin(command_line, wait=False) is None
     assert launch.call_args.kwargs["lpVerb"] == "runas"
     assert launch.call_args.kwargs["lpParameters"] == '"two words"'
 
@@ -84,7 +84,6 @@ def test_database_persists_upsert_and_reports_missing_entry(tmp_path, monkeypatc
         reopened.connection.close()
 
 
-@pytest.mark.xfail(strict=True, raises=sqlite3.OperationalError, reason="DatabaseManager interpolates values into SQL")
 def test_database_round_trips_values_with_apostrophes(tmp_path, monkeypatch, fresh):
     monkeypatch.chdir(tmp_path)
     database = fresh(DatabaseManager)

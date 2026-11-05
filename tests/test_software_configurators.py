@@ -76,10 +76,11 @@ def test_git_configurator_only_adds_missing_keys(fresh, commands):
     ]
 
 
-@pytest.mark.xfail(strict=True, raises=ValueError, reason="GitConfigurator splits on every equals sign")
 def test_git_configurator_accepts_equals_in_existing_value(fresh, commands):
     commands.return_value = "http.extraheader=X-Custom=enabled\n"
-    assert fresh(GitConfigurator).is_config_set("http.extraheader")
+    configurator = fresh(GitConfigurator)
+    assert configurator.is_config_set("http.extraheader")
+    assert configurator.global_config == [("http.extraheader", "X-Custom=enabled")]
 
 
 def test_intellij_requires_all_license_files_in_product_config_directory(tmp_path, monkeypatch, fresh, commands):
@@ -158,13 +159,16 @@ def test_winscp_loads_configuration_and_detects_existing_setting(tmp_path, monke
     monkeypatch.setenv("SCOOP_GLOBAL", str(tmp_path))
     config = tmp_path / "apps" / "winscp" / "current" / "winscp.ini"
     config.parent.mkdir(parents=True)
-    config.write_text("[Configuration\\Interface]\nShowHiddenFiles=1\n", encoding="ascii")
+    original = b"; keep this comment\r\n[Configuration\\Interface]\r\nShowHiddenFiles=1\r\n"
+    config.write_bytes(original)
     fresh(SoftwareManager)
 
-    assert fresh(WinscpConfigurator).is_configured_already()
+    configurator = fresh(WinscpConfigurator)
+    assert configurator.is_configured_already()
+    configurator.configure()
+    assert config.read_bytes() == original
 
 
-@pytest.mark.xfail(strict=True, raises=AssertionError, reason="WinSCP mutates the same config object it compares")
 def test_winscp_saves_changes_for_the_next_run(tmp_path, monkeypatch, fresh, commands):
     monkeypatch.setenv("SCOOP_GLOBAL", str(tmp_path))
     config = tmp_path / "apps" / "winscp" / "current" / "winscp.ini"
