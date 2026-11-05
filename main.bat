@@ -54,14 +54,14 @@ if %ERRORLEVEL% NEQ 0 (
 	echo This could take some time...
 	@"external/executables/portqry/PortQry.exe" -n google.de -p TCP -e 80 -q
 
-	if %ERRORLEVEL% NEQ 0 (
+	if errorlevel 1 (
 		echo.
 		echo ============================================================
 		echo You need an active internet connection to run this script.
 		echo Please check your proxy configuration and network settings.
 		echo ============================================================
 		echo.
-		goto end
+		exit /b 6
 	) else (
 		echo.
 		echo ============================================================
